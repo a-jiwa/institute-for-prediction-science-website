@@ -7,6 +7,7 @@ import { AboutPage } from './pages/AboutPage'
 import { CareersPage } from './pages/CareersPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { DetailPage } from './pages/DetailPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { routerBasename } from './utils/assetUrl'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/careers/:slug" element={<DetailPage type="career" />} />
             <Route path="/team/:slug" element={<DetailPage type="team" />} />
             <Route path="/privacy-policy" element={<PrivacyPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

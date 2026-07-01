@@ -13,7 +13,7 @@ export const navLinks: NavLink[] = [
 ]
 
 export const footerLinks: NavLink[] = [
-  { label: 'Contact', href: '/about/#contact-us' },
+  { label: 'Contact', href: '/about#contact-us' },
   {
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/company/forecasting-research-institute',

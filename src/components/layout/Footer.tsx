@@ -12,12 +12,19 @@ const allFooterNav = [...navLinks, ...footerLinks]
 const mobileMenuPrimary = allFooterNav.slice(0, 4)
 const mobileMenuSecondary = allFooterNav.slice(4)
 
+function normalizePath(path: string) {
+  if (!path || path === '/') return '/'
+  return path.replace(/\/$/, '')
+}
+
 function isFooterLinkActive(href: string, pathname: string, hash: string) {
   if (href.startsWith('http') || href.startsWith('mailto:')) return false
   const [path, linkHash] = href.split('#')
-  if (linkHash) return pathname === path && hash === `#${linkHash}`
-  if (path === '/') return pathname === '/'
-  return pathname === path || pathname.startsWith(`${path}/`)
+  const normalizedPath = normalizePath(path)
+  const normalizedPathname = normalizePath(pathname)
+  if (linkHash) return normalizedPathname === normalizedPath && hash === `#${linkHash}`
+  if (normalizedPath === '/') return normalizedPathname === '/'
+  return normalizedPathname === normalizedPath || normalizedPathname.startsWith(`${normalizedPath}/`)
 }
 
 function FooterNavLink({
@@ -35,14 +42,6 @@ function FooterNavLink({
   if (external || href.startsWith('http')) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={active ? 'active' : undefined}>
-        {label}
-      </a>
-    )
-  }
-
-  if (href.includes('#')) {
-    return (
-      <a href={href} className={active ? 'active' : undefined}>
         {label}
       </a>
     )
