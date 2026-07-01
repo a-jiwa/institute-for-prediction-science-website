@@ -1,0 +1,209 @@
+/* Font faces — matches forecastingresearch.org global.css */
+@font-face {
+  font-family: 'Sans';
+  src: url('/assets/fonts/SeasonSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sans';
+  src: url('/assets/fonts/SeasonSans-RegularItalic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sans';
+  src: url('/assets/fonts/SeasonSans-SemiBold.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/SeasonSerif-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('/assets/fonts/DMMonoRegular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'Sans', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-green);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variant-ligatures: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  outline: 0 !important;
+  font-family: 'Sans', Helvetica, Arial, sans-serif;
+}
+
+a {
+  outline: 0 !important;
+  text-decoration: none !important;
+  transition: color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+  color: inherit;
+}
+
+a * {
+  pointer-events: none;
+}
+
+b,
+strong {
+  font-weight: 600;
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+[class^='f--subtitle'] {
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: 'DM Mono', Helvetica, Arial, sans-serif;
+}
+
+.f--h1,
+h1 {
+  font-family: 'Serif', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 110%;
+}
+
+.f--h2,
+h2 {
+  font-family: 'Serif', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 120%;
+}
+
+.f--h3,
+h3 {
+  font-family: 'Serif', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 120%;
+}
+
+.f--h4,
+h4 {
+  font-family: 'DM Mono', Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+h5 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+}
+
+h6 {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+}
+
+@media (max-width: 767px) {
+  [class^='f--subtitle'] {
+    font-size: 14px;
+  }
+
+  .f--h1,
+  h1 {
+    font-size: 29px;
+  }
+
+  .f--h2,
+  h2 {
+    font-size: 24px;
+  }
+
+  .f--h3,
+  h3 {
+    font-size: 20px;
+  }
+
+  .f--h4,
+  h4 {
+    font-size: 14px;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 5px;
+  font-family: 'DM Mono', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: none;
+}
+
+@media (max-width: 767px) {
+  .btn {
+    font-size: 14px;
+    padding-right: 0;
+  }
+}
+
+.btn.orange {
+  color: var(--color-orange);
+}
+
+.btn.orange svg * {
+  fill: var(--color-orange);
+}
+
+.btn svg {
+  margin-left: 10px;
+}
+
+.btn svg + svg {
+  display: none;
+  margin-left: 14px;
+}
+
+@media (min-width: 1025px) {
+  .btn:hover {
+    text-shadow: 0 0.25px currentColor;
+    padding-right: 0;
+  }
+
+  .btn:hover svg {
+    display: none;
+  }
+
+  .btn:hover svg + svg {
+    display: block;
+  }
+}

@@ -1,0 +1,595 @@
+{
+  "featured": {
+    "color": "#1F19CC",
+    "href": "/research/economic-effects-of-ai",
+    "type": "Featured Working paper",
+    "title": "Forecasting the Economic Effects of AI",
+    "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
+    "date": "Mar 31, 2026",
+    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-1-1200x904.jpg"
+  },
+  "featuredWork": [
+    {
+      "href": "/research/inkling",
+      "label": "Project",
+      "title": "Inkling: News Powered by Prediction Markets",
+      "date": "Ongoing",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg"
+    },
+    {
+      "href": "/research/theyearahead",
+      "label": "Project",
+      "title": "TheYearAhead: Annual Forecasting Challenge",
+      "date": "Ongoing",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg"
+    },
+    {
+      "href": "/research/near-term-xpt-accuracy",
+      "label": "Working paper",
+      "title": "Assessing Near-Term Accuracy in the Existential Risk Persuasion Tournament",
+      "date": "Sep 2, 2025",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-13-700x440.jpg"
+    },
+    {
+      "href": "/research/llm-enabled-biorisk",
+      "label": "Working paper",
+      "title": "Forecasting LLM-enabled Biorisk and the Efficacy of Safeguards",
+      "date": "Jul 1, 2025",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-3-700x527.jpg"
+    }
+  ],
+  "logos": [
+    {
+      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/NYT_V3.svg",
+      "href": "https://www.nytimes.com/2026/04/03/business/economists-once-dismissed-the-ai-job-threat-but-not-anymore.html"
+    },
+    {
+      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/eonomist_3.svg",
+      "href": "https://www.economist.com/science-and-technology/2025/11/10/a-new-project-aims-to-predict-how-quickly-ai-will-progress"
+    },
+    {
+      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/Bloomberg_V3.svg",
+      "href": "https://www.bloomberg.com/news/articles/2025-12-12/ai-forecasts-don-t-have-to-be-pure-guesswork"
+    },
+    {
+      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/TIME_V2.svg",
+      "href": "https://time.com/7298645/ai-pandemic-5-times-more-likely/"
+    },
+    {
+      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/Vox_V3.svg",
+      "href": "https://www.vox.com/future-perfect/23785731/human-extinction-forecasting-superforecasters"
+    },
+    {
+      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/marginal_revolution_3.svg",
+      "href": "https://marginalrevolution.com/marginalrevolution/2026/04/economists-on-ai-and-economic-growth-and-employment.html"
+    }
+  ],
+  "teamSections": [
+    {
+      "id": "the-foresight-institute-team",
+      "title": "The Foresight Institute Team",
+      "members": [
+        {
+          "href": "/team/philip-tetlock",
+          "name": "Philip Tetlock",
+          "position": "President, Chief Scientist",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_a19655-e1775048823603.png"
+        },
+        {
+          "href": "/team/josh-rosenberg",
+          "name": "Josh Rosenberg",
+          "position": "CEO",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_b84899-e1775049423981.png"
+        },
+        {
+          "href": "/team/ezra-karger",
+          "name": "Ezra Karger",
+          "position": "Director of Research",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_e4fff9-e1775049185845.png"
+        },
+        {
+          "href": "/team/matt-reynolds",
+          "name": "Matt Reynolds",
+          "position": "Director of Communications",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_e2ade3-e1775049219110.png"
+        },
+        {
+          "href": "/team/astrid-sorflaten",
+          "name": "Astrid Sorflaten",
+          "position": "Director of Operations",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_ac1866-e1775049572111.png"
+        },
+        {
+          "href": "/team/bridget-williams",
+          "name": "Bridget Williams",
+          "position": "Associate Director of Research & Strategy",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_e12f80-e1775049067866.png"
+        },
+        {
+          "href": "/team/christina-aguila",
+          "name": "Christina Aguila",
+          "position": "Senior Operations Associate",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_bcfc76-e1775049360815.png"
+        },
+        {
+          "href": "/team/jessie-barker",
+          "name": "Jessie Barker",
+          "position": "Senior Researcher",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_171e00-e1775049870692.png"
+        },
+        {
+          "href": "/team/houtan-bastani",
+          "name": "Houtan Bastani",
+          "position": "Senior Data Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_905b95-e1775049810141.png"
+        },
+        {
+          "href": "/team/rhiannon-britt",
+          "name": "Rhiannon Britt",
+          "position": "Senior Data Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_b8bddf-e1775049502580.png"
+        },
+        {
+          "href": "/team/jordan-canedy",
+          "name": "Jordan Canedy",
+          "position": "Senior Researcher",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_6279e8-e1775049772752.png"
+        },
+        {
+          "href": "/team/rebecca-ceppas-de-castro",
+          "name": "Rebecca Ceppas de Castro",
+          "position": "Data Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_8fb978-e1775570172882.png"
+        },
+        {
+          "href": "/team/zack-devlin-foltz",
+          "name": "Zack Devlin-Foltz",
+          "position": "Research Manager",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_59c478.png"
+        },
+        {
+          "href": "/team/nadja-flechner",
+          "name": "Nadja Flechner",
+          "position": "Data Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_68ccab-e1775050469240.png"
+        },
+        {
+          "href": "/team/tim-francis",
+          "name": "Tim Francis",
+          "position": "Operations Associate",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_dfee54-e1775049273320.png"
+        },
+        {
+          "href": "/team/zach-jacobs",
+          "name": "Zach Jacobs",
+          "position": "Data Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_731f10-e1775049842297.png"
+        },
+        {
+          "href": "/team/carys-john",
+          "name": "Carys John",
+          "position": "Senior Operations Associate",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/20240827_0619071.jpg"
+        },
+        {
+          "href": "/team/simas-kucinskas",
+          "name": "Simas Kucinskas",
+          "position": "Senior Research Manager",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_a96b7b-e1775049622946.png"
+        },
+        {
+          "href": "/team/otto-kuusela",
+          "name": "Otto Kuusela",
+          "position": "Senior Data Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_f71293-e1775049033677.png"
+        },
+        {
+          "href": "/team/victoria-schmidt",
+          "name": "Victoria Schmidt",
+          "position": "Research Operations Analyst",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/headshot_victoria-schmidt_2026-04-e1775570099482.jpg"
+        }
+      ]
+    },
+    {
+      "id": "academic-affiliates-external-advisors",
+      "title": "Academic Affiliates & External Advisors",
+      "members": [
+        {
+          "href": "https://www.researchgate.net/profile/Barb-Mellers",
+          "name": "Barb Mellers",
+          "position": "Scientific advisor",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_b54746-e1775050506205.jpg"
+        },
+        {
+          "href": "https://scholar.google.co.uk/citations?hl=en&amp;user=f8zVLj8AAAAJ",
+          "name": "David Budescu",
+          "position": "Scientific advisor",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_285454-e1775049720855.png"
+        },
+        {
+          "href": "https://www.researchgate.net/profile/Pavel-Atanasov",
+          "name": "Pavel Atanasov",
+          "position": "Research lead, Project Improbable",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_a9e7a6.png"
+        },
+        {
+          "href": "https://www.researchgate.net/profile/Mark-Himmelstein",
+          "name": "Mark Himmelstein",
+          "position": "Research lead, Forecasting Proficiency Test",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_a13b7e-e1775049667726.png"
+        },
+        {
+          "href": "#member-4",
+          "name": "Page Hedley",
+          "position": "Senior advisor",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_2e6493-e1780061789438.jpg"
+        },
+        {
+          "href": "#member-5",
+          "name": "Elie Hassenfeld",
+          "position": "Senior advisor",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_b0b4b4.png"
+        },
+        {
+          "href": "#member-6",
+          "name": "Luca Righetti",
+          "position": "Senior advisor",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_13f3d2-e1775050028156.png"
+        }
+      ]
+    },
+    {
+      "id": "board-of-directors",
+      "title": "Board of Directors",
+      "members": [
+        {
+          "href": "/team/philip-tetlock",
+          "name": "Philip Tetlock",
+          "position": "President, Chief Scientist",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_a19655-e1775048823603.png"
+        },
+        {
+          "href": "/team/josh-rosenberg",
+          "name": "Josh Rosenberg",
+          "position": "CEO",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_b84899-e1775049423981.png"
+        },
+        {
+          "href": "https://jenniferlerner.com/",
+          "name": "Jennifer Lerner",
+          "position": "",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_0c0951-e1775050442340.png"
+        },
+        {
+          "href": "https://www.cis.upenn.edu/~ungar/",
+          "name": "Lyle Ungar",
+          "position": "",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_7bb7b5-e1775050341795.png"
+        },
+        {
+          "href": "https://evavivalt.com/",
+          "name": "Eva Vivalt",
+          "position": "",
+          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_f32018-e1775049128528.png"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "title": "Other Collaborators",
+      "members": [
+        {
+          "name": "Carter Allen",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Anna Bartlett",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Morgane Bascle",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Amory Bennett",
+          "position": "Creator of Quorum Research",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Julia Broden",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Kaitlyn Coffee",
+          "position": "Operations consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Josh Connor",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Coralie Consigny",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Johan Daniel",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Nicole Freij Camacho",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Kayla Gamin",
+          "position": "Content editor",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Jessica Helmer",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Sheldon Huang",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Chris Karvetski",
+          "position": "Research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Jaeho Lee",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Sivan Livnat",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Oskari Luoma",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Sophie Ma Zhu",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Matt Martin",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "David Mathers",
+          "position": "Research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Dan Mayland",
+          "position": "Research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Elliot McKernon",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Nick Merrill",
+          "position": "Senior AI research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Ananaya Mittal",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Connacher Murphy",
+          "position": "Research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Lola Obielodan",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Jordan Olmstead",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Jamie Parry",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Nikolay Petrov",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Nolan Quinn",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Aashish Reddy",
+          "position": "Student research assistant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "David Rozado",
+          "position": "Research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Rebecca Vessenes",
+          "position": "Research consultant",
+          "href": "",
+          "image": ""
+        },
+        {
+          "name": "Matthew Zipple",
+          "position": "Research assistant",
+          "href": "",
+          "image": ""
+        }
+      ],
+      "variant": "min"
+    }
+  ],
+  "researchFeatured": [
+    {
+      "href": "/research/inkling",
+      "type": "Featured Project",
+      "title": "Inkling: News Powered by Prediction Markets",
+      "excerpt": "Inkling uses prediction markets to surface what is likely to happen next — before it becomes a headline. Traders assign probabilities to real-world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding — validated across decades of forecasting research — that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg"
+    },
+    {
+      "href": "/research/theyearahead",
+      "type": "Featured Project",
+      "title": "TheYearAhead: Annual Forecasting Challenge",
+      "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs — assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight — established by Philip Tetlock and colleagues — that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg"
+    },
+    {
+      "href": "/research/economic-effects-of-ai",
+      "type": "Featured Working paper",
+      "title": "Forecasting the Economic Effects of AI",
+      "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
+      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-1-1200x904.jpg"
+    }
+  ],
+  "careers": [
+    {
+      "href": "/careers/data-engineer",
+      "title": "Data Engineer",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/senior-llm-researcher",
+      "title": "Senior LLM Researcher",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/research-manager",
+      "title": "Senior Researcher / Research Manager",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/data-analyst",
+      "title": "Data Analyst and Senior Data Analyst",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/research-analyst",
+      "title": "Research Analyst and Senior Research Analyst",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/strategy-fellow",
+      "title": "Strategy Fellow",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/operations-and-events-coordinator",
+      "title": "Operations & Events Coordinator",
+      "tags": [
+        "Full Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/research-assistant",
+      "title": "Part-Time Research Assistant",
+      "tags": [
+        "Part Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/student-research-assistant",
+      "title": "Part-Time Student Research Assistant",
+      "tags": [
+        "Part Time",
+        "Remote"
+      ]
+    },
+    {
+      "href": "/careers/content-editor",
+      "title": "Part-Time Content Editor",
+      "tags": [
+        "Part Time",
+        "Remote"
+      ]
+    }
+  ]
+}
