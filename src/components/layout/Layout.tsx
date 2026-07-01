@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
+import { toRouterPath } from '../../utils/assetUrl'
 
 export function Layout() {
   const { pathname, hash } = useLocation()
@@ -22,12 +23,15 @@ export function Layout() {
       if (target.getAttribute('href')?.startsWith('#')) return
       const url = new URL(target.href)
       if (url.origin !== window.location.origin) return
-      if (url.pathname === pathname && !url.hash) return
+
+      const routerPath = toRouterPath(url.pathname, url.search, url.hash)
+      const routerPathname = routerPath.split('#')[0].split('?')[0]
+      if (routerPathname === pathname && !url.hash) return
 
       event.preventDefault()
       document.body.classList.add('animate-out')
       window.setTimeout(() => {
-        navigate(url.pathname + url.search + url.hash)
+        navigate(routerPath)
       }, 250)
     }
 

@@ -5,3 +5,12 @@ export function assetUrl(path: string) {
 }
 
 export const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+/** Strip the Vite base path so React Router navigate/Link receive app-relative paths. */
+export function toRouterPath(pathname: string, search = '', hash = '') {
+  let path = pathname
+  if (routerBasename && path.startsWith(routerBasename)) {
+    path = path.slice(routerBasename.length) || '/'
+  }
+  return path + search + hash
+}
