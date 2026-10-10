@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
 import { HeroGrid } from '../hero/HeroGrid'
+import { assetUrl } from '../../utils/assetUrl'
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -78,7 +79,7 @@ export function FeaturedItem({
           <div className="grid vstretch-md">
             <div className="col-6-md">
               <div className="thumb">
-                <img src={image} alt="" loading="lazy" />
+                <img src={assetUrl(image)} alt="" loading="lazy" />
               </div>
             </div>
             <div className="col-6-md">
@@ -115,7 +116,7 @@ export function FeaturedItem({
             </div>
             <div className="col-6-md order-1-xs order-2-md">
               <div className="thumb">
-                <img src={image} alt="" loading="lazy" />
+                <img src={assetUrl(image)} alt="" loading="lazy" />
               </div>
             </div>
           </div>
@@ -141,7 +142,7 @@ export function WorkCard({ href, label, title, date, image }: WorkCardProps) {
       <SmartLink href={href} aria-label={title} />
       <div className="top">
         <div className="thumb">
-          <img src={image} alt="" loading="lazy" />
+          <img src={assetUrl(image)} alt="" loading="lazy" />
           <div className="label">{label}</div>
         </div>
       </div>

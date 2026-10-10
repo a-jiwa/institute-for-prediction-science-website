@@ -4,6 +4,7 @@ import type { Splide as SplideType } from '@splidejs/splide'
 import { WorkCard } from './HomeSections'
 import { Btn } from '../ui/Btn'
 import { SmartLink } from '../ui/SmartLink'
+import { assetUrl } from '../../utils/assetUrl'
 
 type WorkItem = {
   href: string
@@ -154,7 +155,7 @@ export function TeamSection({
                     {member.href && <SmartLink href={member.href} aria-label={member.name} />}
                     {member.image && (
                       <div className="thumb">
-                        <img src={member.image} alt={member.name} loading="lazy" />
+                        <img src={assetUrl(member.image)} alt={member.name} loading="lazy" />
                       </div>
                     )}
                     <div className="info">

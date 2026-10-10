@@ -55,26 +55,31 @@ const FEED: Array<{
   },
   {
     slug: 'forecastbench-a-dynamic-benchmark-of-ai-forecasting-capabilities',
-    title: 'Project title placeholder',
-    excerpt: 'Short description of this project goes here.',
+    title: 'ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities',
+    excerpt:
+      'A dynamic, contamination-free benchmark of LLM forecasting accuracy with human comparison baselines.',
     image: '/assets/img/research/dmi-02.webp',
   },
   {
     slug: 'longitudinal-expert-ai-panel-leap-working-paper',
-    title: 'Project title placeholder',
-    excerpt: 'Short description of this project goes here.',
+    title:
+      'The Longitudinal Expert AI Panel: Understanding Expert Views on AI Capabilities, Adoption, and Impact',
+    excerpt:
+      'LEAP tracks leading experts over three years on AI capabilities, adoption, and impact, summarising findings from the first waves.',
     image: '/assets/img/research/dmi-03.webp',
   },
   {
     slug: 'economic-effects-of-ai',
-    title: 'Project title placeholder',
-    excerpt: 'Short description of this project goes here.',
+    title: 'Forecasting the Economic Effects of AI',
+    excerpt:
+      'We surveyed academic economists, AI experts, and superforecasters to produce comparable forecasts of AI’s economic effects.',
     image: '/assets/img/research/dmi-05.webp',
   },
   {
     slug: 'theyearahead',
-    title: 'Project title placeholder',
-    excerpt: 'Short description of this project goes here.',
+    title: 'TheYearAhead: Annual Forecasting Challenge',
+    excerpt:
+      'Each January, participants predict 100 events across politics, economics, and world affairs — and are scored on accuracy.',
     image: '/assets/img/research/dmi-08.webp',
   },
 ]
@@ -87,12 +92,14 @@ export function researchFeed(): ResearchItem[] {
   return FEED.flatMap((entry) => {
     const base = itemBySlug(entry.slug)
     if (!base) return []
+    const placeholder =
+      /placeholder/i.test(entry.title) || /goes here/i.test(entry.excerpt)
     return [
       {
         ...base,
-        title: entry.title,
-        excerpt: entry.excerpt,
-        image: entry.image,
+        title: placeholder ? base.title : entry.title,
+        excerpt: placeholder ? base.excerpt : entry.excerpt,
+        image: entry.image || base.image,
       },
     ]
   })
