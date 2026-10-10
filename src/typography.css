@@ -1,42 +1,121 @@
-/* Font faces — matches forecastingresearch.org global.css */
+/*
+  Brand faces use font-display: block so the browser prefers waiting briefly
+  for the real font instead of painting Helvetica and swapping mid-view.
+  Critical faces are also preloaded + registered in index.html.
+*/
 @font-face {
   font-family: 'Sans';
-  src: url('/assets/fonts/SeasonSans-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+  src: url('/assets/fonts/GoogleSansFlex.woff2') format('woff2');
+  font-weight: 1 1000;
+  font-style: oblique 0deg 10deg;
+  font-display: block;
 }
 
+/* Explicit name for canvas glyphs / any direct Google Sans Flex usage. */
 @font-face {
-  font-family: 'Sans';
-  src: url('/assets/fonts/SeasonSans-RegularItalic.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/GoogleSansFlex.woff2') format('woff2');
+  font-weight: 1 1000;
+  font-style: oblique 0deg 10deg;
+  font-display: block;
 }
 
+/* Serif is Martina Plantijn (Klim). */
 @font-face {
-  font-family: 'Sans';
-  src: url('/assets/fonts/SeasonSans-SemiBold.woff2') format('woff2');
-  font-weight: 500;
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-Light.woff2') format('woff2');
+  font-weight: 300;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
   font-family: 'Serif';
-  src: url('/assets/fonts/SeasonSerif-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+  src: url('/assets/fonts/MartinaPlantijn-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: block;
 }
 
 @font-face {
-  font-family: 'DM Mono';
-  src: url('/assets/fonts/DMMonoRegular.woff2') format('woff2');
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Serif';
+  src: url('/assets/fonts/MartinaPlantijn-BlackItalic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+  font-display: block;
+}
+
+/* Mono is secondary UI chrome — swap is fine if it arrives a beat late. */
+@font-face {
+  font-family: 'Google Sans Code';
+  src: url('/assets/fonts/GoogleSansCode.woff2') format('woff2');
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Google Sans Code';
+  src: url('/assets/fonts/GoogleSansCode-Italic.woff2') format('woff2');
+  font-weight: 300 800;
+  font-style: italic;
+  font-display: optional;
 }
 
 body {
@@ -84,7 +163,7 @@ i {
   line-height: 110%;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  font-family: 'DM Mono', Helvetica, Arial, sans-serif;
+  font-family: 'Google Sans Code', ui-monospace, monospace;
 }
 
 .f--h1,
@@ -93,6 +172,7 @@ h1 {
   font-weight: 400;
   font-size: 38px;
   line-height: 110%;
+  color: #000;
 }
 
 .f--h2,
@@ -101,6 +181,7 @@ h2 {
   font-weight: 400;
   font-size: 30px;
   line-height: 120%;
+  color: #000;
 }
 
 .f--h3,
@@ -113,7 +194,7 @@ h3 {
 
 .f--h4,
 h4 {
-  font-family: 'DM Mono', Helvetica, Arial, sans-serif;
+  font-family: 'Google Sans Code', ui-monospace, monospace;
   font-weight: 500;
   font-size: 16px;
   line-height: 110%;
@@ -163,7 +244,7 @@ h6 {
   display: inline-flex;
   align-items: center;
   padding-right: 5px;
-  font-family: 'DM Mono', Helvetica, Arial, sans-serif;
+  font-family: 'Google Sans Code', ui-monospace, monospace;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   transition: none;

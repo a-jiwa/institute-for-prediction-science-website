@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
-import { assetUrl } from '../../utils/assetUrl'
+import { HeroGrid } from '../hero/HeroGrid'
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -11,35 +11,35 @@ export function HeroSection() {
     if (!section) return
 
     const resize = () => {
-      const next = section.nextElementSibling as HTMLElement | null
+      const reserve = document.querySelector('.hero-reserve')
+      const next = (reserve ?? section.nextElementSibling) as HTMLElement | null
       if (!next) return
       const nextHeight = next.getBoundingClientRect().height
-      section.style.height = `${window.innerHeight - nextHeight}px`
+      if (nextHeight <= 0) return
+      const height = window.innerHeight - nextHeight
+      section.style.height = height > 0 ? `${height}px` : ''
     }
 
     resize()
+    const reserve = document.querySelector('.hero-reserve')
+    const observer = reserve ? new ResizeObserver(resize) : null
+    if (reserve) observer?.observe(reserve)
     window.addEventListener('resize', resize)
-    return () => window.removeEventListener('resize', resize)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', resize)
+    }
   }, [])
 
   return (
     <section className="main" ref={sectionRef}>
-      <div className="bg">
-        <div className="parallax">
-          <video autoPlay muted playsInline>
-            <source src={assetUrl('/assets/videos/hero4.mp4')} type="video/mp4" />
-          </video>
-          <video autoPlay muted playsInline>
-            <source src={assetUrl('/assets/videos/hero4_mobile.mp4')} type="video/mp4" />
-          </video>
-        </div>
-      </div>
+      <HeroGrid />
 
       <div className="bottom">
         <div className="container">
           <div className="max">
             <div className="f--subtitle-500">Our Mission</div>
-            <h1>We apply the science of forecasting to help individuals and organisations make better decisions under uncertainty.</h1>
+            <h1>We’re building a better understanding of forecasting and finding practical ways to apply it to real-world problems.</h1>
           </div>
         </div>
       </div>
@@ -153,78 +153,91 @@ export function WorkCard({ href, label, title, date, image }: WorkCardProps) {
 
 export function AboutTextSection() {
   return (
-    <section className="text">
+    <section className="text home-about">
       <div className="container">
         <div className="grid vstart-md">
           <div className="col-6-md">
             <div className="max">
               <h2>
-                We apply the science of forecasting and probabilistic reasoning to transform how individuals
-                and organisations make decisions under uncertainty.
+                We’re an independent research and innovation organisation exploring how forecasting can help
+                people and organisations make better decisions under uncertainty.
               </h2>
             </div>
           </div>
           <div className="col-6-md">
             <div className="content">
               <p>
-                Academic research — pioneered by Philip Tetlock and others — has established that structured
-                probabilistic thinking dramatically improves the quality of human judgment and prediction. We
-                build on this foundation by translating these insights into practical tools, training, and
-                strategies that work in the real world — for businesses, institutions, and individuals facing
-                high-stakes decisions.
+                We know that predictions influence decisions every day, but there are still relatively few ways
+                to measure how good those predictions are, learn from mistakes and systematically improve. We
+                want to change that by putting forecasting into practice, studying what works and developing
+                new ways to use it.
               </p>
-              <p>Our work includes:</p>
-              <ul>
-                <li>
-                  Designing and running forecasting competitions and tournaments that teach probabilistic
-                  thinking in an engaging and intuitive way
-                </li>
-                <li>
-                  Building products and tools that help individuals and organisations make structured,
-                  evidence-based decisions
-                </li>
-                <li>
-                  Consulting executives and leadership teams on how to apply forecasting science to strategic
-                  planning and decision-making
-                </li>
-                <li>
-                  Developing training programmes that improve judgment, calibration, and reasoning under
-                  uncertainty across organisations
-                </li>
-                <li>
-                  Communicating the science of forecasting to broader audiences to improve public understanding
-                  of probabilistic thinking
-                </li>
-              </ul>
-              <div className="cta">
-                <Btn href="/about" orange>
-                  More About us
-                </Btn>
-              </div>
             </div>
           </div>
+        </div>
+        <div className="home-about-cta">
+          <Btn href="/about" orange>
+            About us
+          </Btn>
         </div>
       </div>
     </section>
   )
 }
 
-export function JoinCtaSection() {
+const services = [
+  {
+    id: 'competitions',
+    title: 'Competitions',
+    text: 'We run our own forecasting competitions and design bespoke competitions for universities, companies and other organisations. They provide a practical way to measure predictive ability, compare approaches and learn from real-world outcomes.',
+  },
+  {
+    id: 'training',
+    title: 'Training',
+    text: 'We help individuals and organisations develop their forecasting skills through practical training. Participants learn to reason more carefully about uncertainty, make probabilistic predictions and improve by evaluating their forecasts over time.',
+  },
+  {
+    id: 'lab',
+    title: 'The Lab',
+    text: 'We research how forecasting works and experiment with new ways to apply it. This includes studying forecasting methods, exploring prediction-market data and developing tools and applications that make predictive information more useful.',
+  },
+]
+
+export function ServicesIntroSection() {
   return (
-    <section className="cta" id="join-us">
+    <section className="text home-services" id="services">
       <div className="container">
-        <div className="grid hcenter-xs">
-          <div className="col-8-md text-center">
-            <h4>Join us</h4>
-            <div className="text f--h2">
-              <p>Want to join our team? See our careers page for ways to get involved</p>
-            </div>
-            <div className="cta">
-              <Btn href="/careers" orange>
-                Read more
-              </Btn>
+        <div className="grid vstart-md">
+          <div className="col-6-md">
+            <div className="home-services-intro">
+              <div className="f--subtitle">Services</div>
+              <h2>Our work in practice</h2>
+              <p>
+                We approach forecasting from three directions, measuring how well people predict, helping them
+                improve and exploring new ways to apply forecasting in practice.
+              </p>
             </div>
           </div>
+          <div className="col-6-md">
+            <ol className="home-services-list">
+              {services.map((service, index) => (
+                <li key={service.id}>
+                  <SmartLink href={`/services#${service.id}`}>
+                    <span className="work-index">{String(index + 1).padStart(2, '0')}</span>
+                    <span>
+                      <h3>{service.title}</h3>
+                      <p>{service.text}</p>
+                    </span>
+                  </SmartLink>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+        <div className="home-services-cta">
+          <Btn href="/services" orange>
+            Our services
+          </Btn>
         </div>
       </div>
     </section>

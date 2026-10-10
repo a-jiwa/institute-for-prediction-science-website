@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { SmartLink } from '../ui/SmartLink'
 import researchAll from '../../data/research-all.json'
+import { assetUrl } from '../../utils/assetUrl'
 
 const FILTER_OPTIONS = ['All', 'Working paper', 'Academic article', 'Project', 'Editorial']
 
@@ -30,7 +31,7 @@ function SmallCard({ item }: { item: ResearchItem }) {
         <div className="top">
           <div className="thumb">
             <div className="label">{item.type}</div>
-            {item.image && <img src={item.image} alt="" loading="lazy" />}
+            {item.image && <img src={assetUrl(item.image)} alt="" loading="lazy" />}
           </div>
           <div className="f--h3 title">{item.title}</div>
         </div>
@@ -49,7 +50,7 @@ function LargeCard({ item }: { item: ResearchItem }) {
 
   const thumb = item.image ? (
     <div className="thumb">
-      <img src={item.image} alt="" loading="lazy" />
+      <img src={assetUrl(item.image)} alt="" loading="lazy" />
     </div>
   ) : null
 

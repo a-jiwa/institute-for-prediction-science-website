@@ -11,7 +11,9 @@ export function Layout() {
   useEffect(() => {
     const isHeaderWhite = pathname.startsWith('/privacy-policy')
     document.body.classList.toggle('header-white', isHeaderWhite)
-    return () => document.body.classList.remove('header-white')
+    return () => {
+      document.body.classList.remove('header-white')
+    }
   }, [pathname])
 
   useEffect(() => {

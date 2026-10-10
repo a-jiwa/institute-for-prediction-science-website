@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import siteData from '../data/site-data.json'
 import { PageHero } from '../components/sections/SharedSections'
+import { ArticlePage } from '../components/research/ArticlePage'
+import { assetUrl } from '../utils/assetUrl'
 
 type DetailPageProps = {
   type: 'research' | 'career' | 'team'
@@ -10,16 +12,6 @@ type DetailPageProps = {
 function findItem(type: DetailPageProps['type'], slug: string) {
   if (type === 'career') {
     return siteData.careers.find((job) => job.href.endsWith(`/${slug}`))
-  }
-
-  if (type === 'research') {
-    const all = [
-      siteData.featured,
-      ...siteData.featuredWork,
-      ...siteData.researchFeatured,
-    ].filter(Boolean)
-
-    return all.find((item) => item && item.href.endsWith(`/${slug}`))
   }
 
   for (const section of siteData.teamSections) {
@@ -32,6 +24,11 @@ function findItem(type: DetailPageProps['type'], slug: string) {
 
 export function DetailPage({ type }: DetailPageProps) {
   const { slug = '' } = useParams()
+
+  if (type === 'research') {
+    return <ArticlePage slug={slug} />
+  }
+
   const item = findItem(type, slug)
 
   if (!item) {
@@ -56,67 +53,66 @@ export function DetailPage({ type }: DetailPageProps) {
       <section className="bg-white py-16 md:py-24">
         <div className="container">
           <div className="mx-auto max-w-3xl">
-            {'image' in item && item.image && (
+            {'image' in item && typeof item.image === 'string' && item.image ? (
               <div className="thumb mb-10 overflow-hidden rounded-xl pb-[56%]">
-                <img src={item.image} alt="" />
+                <img src={assetUrl(item.image)} alt="" />
               </div>
-            )}
+            ) : null}
 
-            {'type' in item && item.type && (
+            {'type' in item && typeof item.type === 'string' && item.type ? (
               <div className="f--subtitle mb-4 text-[#1F19CC]">{item.type}</div>
-            )}
+            ) : null}
 
-            {'label' in item && item.label && (
+            {'label' in item && typeof item.label === 'string' && item.label ? (
               <div className="f--subtitle mb-4 text-[#1F19CC]">{item.label}</div>
-            )}
+            ) : null}
 
-            {'position' in item && item.position && (
+            {'position' in item && typeof item.position === 'string' && item.position ? (
               <p className="mb-6 text-lg text-teal">{item.position}</p>
-            )}
+            ) : null}
 
-            {'section' in item && item.section && (
+            {'section' in item && typeof item.section === 'string' && item.section ? (
               <p className="mb-6 font-mono text-sm uppercase tracking-wide text-orange">
                 {item.section}
               </p>
-            )}
+            ) : null}
 
-            {'excerpt' in item && item.excerpt && (
+            {'excerpt' in item && typeof item.excerpt === 'string' && item.excerpt ? (
               <p className="mb-6 text-lg leading-relaxed">{item.excerpt}</p>
-            )}
+            ) : null}
 
-            {'tags' in item && item.tags && (
+            {'tags' in item && Array.isArray(item.tags) ? (
               <ul className="mb-8 flex flex-wrap gap-2">
                 {item.tags.map((tag) => (
                   <li
-                    key={tag}
+                    key={String(tag)}
                     className="rounded-full border border-green/20 px-3 py-1 font-mono text-xs uppercase tracking-wide"
                   >
-                    {tag}
+                    {String(tag)}
                   </li>
                 ))}
               </ul>
-            )}
+            ) : null}
 
-            {'date' in item && item.date && (
+            {'date' in item && typeof item.date === 'string' && item.date ? (
               <p className="mb-6 font-mono text-sm uppercase tracking-wide text-green/70">
                 {item.date}
               </p>
-            )}
+            ) : null}
 
             <p className="leading-relaxed">
-              This page mirrors the structure of forecastingresearch.org. Full article and job
-              descriptions are available on the original site.
+              {'excerpt' in item && typeof item.excerpt === 'string' && item.excerpt
+                ? item.excerpt
+                : 'Learn more about this role and how to get involved with The Institute for Predictive Sciences.'}
             </p>
 
             <div className="mt-10">
-              <a
-                href={`https://forecastingresearch.org${'href' in item ? item.href : ''}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/about#contact-us"
                 className="font-mono text-sm uppercase tracking-wide text-orange underline"
               >
-                View on forecastingresearch.org
-              </a>
+                Contact us
+              </Link>
             </div>
           </div>
         </div>

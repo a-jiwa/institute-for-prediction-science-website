@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './components/layout/Layout'
 import { SmoothScroll } from './components/layout/CookieBanner'
 import { HomePage } from './pages/HomePage'
 import { ResearchPage } from './pages/ResearchPage'
 import { AboutPage } from './pages/AboutPage'
+import { WorkPage } from './pages/WorkPage'
 import { CareersPage } from './pages/CareersPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { DetailPage } from './pages/DetailPage'
@@ -19,6 +20,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/research/:slug" element={<DetailPage type="research" />} />
+            <Route path="/services" element={<WorkPage />} />
+            <Route path="/our-work" element={<Navigate to="/services" replace />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/careers/:slug" element={<DetailPage type="career" />} />

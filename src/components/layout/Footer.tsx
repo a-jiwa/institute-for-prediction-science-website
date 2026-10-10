@@ -1,16 +1,17 @@
 import { useLocation } from 'react-router-dom'
 import { navLinks, footerLinks, legalLinks } from '../../data/navigation'
 import { SmartLink } from '../ui/SmartLink'
-import { LogoIcon, SITE_NAME } from '../icons/Logo'
+import { BLOG_SUBSCRIBE_URL, CONTACT_EMAIL, Logo, SITE_NAME } from '../icons/Logo'
 import { assetUrl } from '../../utils/assetUrl'
 
 function FooterIcon() {
-  return <LogoIcon fill="white" />
+  return <Logo variant="white" />
 }
 
-const allFooterNav = [...navLinks, ...footerLinks]
-const mobileMenuPrimary = allFooterNav.slice(0, 4)
-const mobileMenuSecondary = allFooterNav.slice(4)
+const allFooterNav = [
+  ...navLinks,
+  ...footerLinks.filter((link) => link.label !== 'LinkedIn' && link.label !== 'X (Twitter)'),
+]
 
 function normalizePath(path: string) {
   if (!path || path === '/') return '/'
@@ -68,7 +69,7 @@ export function Footer() {
             </div>
             <div className="newsletter">
               <a
-                href="https://forecastingresearch.substack.com/subscribe?utm_source=menu&simple=true&next=https%3A%2F%2Fforecastingresearch.substack.com%2F"
+                href={BLOG_SUBSCRIBE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn"
@@ -88,22 +89,13 @@ export function Footer() {
               </ul>
             </div>
             <div className="hidden-md">
-              <div className="grid">
-                <ul className="menu">
-                  {mobileMenuPrimary.map((link) => (
-                    <li key={link.href}>
-                      <FooterNavLink {...link} />
-                    </li>
-                  ))}
-                </ul>
-                <ul className="menu">
-                  {mobileMenuSecondary.map((link) => (
-                    <li key={link.href}>
-                      <FooterNavLink {...link} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="menu">
+                {allFooterNav.map((link) => (
+                  <li key={link.href}>
+                    <FooterNavLink {...link} />
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -111,42 +103,22 @@ export function Footer() {
         <div className="grid">
           <div className="col-12-sm">
             <div className="copy">
-              <div className="grid">
-                <div className="col-1-sm">
-                  <div className="logo">
-                    <FooterIcon />
-                  </div>
-                </div>
-                <div className="col-5-md">
-                  <div className="text">
-                    You can view any relevant public access files electronically by emailing
-                    info@forecastingresearch.org
-                    <br />© 2026 {SITE_NAME}
-                  </div>
-                </div>
-                <div className="col-3-md" />
-                <div className="col-1-md col-5-xs">
-                  <ul>
-                    {legalLinks.map((link) => (
-                      <li key={link.href}>
-                        <SmartLink href={link.href}>{link.label}</SmartLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="col-2-md col-7-xs">
-                  <ul>
-                    <li>
-                      <a href="mailto:info@forecastingresearch.org">info@forecastingresearch.org</a>
-                    </li>
-                    <li>
-                      <a href="https://www.atc.studio/" target="_blank" rel="noopener noreferrer">
-                        Designed by All Things Considered
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+            <div className="footer-meta">
+              <div className="logo">
+                <FooterIcon />
               </div>
+              <div className="text">© 2026 {SITE_NAME}</div>
+              <ul className="footer-links">
+                {legalLinks.map((link) => (
+                  <li key={link.href}>
+                    <SmartLink href={link.href}>{link.label}</SmartLink>
+                  </li>
+                ))}
+                <li>
+                  <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+                </li>
+              </ul>
+            </div>
             </div>
           </div>
         </div>

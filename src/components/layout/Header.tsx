@@ -1,19 +1,16 @@
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { navLinks, footerLinks, featuredNavProject } from '../../data/navigation'
-import { Logo, SITE_NAME } from '../icons/Logo'
+import { useEffect, useRef, useState } from 'react'
+import { navLinks, footerLinks } from '../../data/navigation'
+import { Logo, WORDMARK_NAME } from '../icons/Logo'
 import { useHeaderScroll } from '../../hooks/useHeaderScroll'
 import { useLenis } from './CookieBanner'
 
 export function Header() {
+  const headerRef = useRef<HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const { isOff, isFixed, isScroll } = useHeaderScroll()
   const lenis = useLenis()
+  useHeaderScroll(headerRef, lenis)
   const location = useLocation()
-  const isHeaderWhite = location.pathname.startsWith('/privacy-policy')
-
-  const isDarkHeader = !isHeaderWhite && !isFixed
-  const logoVariant = isDarkHeader && !menuOpen ? 'white' : 'green'
 
   useEffect(() => {
     setMenuOpen(false)
@@ -32,22 +29,13 @@ export function Header() {
     else lenis.start()
   }, [menuOpen, lenis])
 
-  const headerClasses = [
-    isOff && !isScroll && 'off',
-    isFixed && 'fixed',
-    isScroll && 'scroll',
-    menuOpen && 'menu-open',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
   return (
-    <header className={headerClasses || undefined}>
+    <header ref={headerRef} className={menuOpen ? 'menu-open' : undefined}>
       <div className="container">
         <div className="grid">
           <div className="col-10-xs col-4-sm">
-            <Link to="/" className="logo" title={SITE_NAME} aria-label={SITE_NAME}>
-              <Logo className="logo__svg" variant={logoVariant} />
+            <Link to="/" className="logo" title={WORDMARK_NAME} aria-label={WORDMARK_NAME}>
+              <Logo className="logo__svg" variant={menuOpen ? 'white' : 'green'} />
             </Link>
           </div>
 
@@ -71,22 +59,6 @@ export function Header() {
                   />
                 ))}
               </ul>
-
-              <div className="projects">
-                <Link to={featuredNavProject.href} onClick={() => setMenuOpen(false)}>
-                  <div className="grid">
-                    <div className="left">
-                      <div className="thumb">
-                        <img src={featuredNavProject.image} alt="" />
-                      </div>
-                    </div>
-                    <div className="right">
-                      <div className="f--subtitle">{featuredNavProject.type}</div>
-                      <div className="title f--h3">{featuredNavProject.title}</div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
 
               <div className="links grid hspace-between-xs">
                 {footerLinks.map((link) =>

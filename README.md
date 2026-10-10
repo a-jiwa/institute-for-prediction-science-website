@@ -1,6 +1,6 @@
-# The Foresight Institute
+# The Institute for Predictive Sciences
 
-Website for [The Foresight Institute](https://a-jiwa.github.io/forecasting-institute/), built with React, Vite, and Tailwind CSS.
+Website for [The Institute for Predictive Sciences](https://a-jiwa.github.io/forecasting-institute/), built with React, Vite, and Tailwind CSS.
 
 **Live site:** [https://a-jiwa.github.io/forecasting-institute/](https://a-jiwa.github.io/forecasting-institute/)
 
@@ -66,8 +66,8 @@ You can also trigger a deploy manually from the **Actions** tab.
 
 ## Assets
 
-Fonts, hero videos, and icons are bundled locally under `public/assets/`. Images are loaded from the original forecastingresearch.org CDN where noted in site data.
+Fonts, hero videos, and icons are bundled locally under `public/assets/`. Some research images are still hosted on an external CDN.
 
 ## Notes
 
-Detail pages mirror the structure of the original site. Some content links to the live forecastingresearch.org for full articles and job descriptions.
+Detail pages cover research articles, careers, and team members for The Institute for Predictive Sciences.
