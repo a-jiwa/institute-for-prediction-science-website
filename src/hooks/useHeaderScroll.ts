@@ -19,6 +19,17 @@ export function useHeaderScroll(
 ) {
   useEffect(() => {
     let raf = 0
+    let fullHeight = 0
+
+    const measureFullHeight = () => {
+      const header = headerRef.current
+      if (!header) return
+      const prevCompact = header.style.getPropertyValue('--header-compact')
+      header.style.setProperty('--header-compact', '0')
+      fullHeight = header.getBoundingClientRect().height
+      if (prevCompact) header.style.setProperty('--header-compact', prevCompact)
+      else header.style.removeProperty('--header-compact')
+    }
 
     const update = () => {
       raf = 0
@@ -27,8 +38,6 @@ export function useHeaderScroll(
 
       const max = document.documentElement.scrollHeight - window.innerHeight
       const y = Math.max(0, Math.min(window.scrollY, max))
-      const fullHeight =
-        Number.parseFloat(getComputedStyle(header).getPropertyValue('--header-height')) || 88
       // Sticky hero stays in view; compact only once the section below reaches the bar.
       const cover = document.querySelector('.home-cover')
       const hero = document.querySelector('section.main.statement-hero, section.main')
@@ -57,14 +66,20 @@ export function useHeaderScroll(
       if (!raf) raf = requestAnimationFrame(update)
     }
 
+    const onResize = () => {
+      measureFullHeight()
+      onScroll()
+    }
+
+    measureFullHeight()
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    window.addEventListener('resize', onResize)
     lenis?.on('scroll', onScroll)
 
     return () => {
       window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+      window.removeEventListener('resize', onResize)
       lenis?.off('scroll', onScroll)
       cancelAnimationFrame(raf)
     }

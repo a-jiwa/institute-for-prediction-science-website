@@ -7,7 +7,7 @@ export function PrivacyPage() {
         <div className="container">
           <div className="grid">
             <div className="col-8-sm">
-              <h1>Privacy Policy</h1>
+              <h1 className="editorial-title">Privacy Policy</h1>
             </div>
           </div>
         </div>

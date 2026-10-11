@@ -1,0 +1,199 @@
+/*
+  Document foundation, structured like institute.deepmind.com:
+  tokens on :root, semantic theme on html.theme-ips, element reset in `base`.
+
+  Page sections keep this site's colors, faces, and layout. They read these tokens.
+*/
+
+@layer theme {
+  :root {
+    --token-color-white: #fff;
+    --token-color-black: #000;
+    --token-color-ink: #102b23;
+    --token-font-sans: var(--font-sans);
+    --token-font-serif: var(--font-serif);
+    --token-font-mono: var(--font-mono);
+    --token-layout-spacing-base: max(27px, min(2.1vw, 60px));
+    --token-layout-max-width-fluid: max(64rem, min(80vw, 110rem));
+    --token-fluid-font-size-xs: max(0.75rem, min(0.75vw, 1rem));
+    --token-fluid-font-size-sm: max(0.875rem, min(0.85vw, 1.125rem));
+    --token-fluid-font-size-md: max(1rem, min(1vw, 1.25rem));
+    --token-fluid-font-size-lg: max(1.125rem, min(1.25vw, 1.375rem));
+    --token-fluid-font-size-xl: max(1.125rem, min(1.5vw, 1.625rem));
+    --token-fluid-font-size-2xl: max(1.25rem, min(2vw, 2rem));
+    --token-fluid-font-size-3xl: max(1.5rem, min(3vw, 3rem));
+    --token-type-size-2xs: 0.5rem;
+    --token-type-size-xs: 0.75rem;
+    --token-type-size-sm: 0.875rem;
+    --token-type-size-base: 1rem;
+    --token-type-size-md: 1.125rem;
+    --token-type-size-lg: 1.25rem;
+    --token-type-size-xl: 1.5rem;
+    --token-type-size-2xl: 1.625rem;
+    --token-tracking-tight: -0.01em;
+    --token-tracking-normal: 0.01em;
+    --token-tracking-wide: 0.08em;
+    --token-leading-tight: 1.12;
+    --token-leading-fitted: 1.185;
+    --token-leading-snug: 1.25;
+    --token-leading-cozy: 1.4;
+    --token-leading-normal: 1.55;
+    --token-border-width-base: 1px;
+    --token-border-width-subtle: 1px;
+    --token-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-resolution: 2dppx) {
+    :root {
+      --token-border-width-subtle: 0.5px;
+    }
+  }
+
+  html.theme-ips {
+    --theme-color-surface: var(--token-color-white);
+    --theme-color-surface-subtle: #fafafa;
+    --theme-color-text-primary: var(--token-color-ink);
+    --theme-color-text-secondary: rgba(16, 43, 35, 0.66);
+    --theme-color-text-subtle: #747476;
+    --theme-color-border: #57585b;
+    --theme-color-border-subtle: #d6d6d6;
+    --theme-color-on-surface: var(--token-color-ink);
+    --theme-layout-max-width: var(--token-layout-max-width-fluid);
+    --theme-layout-spacing-base: var(--token-layout-spacing-base);
+    --theme-layout-gutter: var(--theme-layout-spacing-base);
+    --theme-layout-spacing-0-25: calc(var(--theme-layout-spacing-base) * 0.25);
+    --theme-layout-spacing-0-5: calc(var(--theme-layout-spacing-base) * 0.5);
+    --theme-layout-spacing-0-75: calc(var(--theme-layout-spacing-base) * 0.75);
+    --theme-layout-spacing-1: var(--theme-layout-spacing-base);
+    --theme-layout-spacing-1-25: calc(var(--theme-layout-spacing-base) * 1.25);
+    --theme-layout-spacing-1-5: calc(var(--theme-layout-spacing-base) * 1.5);
+    --theme-layout-spacing-2: calc(var(--theme-layout-spacing-base) * 2);
+    --theme-layout-spacing-4: calc(var(--theme-layout-spacing-base) * 4);
+    --theme-prose-max-width: 62ch;
+    --theme-font-sans: var(--token-font-sans);
+    --theme-font-serif: var(--token-font-serif);
+    --theme-font-mono: var(--token-font-mono);
+    --theme-font-heading: var(--theme-font-serif);
+    --theme-font-body: var(--theme-font-sans);
+    --theme-font-code: var(--theme-font-mono);
+    --theme-type-fluid-xs: var(--token-fluid-font-size-xs);
+    --theme-type-fluid-sm: var(--token-fluid-font-size-sm);
+    --theme-type-fluid-md: var(--token-fluid-font-size-md);
+    --theme-type-fluid-lg: var(--token-fluid-font-size-lg);
+    --theme-type-fluid-xl: var(--token-fluid-font-size-xl);
+    --theme-type-fluid-2xl: var(--token-fluid-font-size-2xl);
+    --theme-type-fluid-3xl: var(--token-fluid-font-size-3xl);
+    --theme-type-size-xs: var(--token-type-size-xs);
+    --theme-type-size-sm: var(--token-type-size-sm);
+    --theme-type-size-base: var(--token-type-size-base);
+    --theme-type-size-md: var(--token-type-size-md);
+    --theme-type-size-lg: var(--token-type-size-lg);
+    --theme-type-size-xl: var(--token-type-size-xl);
+    --theme-font-tracking-heading: var(--token-tracking-tight);
+    --theme-font-tracking-body: var(--token-tracking-normal);
+    --theme-font-tracking-meta: var(--token-tracking-wide);
+    --theme-font-leading-meta: var(--token-leading-snug);
+    --theme-font-leading-body: var(--token-leading-normal);
+    --theme-font-leading-body-tight: var(--token-leading-cozy);
+    --theme-border-width-base: var(--token-border-width-base);
+    --theme-border-width-subtle: var(--token-border-width-subtle);
+    --theme-focus-width: 2px;
+    --theme-focus-offset: 2px;
+    --layout-header-height: 88px;
+    --layout-depth-header: 100;
+    --theme-motion-ease-decelerate: var(--token-ease-out-expo);
+    --theme-motion-duration-fast: 150ms;
+    --theme-motion-duration-normal: 400ms;
+
+    /* Names the existing page CSS already reads. */
+    --layout-type-sm: var(--theme-type-fluid-sm);
+    --layout-spacing-base: var(--theme-layout-spacing-base);
+    --layout-gutter: var(--theme-layout-gutter);
+    --layout-max-width: var(--theme-layout-max-width);
+    --layout-measure: 34rem;
+    --layout-display: 42rem;
+    --layout-column-gap: 48px;
+    --layout-stack-gap: 24px;
+    --layout-logo-height: 48px;
+    --layout-scroll-offset: calc(var(--layout-header-height) + 16px);
+
+    color: var(--theme-color-text-primary);
+    font-family: var(--theme-font-body);
+    background: transparent;
+  }
+
+  @media (max-width: 768px) and (orientation: portrait) {
+    html.theme-ips {
+      --theme-layout-spacing-base: max(16px, min(1.1vw, 34px));
+    }
+  }
+}
+
+@layer base {
+  html,
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: initial;
+    font: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
+
+  body,
+  blockquote,
+  figure {
+    margin: initial;
+  }
+
+  ul,
+  ol {
+    padding: initial;
+    margin: initial;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-skip-ink: auto;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: var(--theme-focus-width) solid currentColor;
+    outline-offset: var(--theme-focus-offset);
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html.theme-ips::selection {
+    background-color: color-mix(in oklch, var(--color-teal), var(--theme-color-surface) 55%);
+  }
+}

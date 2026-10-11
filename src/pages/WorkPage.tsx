@@ -51,7 +51,7 @@ export function WorkPage() {
             {services.map((service, index) => (
               <article className="work-card" id={service.id} key={service.id}>
                 <div className="work-index">{String(index + 1).padStart(2, '0')}</div>
-                <h3>{service.title}</h3>
+                <h3 className="editorial-subheading">{service.title}</h3>
                 <p className="work-card-lead">{service.paragraphs[0]}</p>
                 {service.paragraphs.slice(1).map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>

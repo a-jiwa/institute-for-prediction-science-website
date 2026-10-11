@@ -35,7 +35,7 @@ export function DetailPage({ type }: DetailPageProps) {
     return (
       <section className="bg-white py-24">
         <div className="container text-center">
-          <h1 className="mb-4">Page not found</h1>
+          <h1 className="editorial-title mb-4">Page not found</h1>
           <Link to="/" className="text-orange underline">
             Return home
           </Link>

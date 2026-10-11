@@ -115,7 +115,7 @@ export function TeamSection({
           <div className="grid">
             <div className="col-4-md">
               <div className="sticky">
-                <h2>{title}</h2>
+                <h2 className="editorial-heading">{title}</h2>
               </div>
             </div>
             <div className="col-8-md">
@@ -144,7 +144,7 @@ export function TeamSection({
         <div className="grid">
           <div className="col-4-md">
             <div className="sticky">
-              <h2>{title}</h2>
+              <h2 className="editorial-heading">{title}</h2>
             </div>
           </div>
           <div className="col-8-md">
@@ -190,7 +190,7 @@ export function CareersList({
       <div className="container">
         <div className="grid">
           <div className="col-6-md">
-            <h4>open positions</h4>
+            <h4 className="editorial-kicker">open positions</h4>
           </div>
           <div className="col-6-md">
             <div className="list">

@@ -119,26 +119,17 @@
 }
 
 body {
-  font-family: 'Sans', Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--color-green);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   font-variant-ligatures: none;
-  -webkit-text-size-adjust: 100%;
 }
 
 button,
 input,
 select,
 textarea {
-  outline: 0 !important;
-  font-family: 'Sans', Helvetica, Arial, sans-serif;
+  font-family: var(--theme-font-sans);
 }
 
 a {
-  outline: 0 !important;
   text-decoration: none !important;
   transition: color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
   color: inherit;
@@ -158,43 +149,41 @@ i {
   font-style: italic;
 }
 
-[class^='f--subtitle'] {
-  font-size: 16px;
-  line-height: 110%;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-family: 'Google Sans Code', ui-monospace, monospace;
-}
-
+/* Stepped type. One size from 768px up, a smaller step at 767px and below. */
+.editorial-title,
 .f--h1,
 h1 {
-  font-family: 'Serif', Helvetica, Arial, sans-serif;
+  font-family: var(--theme-font-heading);
   font-weight: 400;
   font-size: 38px;
   line-height: 110%;
-  color: #000;
+  color: var(--color-ink);
 }
 
+.editorial-heading,
 .f--h2,
 h2 {
-  font-family: 'Serif', Helvetica, Arial, sans-serif;
+  font-family: var(--theme-font-heading);
   font-weight: 400;
   font-size: 30px;
   line-height: 120%;
-  color: #000;
+  color: var(--color-ink);
 }
 
+.editorial-subheading,
 .f--h3,
 h3 {
-  font-family: 'Serif', Helvetica, Arial, sans-serif;
+  font-family: var(--theme-font-heading);
   font-weight: 400;
   font-size: 22px;
   line-height: 120%;
 }
 
+.editorial-kicker,
 .f--h4,
-h4 {
-  font-family: 'Google Sans Code', ui-monospace, monospace;
+h4,
+[class^='f--subtitle'] {
+  font-family: var(--theme-font-code);
   font-weight: 500;
   font-size: 16px;
   line-height: 110%;
@@ -202,41 +191,57 @@ h4 {
   text-transform: uppercase;
 }
 
-h5 {
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 150%;
+.content :where(h2) {
+  font-family: var(--theme-font-heading);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 120%;
+  color: var(--color-ink);
 }
 
-h6 {
+.content :where(h3) {
+  font-family: var(--theme-font-heading);
   font-weight: 400;
-  font-size: 12px;
-  line-height: 150%;
+  font-size: 22px;
+  line-height: 120%;
+}
+
+.content :where(h4) {
+  font-family: var(--theme-font-code);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 @media (max-width: 767px) {
-  [class^='f--subtitle'] {
+  .editorial-kicker,
+  .f--h4,
+  h4,
+  [class^='f--subtitle'],
+  .content :where(h4) {
     font-size: 14px;
   }
 
+  .editorial-title,
   .f--h1,
   h1 {
     font-size: 29px;
   }
 
+  .editorial-heading,
   .f--h2,
-  h2 {
+  h2,
+  .content :where(h2) {
     font-size: 24px;
   }
 
+  .editorial-subheading,
   .f--h3,
-  h3 {
+  h3,
+  .content :where(h3) {
     font-size: 20px;
-  }
-
-  .f--h4,
-  h4 {
-    font-size: 14px;
   }
 }
 

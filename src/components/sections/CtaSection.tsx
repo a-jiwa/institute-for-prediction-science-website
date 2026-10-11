@@ -14,7 +14,7 @@ export function CtaSection({ id, title, children, support, action }: CtaSectionP
       <div className="container">
         <div className="grid hcenter-xs">
           <div className="col-8-md text-center">
-            <h4>{title}</h4>
+            <h4 className="editorial-kicker">{title}</h4>
             <div className="text f--h2">{children}</div>
             {support && <div className="cta-support">{support}</div>}
             {action && (

@@ -17,7 +17,7 @@ export function AboutIntroSection() {
         <div className="grid vstart-md">
           <div className="col-6-md">
             <div className="max">
-              <h2>
+              <h2 className="editorial-heading">
                 We’re an independent research and innovation organisation exploring how forecasting can help
                 people and organisations make better decisions under uncertainty.
               </h2>

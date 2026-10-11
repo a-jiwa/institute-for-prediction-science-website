@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="fonts-pending">
+<html lang="en" class="theme-ips fonts-pending">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg" />
@@ -43,8 +43,8 @@
         font-style: italic;
         font-display: block;
       }
-      /* Match page canvas while we wait so the brief hold is a white screen, not a flash. */
-      html {
+      /* Match the page canvas while fonts load so the hold is a white screen. */
+      html.fonts-pending {
         background: #fff;
       }
       html.fonts-pending body {

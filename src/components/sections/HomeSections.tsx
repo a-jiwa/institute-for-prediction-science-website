@@ -10,8 +10,11 @@ export function HeroSection() {
 
       <div className="statement-hero__content">
         <div className="statement-hero__copy">
-          <h1 className="statement-hero__headline">Better Decisions Begin with Forecasting</h1>
-          <p className="statement-hero__description">Improving how we think about the future</p>
+          <h1 className="statement-hero__headline">Improving how we think about the future</h1>
+          <p className="statement-hero__description">
+            We study, teach, and apply the science of prediction, so people and organisations can act with
+            greater clarity under uncertainty.
+          </p>
         </div>
       </div>
     </section>
@@ -182,7 +185,7 @@ export function ServicesIntroSection() {
           <div className="col-6-md">
             <div className="home-services-intro">
               <div className="f--subtitle">Services</div>
-              <h2>Our work in practice</h2>
+              <h2 className="editorial-heading">Our work in practice</h2>
               <p>
                 We approach forecasting from three directions, measuring how well people predict, helping them
                 improve and exploring new ways to apply forecasting in practice.
@@ -196,7 +199,7 @@ export function ServicesIntroSection() {
                   <SmartLink href={`/services#${service.id}`}>
                     <span className="work-index">{String(index + 1).padStart(2, '0')}</span>
                     <span>
-                      <h3>{service.title}</h3>
+                      <h3 className="editorial-subheading">{service.title}</h3>
                       <p>{service.text}</p>
                     </span>
                   </SmartLink>

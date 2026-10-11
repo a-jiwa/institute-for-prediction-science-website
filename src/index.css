@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './foundation.css';
 @import '@splidejs/react-splide/css';
 @import './typography.css';
 @import './grid.css';
@@ -20,36 +21,8 @@
   --font-mono: 'Google Sans Code', ui-monospace, monospace;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  background: #fff;
-  /* DeepMind Institute layout tokens (institute.deepmind.com). */
-  --layout-type-sm: max(0.875rem, min(0.85vw, 1.125rem));
-  --layout-spacing-base: max(27px, min(2.1vw, 60px));
-  --layout-gutter: var(--layout-spacing-base);
-  --layout-max-width: max(64rem, min(80vw, 110rem));
-  /* Reading width, and the wider block used for titles. */
-  --layout-measure: 34rem;
-  --layout-display: 42rem;
-  /* Paired columns, and the gap when those columns stack. */
-  --layout-column-gap: 48px;
-  --layout-stack-gap: 24px;
-  /* One header size at every breakpoint. */
-  --layout-header-height: 88px;
-  --layout-logo-height: 48px;
-  /* Keep layout queries on the grid edges: ≤767 mobile, ≤1023 stacked, ≥1024 columns.
-     min-width: 1025px is hover only. */
-  --layout-scroll-offset: calc(var(--layout-header-height) + 16px);
-}
-
-@media (max-width: 767px) and (orientation: portrait) {
-  html {
-    --layout-spacing-base: max(16px, min(1.1vw, 34px));
-  }
-}
+/* Layout queries stay on the grid edges: ≤767 mobile, ≤1023 stacked, ≥1024 columns.
+   min-width: 1025px is hover only. Spacing, type, and header height live on html.theme-ips. */
 
 /* Shared content column: centered max-width + fluid gutters (DeepMind). */
 .layout-rail,
@@ -93,13 +66,6 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-}
-
-@media (max-width: 767px) {
-  html,
-  body {
-    overflow-x: clip;
-  }
 }
 
 #root {
@@ -240,7 +206,7 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9;
+  z-index: var(--layout-depth-header);
   box-sizing: border-box;
   width: 100%;
   height: calc(
@@ -464,13 +430,12 @@ section.main {
 /* Homepage hero — sticky pin behind opaque `.home-cover` (DeepMind cover-scroll). */
 section.main.statement-hero {
   --hero-stack: var(--layout-header-height);
-  --hero-peek: 64px;
   position: sticky;
   top: 0;
   z-index: 0;
-  /* Always shorter than the screen so the next section stays in view. */
-  height: calc(100svh - var(--hero-peek));
-  min-height: calc(100svh - var(--hero-peek));
+  height: 80svh;
+  min-height: 80svh;
+  max-height: 80svh;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -513,8 +478,8 @@ section.main.statement-hero .statement-hero__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
-  padding: clamp(140px, 22vh, 220px) var(--layout-gutter) 48px;
+  justify-content: center;
+  padding: 24px var(--layout-gutter) 32px;
   --layout-split: calc((100% - var(--layout-column-gap)) / 2);
 }
 
@@ -522,7 +487,8 @@ section.main.statement-hero .statement-hero__copy {
 section.main.statement-hero .statement-hero__headline {
   position: relative;
   margin: 0;
-  width: min(var(--layout-display), var(--layout-split));
+  width: max(70vw, min(var(--layout-display), var(--layout-split)));
+  min-width: 70vw;
   max-width: none;
   color: #fff;
   font-family: var(--font-serif);
@@ -536,7 +502,8 @@ section.main.statement-hero .statement-hero__headline {
 section.main.statement-hero .statement-hero__description {
   position: relative;
   margin: 32px 0 0;
-  width: min(var(--layout-measure), var(--layout-split));
+  width: max(70vw, min(var(--layout-measure), var(--layout-split)));
+  min-width: 70vw;
   max-width: none;
   color: #fff;
   font-family: var(--font-sans);
@@ -552,7 +519,11 @@ section.main.statement-hero .statement-hero__description {
     top: 0;
     right: auto;
     bottom: 0;
-    padding: 32px var(--layout-gutter) 48px;
+    left: var(--layout-gutter);
+    width: 80%;
+    max-width: 80%;
+    transform: none;
+    padding: 32px 0 48px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -731,7 +702,7 @@ section.main .hero-grid__hud {
 @media (max-width: 767px) {
   section.main .hero-grid__hud {
     top: auto;
-    bottom: 88px;
+    bottom: var(--layout-header-height);
     font-size: 11px;
   }
 }

@@ -91,7 +91,7 @@ export function ArticlePage({ slug }: { slug: string }) {
     return (
       <section className="essay essay-missing">
         <div className="container">
-          <h1>Page not found</h1>
+          <h1 className="editorial-title">Page not found</h1>
           <Link to="/research">All research</Link>
         </div>
       </section>
