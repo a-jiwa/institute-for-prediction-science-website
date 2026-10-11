@@ -148,6 +148,11 @@ const LAYER_SEED: Record<CircleId, number> = {
 /** Shared grid knobs — edit these (or mutate `circles.*`) to play with the look. */
 export const HERO_GRID = {
   /**
+   * Master switch for the animated dot field.
+   * Set to `true` to bring the dots back.
+   */
+  showDots: false,
+  /**
    * Spacing between intersection dots (px).
    * ~19 keeps letterforms readable; much larger and A/O/S fall apart.
    */
@@ -672,6 +677,8 @@ export function HeroGrid() {
   const hudTextRef = useRef<string | null>(null)
 
   useEffect(() => {
+    if (!HERO_GRID.showDots) return
+
     const el = ref.current
     const canvas = canvasRef.current
     if (!el || !canvas) return
@@ -722,6 +729,12 @@ export function HeroGrid() {
       const section = el.closest('section') ?? hero
       const rect = section.getBoundingClientRect()
       const span = Math.max(1, rect.height * (HERO_GRID.scroll.distance ?? 0.88))
+      // Sticky hero keeps rect.top ≈ 0; measure how far `.home-cover` has risen over it.
+      const cover = document.querySelector('.home-cover')
+      if (cover) {
+        const covered = Math.max(0, rect.height - cover.getBoundingClientRect().top)
+        return Math.min(1, Math.max(0, covered / span))
+      }
       const scrolled = Math.max(0, -rect.top)
       return Math.min(1, Math.max(0, scrolled / span))
     }
@@ -1499,7 +1512,9 @@ export function HeroGrid() {
         }}
       >
         <div className="hero-grid__lines" />
-        <canvas ref={canvasRef} className="hero-grid__dots" />
+        {HERO_GRID.showDots && (
+          <canvas ref={canvasRef} className="hero-grid__dots" />
+        )}
       </div>
       {hud && (
         <div className="hero-grid__hud" aria-live="polite">

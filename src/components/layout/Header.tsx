@@ -35,7 +35,7 @@ export function Header() {
         <div className="grid">
           <div className="col-10-xs col-4-sm">
             <Link to="/" className="logo" title={WORDMARK_NAME} aria-label={WORDMARK_NAME}>
-              <Logo className="logo__svg" variant={menuOpen ? 'white' : 'green'} />
+              <Logo className="logo__svg" variant="white" />
             </Link>
           </div>
 
@@ -46,7 +46,12 @@ export function Header() {
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
-            />
+            >
+              <svg className="hamb__icon" viewBox="0 0 22 10" width="22" height="10" aria-hidden="true">
+                <rect className="hamb__bar hamb__bar--top" x="0" y="0" width="22" height="2" rx="0" />
+                <rect className="hamb__bar hamb__bar--bottom" x="0" y="8" width="22" height="2" rx="0" />
+              </svg>
+            </button>
 
             <nav className={menuOpen ? 'show' : ''}>
               <ul className="grid hend-sm">

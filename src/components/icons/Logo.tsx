@@ -35,7 +35,7 @@ function glyphBlock() {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   if (!ctx) return null
-  ctx.font = `600 ${CAP_SIZE}px ${SANS_FAMILY}`
+  ctx.font = `500 ${CAP_SIZE}px ${SANS_FAMILY}`
   // Flat caps (I, T, E, N) set the edge. S and C overshoot that line slightly,
   // which made the leaf look a hair taller than the wordmark.
   let ascent = 0
@@ -65,7 +65,7 @@ function LogoWordmark({
         y={TOP_BASELINE}
         fontFamily={SANS_FAMILY}
         fontSize={CAP_SIZE}
-        fontWeight={600}
+        fontWeight={500}
         letterSpacing={CAP_TRACKING}
       >
         INSTITUTE
@@ -85,7 +85,7 @@ function LogoWordmark({
         dx="0.28em"
         fontFamily={SANS_FAMILY}
         fontSize={CAP_SIZE}
-        fontWeight={600}
+        fontWeight={500}
         fontStyle="normal"
         letterSpacing={CAP_TRACKING}
       >
@@ -96,7 +96,7 @@ function LogoWordmark({
         y={BOTTOM_BASELINE}
         fontFamily={SANS_FAMILY}
         fontSize={CAP_SIZE}
-        fontWeight={600}
+        fontWeight={500}
         letterSpacing={CAP_TRACKING}
       >
         SCIENCES

@@ -339,7 +339,7 @@ export const SHOWCASE: ShowcaseConfig = {
     path: 'chase',
     swing: 0.14,
   },
-  // One pattern: floating trio — scroll freezes + grows them to a page fill.
+  // One pattern: floating trio — homes sit clear of the hero copy.
   sequence: [
     {
       type: 'trio',
@@ -347,7 +347,7 @@ export const SHOWCASE: ShowcaseConfig = {
       duration: 60000,
       layers: 'color',
       band: 120,
-      play: 0.14,
+      play: 0.1,
       stagger: 1,
       intensity: 0.92,
     },
@@ -370,12 +370,89 @@ export type ShowEvalContext = {
   scroll?: number
 }
 
-/** Per-colour float recipes — incommensurate freqs so paths never lock. */
+/**
+ * Soft zone covering the hero headline + description (normalized 0–1 in the
+ * full hero box). Floating centres are nudged out of this so colour blobs
+ * don't sit under the copy.
+ */
+function copyAvoidRect(width: number) {
+  // Mobile: copy stacks full-width near the top → keep blobs in the lower band.
+  if (width <= 768) {
+    return { x0: 0, x1: 1, y0: 0, y1: 0.62 }
+  }
+  // Tablet / desktop: copy is a left column → keep blobs on the right.
+  if (width <= 1024) {
+    return { x0: 0, x1: 0.58, y0: 0.18, y1: 0.82 }
+  }
+  return { x0: 0, x1: 0.56, y0: 0.22, y1: 0.78 }
+}
+
+/** Preferred page-fill centre once scroll grows the trio (away from copy). */
+function trioFillCenter(width: number) {
+  if (width <= 768) return { x: 0.5, y: 0.74 }
+  if (width <= 1024) return { x: 0.68, y: 0.56 }
+  return { x: 0.7, y: 0.55 }
+}
+
+/** Nudge a float centre out of the copy rectangle toward open space. */
+function avoidCopyCenter(
+  ox: number,
+  oy: number,
+  width: number,
+  height: number,
+) {
+  const zone = copyAvoidRect(width)
+  const nx = ox / width
+  const ny = oy / height
+  if (nx < zone.x0 || nx > zone.x1 || ny < zone.y0 || ny > zone.y1) {
+    return { x: ox, y: oy }
+  }
+
+  // Mobile: push down. Wider layouts: push right (and a little down if needed).
+  if (width <= 768) {
+    const targetY = zone.y1 + 0.1
+    return { x: ox, y: Math.max(oy, targetY * height) }
+  }
+
+  const targetX = zone.x1 + 0.1
+  const targetY = Math.min(Math.max(ny, 0.42), 0.72)
+  return {
+    x: Math.max(ox, targetX * width),
+    y: oy * 0.65 + targetY * height * 0.35,
+  }
+}
+
+/**
+ * Soft mask: 0 deep under the copy, 1 in open field. Keeps blob edges from
+ * reading through the headline even when a centre sits nearby.
+ */
+function copyClearance(x: number, y: number, width: number, height: number) {
+  const zone = copyAvoidRect(width)
+  const nx = x / width
+  const ny = y / height
+  const inside =
+    nx >= zone.x0 && nx <= zone.x1 && ny >= zone.y0 && ny <= zone.y1
+  if (!inside) return 1
+  const edgeDist = Math.min(
+    nx - zone.x0,
+    zone.x1 - nx,
+    ny - zone.y0,
+    zone.y1 - ny,
+  )
+  const soft = width <= 768 ? 0.07 : 0.09
+  return smoothstep(1 - edgeDist / soft)
+}
+
+/** Per-colour float recipes — incommensurate freqs so paths never lock.
+ *  Lanes/homes sit to the right (desktop) / lower (mobile) of the hero copy. */
 const TRIO_FLOAT: Record<
   Exclude<ShowcaseLayerId, 'black'>,
   {
     lane: number
     homeY: number
+    /** Mobile overrides — copy occupies the upper full width. */
+    laneMobile: number
+    homeYMobile: number
     fx: number
     fy: number
     f2x: number
@@ -388,41 +465,47 @@ const TRIO_FLOAT: Record<
   }
 > = {
   yellow: {
-    lane: 0.2,
-    homeY: 0.44,
+    lane: 0.62,
+    homeY: 0.58,
+    laneMobile: 0.3,
+    homeYMobile: 0.74,
     fx: 0.07,
     fy: 0.11,
     f2x: 0.19,
     f2y: 0.13,
-    ax: 1.05,
-    ay: 0.78,
-    a2: 0.38,
+    ax: 0.85,
+    ay: 0.7,
+    a2: 0.32,
     phase: 0.35,
     react: 0.95,
   },
   pink: {
-    lane: 0.5,
-    homeY: 0.54,
+    lane: 0.78,
+    homeY: 0.64,
+    laneMobile: 0.52,
+    homeYMobile: 0.8,
     fx: 0.05,
     fy: 0.09,
     f2x: 0.15,
     f2y: 0.21,
-    ax: 0.72,
-    ay: 1.12,
-    a2: 0.42,
+    ax: 0.62,
+    ay: 0.95,
+    a2: 0.36,
     phase: 1.85,
     react: 1.2,
   },
   blue: {
-    lane: 0.8,
-    homeY: 0.47,
+    lane: 0.9,
+    homeY: 0.56,
+    laneMobile: 0.74,
+    homeYMobile: 0.76,
     fx: 0.09,
     fy: 0.06,
     f2x: 0.17,
     f2y: 0.14,
-    ax: 0.88,
-    ay: 0.96,
-    a2: 0.35,
+    ax: 0.72,
+    ay: 0.82,
+    a2: 0.3,
     phase: 3.1,
     react: 1.05,
   },
@@ -897,25 +980,32 @@ export function evaluateShow(
       const ptr = freeze < 0.85 ? ctx.pointer : null
       const recipe = TRIO_FLOAT[layerId]
       const ph = recipe.phase
+      const mobile = width <= 768
+      const lane = mobile ? recipe.laneMobile : recipe.lane
+      const homeY = mobile ? recipe.homeYMobile : recipe.homeY
 
       let ox =
-        recipe.lane * width +
+        lane * width +
         play *
           (recipe.ax * Math.sin(secs * recipe.fx * Math.PI * 2 + ph) +
             recipe.a2 *
               Math.sin(secs * recipe.f2x * Math.PI * 2 + ph * 1.7)) +
         warp * 10 * (1 - freeze)
       let oy =
-        recipe.homeY * height +
+        homeY * height +
         play *
           (recipe.ay * Math.sin(secs * recipe.fy * Math.PI * 2 + ph * 1.3) +
             recipe.a2 *
               Math.cos(secs * recipe.f2y * Math.PI * 2 + ph * 0.6)) +
         warp * 8 * (1 - freeze)
 
-      // Ease centers slightly toward mid-page as they swell so the fill is even.
-      ox += (0.5 * width - ox) * grow * 0.28
-      oy += (0.5 * height - oy) * grow * 0.22
+      // Keep float centres out from under the hero copy.
+      ;({ x: ox, y: oy } = avoidCopyCenter(ox, oy, width, height))
+
+      // Ease toward a copy-safe fill centre (not page middle through the text).
+      const fill = trioFillCenter(width)
+      ox += (fill.x * width - ox) * grow * 0.28
+      oy += (fill.y * height - oy) * grow * 0.22
 
       let near = 0
       if (ptr) {
@@ -927,12 +1017,16 @@ export function evaluateShow(
         const push = near * play * 0.7 * recipe.react
         ox += (dx / d) * push
         oy += (dy / d) * push
+        ;({ x: ox, y: oy } = avoidCopyCenter(ox, oy, width, height))
       }
 
       strength = smoothstep(
         1 - Math.hypot(x - ox, y - oy) / (band * (1 + near * 0.06)),
       )
-      return clamp01(strength * intensity * voice.size)
+      // Idle: clear the copy. Scroll-grow may refill the whole hero.
+      const clear =
+        copyClearance(x, y, width, height) * (1 - grow) + 1 * grow
+      return clamp01(strength * intensity * voice.size * clear)
     }
     case 'split': {
       const soft = show.soft ?? 0.2

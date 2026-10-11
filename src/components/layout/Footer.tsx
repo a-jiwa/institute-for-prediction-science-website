@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import { navLinks, footerLinks, legalLinks } from '../../data/navigation'
+import { footerNavLinks, legalLinks } from '../../data/navigation'
 import { SmartLink } from '../ui/SmartLink'
 import { BLOG_SUBSCRIBE_URL, CONTACT_EMAIL, Logo, SITE_NAME } from '../icons/Logo'
 import { assetUrl } from '../../utils/assetUrl'
@@ -7,11 +7,6 @@ import { assetUrl } from '../../utils/assetUrl'
 function FooterIcon() {
   return <Logo variant="white" />
 }
-
-const allFooterNav = [
-  ...navLinks,
-  ...footerLinks.filter((link) => link.label !== 'LinkedIn' && link.label !== 'X (Twitter)'),
-]
 
 function normalizePath(path: string) {
   if (!path || path === '/') return '/'
@@ -81,7 +76,7 @@ export function Footer() {
           <div className="col-7-md">
             <div className="visible-md">
               <ul className="grid hspace-between-xs menu">
-                {allFooterNav.map((link) => (
+                {footerNavLinks.map((link) => (
                   <li key={link.href}>
                     <FooterNavLink {...link} />
                   </li>
@@ -90,7 +85,7 @@ export function Footer() {
             </div>
             <div className="hidden-md">
               <ul className="menu">
-                {allFooterNav.map((link) => (
+                {footerNavLinks.map((link) => (
                   <li key={link.href}>
                     <FooterNavLink {...link} />
                   </li>

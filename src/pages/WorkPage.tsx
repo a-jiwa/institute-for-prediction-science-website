@@ -7,7 +7,7 @@ const services = [
     id: 'competitions',
     title: 'Competitions',
     paragraphs: [
-      'We run our own forecasting competitions and design bespoke competitions for universities, companies and other organisations. They provide a practical way to measure predictive ability, compare approaches and learn from real-world outcomes.',
+      'We run our own forecasting competitions and design bespoke competitions for universities, companies and other organisations. They provide a practical way to measure predictive ability, compare approaches and learn from real world outcomes.',
     ],
     action: { label: 'Learn about our competitions', href: '/research/theyearahead' },
   },
@@ -20,9 +20,9 @@ const services = [
   },
   {
     id: 'lab',
-    title: 'The Lab',
+    title: 'Lab',
     paragraphs: [
-      'We research how forecasting works and experiment with new ways to apply it. This includes studying forecasting methods, exploring prediction-market data and developing tools and applications that make predictive information more useful.',
+      'We research how forecasting works and experiment with new ways to apply it. This includes studying forecasting methods, exploring prediction market data and developing tools and applications that make predictive information more useful.',
     ],
   },
 ] as const

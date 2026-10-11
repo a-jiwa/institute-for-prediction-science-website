@@ -8,11 +8,21 @@ export type NavLink = {
 
 export const navLinks: NavLink[] = [
   { label: 'Home', href: '/' },
-  { label: 'Research', href: '/research' },
-  { label: 'Services', href: '/services' },
+  // { label: 'Research', href: '/research' },
   { label: 'About', href: '/about' },
-  { label: 'Careers', href: '/careers' },
+  { label: 'Services', href: '/services' },
+  // { label: 'Careers', href: '/careers' },
   { label: 'Blog', href: BLOG_URL, external: true },
+]
+
+export const footerNavLinks: NavLink[] = [
+  { label: 'Home', href: '/' },
+  // { label: 'Research', href: '/research' },
+  { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services' },
+  // { label: 'Careers', href: '/careers' },
+  { label: 'Blog', href: BLOG_URL, external: true },
+  { label: 'Contact', href: '/about#contact-us' },
 ]
 
 export const footerLinks: NavLink[] = [

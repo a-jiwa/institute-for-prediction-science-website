@@ -26,14 +26,14 @@
     {
       "href": "/research/near-term-xpt-accuracy",
       "label": "Working paper",
-      "title": "Assessing Near-Term Accuracy in the Existential Risk Persuasion Tournament",
+      "title": "Assessing Near Term Accuracy in the Existential Risk Persuasion Tournament",
       "date": "Sep 2, 2025",
       "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-13-700x440.jpg"
     },
     {
       "href": "/research/llm-enabled-biorisk",
       "label": "Working paper",
-      "title": "Forecasting LLM-enabled Biorisk and the Efficacy of Safeguards",
+      "title": "Forecasting LLM enabled Biorisk and the Efficacy of Safeguards",
       "date": "Jul 1, 2025",
       "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-3-700x527.jpg"
     }
@@ -113,14 +113,14 @@
       "href": "/research/inkling",
       "type": "Featured Project",
       "title": "Inkling: News Powered by Prediction Markets",
-      "excerpt": "Inkling uses prediction markets to surface what is likely to happen next \u2014 before it becomes a headline. Traders assign probabilities to real-world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding \u2014 validated across decades of forecasting research \u2014 that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
+      "excerpt": "Inkling uses prediction markets to surface what is likely to happen next, before it becomes a headline. Traders assign probabilities to real world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding, validated across decades of forecasting research, that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
       "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg"
     },
     {
       "href": "/research/theyearahead",
       "type": "Featured Project",
       "title": "TheYearAhead: Annual Forecasting Challenge",
-      "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs \u2014 assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight \u2014 established by Philip Tetlock and colleagues \u2014 that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
+      "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs, assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight, established by Philip Tetlock and colleagues, that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
       "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg"
     },
     {
@@ -190,7 +190,7 @@
     },
     {
       "href": "/careers/research-assistant",
-      "title": "Part-Time Research Assistant",
+      "title": "Part Time Research Assistant",
       "tags": [
         "Part Time",
         "Remote"
@@ -198,7 +198,7 @@
     },
     {
       "href": "/careers/student-research-assistant",
-      "title": "Part-Time Student Research Assistant",
+      "title": "Part Time Student Research Assistant",
       "tags": [
         "Part Time",
         "Remote"
@@ -206,7 +206,7 @@
     },
     {
       "href": "/careers/content-editor",
-      "title": "Part-Time Content Editor",
+      "title": "Part Time Content Editor",
       "tags": [
         "Part Time",
         "Remote"

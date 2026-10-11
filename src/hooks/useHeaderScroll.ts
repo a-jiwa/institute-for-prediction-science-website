@@ -27,14 +27,29 @@ export function useHeaderScroll(
 
       const max = document.documentElement.scrollHeight - window.innerHeight
       const y = Math.max(0, Math.min(window.scrollY, max))
-      header.style.setProperty('--header-compact', compactProgress(y).toFixed(4))
-      header.style.transform = ''
+      const fullHeight =
+        Number.parseFloat(getComputedStyle(header).getPropertyValue('--header-height')) || 88
+      // Sticky hero stays in view; compact only once the section below reaches the bar.
+      const cover = document.querySelector('.home-cover')
+      const hero = document.querySelector('section.main.statement-hero, section.main')
+      const coverTop = cover?.getBoundingClientRect().top
+      const heroBottom = hero?.getBoundingClientRect().bottom
+      const overHero =
+        coverTop != null
+          ? coverTop > fullHeight
+          : heroBottom != null
+            ? heroBottom > fullHeight
+            : y < fullHeight
 
-      const headerHeight = Math.round(header.getBoundingClientRect().height) || 80
-      const hero = document.querySelector('section.main')
-      const overHero = hero
-        ? hero.getBoundingClientRect().bottom > headerHeight
-        : y < headerHeight
+      const pastHero =
+        coverTop != null
+          ? Math.max(0, fullHeight - coverTop)
+          : heroBottom != null
+            ? Math.max(0, fullHeight - heroBottom)
+            : y
+
+      header.style.setProperty('--header-compact', compactProgress(pastHero).toFixed(4))
+      header.style.transform = ''
       header.toggleAttribute('data-scrolled', !overHero)
     }
 

@@ -57,7 +57,7 @@ const FEED: Array<{
     slug: 'forecastbench-a-dynamic-benchmark-of-ai-forecasting-capabilities',
     title: 'ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities',
     excerpt:
-      'A dynamic, contamination-free benchmark of LLM forecasting accuracy with human comparison baselines.',
+      'A dynamic benchmark of LLM forecasting accuracy, free of contamination, with human comparison baselines.',
     image: '/assets/img/research/dmi-02.webp',
   },
   {
@@ -79,7 +79,7 @@ const FEED: Array<{
     slug: 'theyearahead',
     title: 'TheYearAhead: Annual Forecasting Challenge',
     excerpt:
-      'Each January, participants predict 100 events across politics, economics, and world affairs — and are scored on accuracy.',
+      'Each January, participants predict 100 events across politics, economics, and world affairs and are scored on accuracy.',
     image: '/assets/img/research/dmi-08.webp',
   },
 ]
@@ -118,7 +118,7 @@ const DEFAULT_AUTHORS: ResearchAuthor[] = [
   {
     name: 'Ezra Karger',
     role: 'Director of Research',
-    bio: 'Ezra leads the institute’s research programme on forecasting, judgment, and the use of prediction in high-stakes decisions.',
+    bio: 'Ezra leads the institute’s research programme on forecasting, judgment, and the use of prediction in high stakes decisions.',
   },
   {
     name: 'Philip Tetlock',
@@ -255,7 +255,7 @@ export function articleContent(item: ResearchItem): ArticleContent {
           items: [
             'Clear questions and scoring rules make predictions comparable over time.',
             'Tournaments and panels surface where experts and methods disagree.',
-            'Applied tools carry those lessons into day-to-day decisions.',
+            'Applied tools carry those lessons into everyday decisions.',
             'Open reporting helps others reuse methods and check results.',
           ],
         },
@@ -300,7 +300,7 @@ export function articleContent(item: ResearchItem): ArticleContent {
           text:
             item.date === 'Ongoing'
               ? `This ${item.type.toLowerCase()} is ongoing work from ${SITE_NAME}. We continue to refine the methods, gather feedback, and share what we learn.`
-              : `This ${item.type.toLowerCase()} was published on ${item.date}. Follow-on work will test the ideas in new settings and with new participants.`,
+              : `This ${item.type.toLowerCase()} was published on ${item.date}. Further work will test the ideas in new settings and with new participants.`,
         },
         ...lorem(seed + 1, 2).map((text) => ({ type: 'p' as const, text })),
       ],

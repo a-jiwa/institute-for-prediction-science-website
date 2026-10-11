@@ -1,47 +1,17 @@
-import { useEffect, useRef } from 'react'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
 import { HeroGrid } from '../hero/HeroGrid'
 import { assetUrl } from '../../utils/assetUrl'
 
 export function HeroSection() {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const resize = () => {
-      const reserve = document.querySelector('.hero-reserve')
-      const next = (reserve ?? section.nextElementSibling) as HTMLElement | null
-      if (!next) return
-      const nextHeight = next.getBoundingClientRect().height
-      if (nextHeight <= 0) return
-      const height = window.innerHeight - nextHeight
-      section.style.height = height > 0 ? `${height}px` : ''
-    }
-
-    resize()
-    const reserve = document.querySelector('.hero-reserve')
-    const observer = reserve ? new ResizeObserver(resize) : null
-    if (reserve) observer?.observe(reserve)
-    window.addEventListener('resize', resize)
-    return () => {
-      observer?.disconnect()
-      window.removeEventListener('resize', resize)
-    }
-  }, [])
-
   return (
-    <section className="main" ref={sectionRef}>
+    <section className="main statement-hero">
       <HeroGrid />
 
-      <div className="bottom">
-        <div className="container">
-          <div className="max">
-            <div className="f--subtitle-500">Our Mission</div>
-            <h1>We’re building a better understanding of forecasting and finding practical ways to apply it to real-world problems.</h1>
-          </div>
+      <div className="statement-hero__content">
+        <div className="statement-hero__copy">
+          <h1 className="statement-hero__headline">Better Decisions Begin with Forecasting</h1>
+          <p className="statement-hero__description">Improving how we think about the future</p>
         </div>
       </div>
     </section>
@@ -154,24 +124,24 @@ export function WorkCard({ href, label, title, date, image }: WorkCardProps) {
 
 export function AboutTextSection() {
   return (
-    <section className="text home-about">
+    <section className="home-about">
       <div className="container">
-        <div className="grid vstart-md">
-          <div className="col-6-md">
-            <div className="max">
-              <h2>
-                We’re an independent research and innovation organisation exploring how forecasting can help
+        <div className="home-about__row">
+          <div className="home-about__left">
+            <p className="home-about__label">What we do</p>
+            <div className="home-about__main">
+              <p>
+                The Institute for Predictive Sciences develops and applies the science of forecasting to help
                 people and organisations make better decisions under uncertainty.
-              </h2>
+              </p>
             </div>
           </div>
-          <div className="col-6-md">
-            <div className="content">
+          <div className="home-about__right">
+            <div className="home-about__secondary">
               <p>
-                We know that predictions influence decisions every day, but there are still relatively few ways
-                to measure how good those predictions are, learn from mistakes and systematically improve. We
-                want to change that by putting forecasting into practice, studying what works and developing
-                new ways to use it.
+                We put prediction into practice through competitions, training and research, building the methods,
+                tools and evidence needed to measure judgment, learn from outcomes and systematically improve how
+                decisions are made.
               </p>
             </div>
           </div>
@@ -190,7 +160,7 @@ const services = [
   {
     id: 'competitions',
     title: 'Competitions',
-    text: 'We run our own forecasting competitions and design bespoke competitions for universities, companies and other organisations. They provide a practical way to measure predictive ability, compare approaches and learn from real-world outcomes.',
+    text: 'We run our own forecasting competitions and design bespoke competitions for universities, companies and other organisations. They provide a practical way to measure predictive ability, compare approaches and learn from real world outcomes.',
   },
   {
     id: 'training',
@@ -199,8 +169,8 @@ const services = [
   },
   {
     id: 'lab',
-    title: 'The Lab',
-    text: 'We research how forecasting works and experiment with new ways to apply it. This includes studying forecasting methods, exploring prediction-market data and developing tools and applications that make predictive information more useful.',
+    title: 'Lab',
+    text: 'We research how forecasting works and experiment with new ways to apply it. This includes studying forecasting methods, exploring prediction market data and developing tools and applications that make predictive information more useful.',
   },
 ]
 
