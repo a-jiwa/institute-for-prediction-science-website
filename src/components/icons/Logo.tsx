@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { animate, stagger } from 'animejs'
 import { IHS_LOGO_MARK } from './ihs-logo-paths'
 
 export const LOGO_HEIGHT = 48
@@ -24,6 +25,8 @@ export const X_URL = 'https://x.com/PredictiveSci'
 type LogoProps = {
   className?: string
   variant?: 'white' | 'green'
+  /** Split the wordmark and fade each character in once. Header only. */
+  animateChars?: boolean
 }
 
 type Ink = { x: number; y: number; width: number; height: number }
@@ -49,15 +52,99 @@ function glyphBlock() {
   return { y, height }
 }
 
+function GlyphRun({
+  text,
+  tracking,
+  leadDx,
+  x,
+  y,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  fontStyle,
+}: {
+  text: string
+  tracking: string
+  leadDx?: string
+  x?: number
+  y?: number
+  fontFamily: string
+  fontSize: number
+  fontWeight: number
+  fontStyle?: 'normal' | 'italic'
+}) {
+  return [...text].map((char, index) => (
+    <tspan
+      key={`${text}-${index}`}
+      className="logo-char"
+      x={index === 0 ? x : undefined}
+      y={index === 0 ? y : undefined}
+      dx={index === 0 ? leadDx : tracking}
+      fontFamily={fontFamily}
+      fontSize={fontSize}
+      fontWeight={fontWeight}
+      fontStyle={fontStyle}
+    >
+      {char}
+    </tspan>
+  ))
+}
+
 function LogoWordmark({
   fill,
   textX,
   textRef,
+  split,
 }: {
   fill: string
   textX: number
   textRef: RefObject<SVGTextElement | null>
+  split: boolean
 }) {
+  if (split) {
+    return (
+      <text ref={textRef} fill={fill} stroke="none">
+        <GlyphRun
+          text="INSTITUTE"
+          tracking={CAP_TRACKING}
+          x={textX}
+          y={TOP_BASELINE}
+          fontFamily={SANS_FAMILY}
+          fontSize={CAP_SIZE}
+          fontWeight={500}
+        />
+        <GlyphRun
+          text="for"
+          tracking="-0.01em"
+          x={textX}
+          y={29}
+          fontFamily={SERIF_FAMILY}
+          fontSize={FOR_SIZE}
+          fontWeight={500}
+          fontStyle="italic"
+        />
+        <GlyphRun
+          text="PREDICTIVE"
+          tracking={CAP_TRACKING}
+          leadDx="0.28em"
+          fontFamily={SANS_FAMILY}
+          fontSize={CAP_SIZE}
+          fontWeight={500}
+          fontStyle="normal"
+        />
+        <GlyphRun
+          text="SCIENCES"
+          tracking={CAP_TRACKING}
+          x={textX}
+          y={BOTTOM_BASELINE}
+          fontFamily={SANS_FAMILY}
+          fontSize={CAP_SIZE}
+          fontWeight={500}
+        />
+      </text>
+    )
+  }
+
   return (
     <text ref={textRef} fill={fill} stroke="none">
       <tspan
@@ -105,13 +192,46 @@ function LogoWordmark({
   )
 }
 
-export function Logo({ className = '', variant = 'green' }: LogoProps) {
+export function Logo({ className = '', variant = 'green', animateChars = false }: LogoProps) {
   const fill = variant === 'white' ? '#ffffff' : TEXT_INK
   const markRef = useRef<SVGPathElement>(null)
   const textRef = useRef<SVGTextElement>(null)
   const [ink, setInk] = useState<Ink | null>(null)
   const [markBox, setMarkBox] = useState<Ink | null>(null)
   const [textBox, setTextBox] = useState<Ink | null>(null)
+
+  useEffect(() => {
+    if (!animateChars) return
+    const text = textRef.current
+    if (!text) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let cancelled = false
+    let animation: { revert: () => void } | undefined
+
+    const play = () => {
+      if (cancelled) return
+      const chars = text.querySelectorAll('.logo-char')
+      if (!chars.length) return
+      animation = animate(chars, {
+        opacity: [0, 1],
+        duration: 560,
+        ease: 'out(2)',
+        delay: stagger(9, { from: 'random' }),
+      })
+    }
+
+    document.fonts.ready.then(() => {
+      requestAnimationFrame(() => {
+        if (!cancelled) play()
+      })
+    })
+
+    return () => {
+      cancelled = true
+      animation?.revert()
+    }
+  }, [animateChars])
 
   useLayoutEffect(() => {
     let cancelled = false
@@ -162,7 +282,7 @@ export function Logo({ className = '', variant = 'green' }: LogoProps) {
       <g transform={`translate(${iconLeft} ${iconTop}) scale(${scale})`}>
         <path ref={markRef} d={IHS_LOGO_MARK} fill={fill} />
       </g>
-      <LogoWordmark fill={fill} textX={TEXT_X} textRef={textRef} />
+      <LogoWordmark fill={fill} textX={TEXT_X} textRef={textRef} split={animateChars} />
     </svg>
   )
 }

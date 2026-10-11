@@ -84,13 +84,17 @@ export function Footer() {
               </ul>
             </div>
             <div className="hidden-md">
-              <ul className="menu">
-                {footerNavLinks.map((link) => (
-                  <li key={link.href}>
-                    <FooterNavLink {...link} />
-                  </li>
+              <div className="grid">
+                {[footerNavLinks.slice(0, 3), footerNavLinks.slice(3)].map((column) => (
+                  <ul className="menu" key={column[0]?.href}>
+                    {column.map((link) => (
+                      <li key={link.href}>
+                        <FooterNavLink {...link} />
+                      </li>
+                    ))}
+                  </ul>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </div>

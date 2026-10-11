@@ -245,6 +245,12 @@ header .logo svg,
   overflow: visible;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  header .logo-char {
+    opacity: 0;
+  }
+}
+
 .hamb {
   display: none;
 }
@@ -1766,11 +1772,23 @@ footer .copy .text {
   font-size: clamp(11px, 3.2vw, 12px);
 }
 
+/* Reference copyright block wraps to an extra line just above the tablet breakpoint. */
+@media (min-width: 1024px) and (max-width: 1170px) {
+  footer .copy {
+    min-height: 113px;
+  }
+}
+
 @media (max-width: 1023px) {
   /* Same footer block height as forecastingresearch.org: the subscribe
      control sits above a 150px gap, then a stacked link list. */
   footer .newsletter {
     margin-bottom: 150px;
+  }
+
+  /* Two link columns on the reference site are four items tall. */
+  footer .hidden-md .menu {
+    min-height: 160px;
   }
 
   footer .footer-meta {

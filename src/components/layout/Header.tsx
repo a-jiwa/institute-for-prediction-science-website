@@ -49,7 +49,7 @@ export function Header() {
         <div className="grid">
           <div className="col-10-xs col-4-sm">
             <Link to="/" className="logo" title={WORDMARK_NAME} aria-label={WORDMARK_NAME}>
-              <Logo className="logo__svg" variant="white" />
+              <Logo className="logo__svg" variant="white" animateChars />
             </Link>
           </div>
 
