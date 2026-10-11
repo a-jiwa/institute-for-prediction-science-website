@@ -63,21 +63,29 @@
   }
 }
 
+html,
 body {
   margin: 0;
-  min-height: 100%;
+  padding: 0;
+  width: 100%;
 }
 
-#root {
+body {
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+#root,
+.wrapper {
+  width: 100%;
   min-height: 100vh;
-  min-height: 100lvh;
+  min-height: 100dvh;
+  padding: 0;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100lvh;
   justify-content: space-between;
 }
 
