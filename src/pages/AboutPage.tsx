@@ -1,22 +1,11 @@
-import siteData from '../data/site-data.json'
 import { AboutIntroSection } from '../components/sections/AboutIntroSection'
 import { CtaSection } from '../components/sections/CtaSection'
-import { TeamSection } from '../components/sections/SharedSections'
 import { CONTACT_EMAIL } from '../components/icons/Logo'
 
 export function AboutPage() {
-  const team = siteData.teamSections[0]
-
   return (
     <>
       <AboutIntroSection />
-      {team && (
-        <TeamSection
-          id={team.id || 'team'}
-          title={team.title}
-          members={team.members}
-        />
-      )}
       <CtaSection
         id="contact-us"
         title="Contact us"

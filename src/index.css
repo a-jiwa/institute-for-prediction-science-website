@@ -70,14 +70,14 @@ body {
 
 #root {
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: 100dvh;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: 100dvh;
   justify-content: space-between;
 }
 
@@ -211,9 +211,10 @@ header {
   width: 100%;
   height: calc(
     var(--header-height) -
-      (var(--header-height) - var(--header-height-compact)) * var(--header-compact)
+      (var(--header-height) - var(--header-height-compact)) * var(--header-compact) +
+      env(safe-area-inset-top, 0px)
   );
-  padding: 0;
+  padding: env(safe-area-inset-top, 0px) 0 0;
   background-color: #000;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
@@ -236,10 +237,11 @@ header .logo svg,
   display: block;
   width: auto;
   height: auto;
-  max-height: calc(
-    var(--layout-logo-height) - 8px * var(--header-compact)
+  max-height: min(
+    calc(var(--layout-logo-height) - 8px * var(--header-compact)),
+    calc(var(--layout-header-height) - 8px)
   );
-  max-width: min(100%, calc(100vw - 110px));
+  max-width: 100%;
   overflow: visible;
 }
 
@@ -329,6 +331,11 @@ header nav a.active {
 }
 
 @media (max-width: 767px) {
+  /* The short mobile bar does not compact further. */
+  header {
+    --header-height-compact: var(--layout-header-height);
+  }
+
   header.menu-open {
     background: #000;
     border-bottom-color: transparent;
@@ -339,22 +346,28 @@ header nav a.active {
     z-index: 12;
   }
 
+  /* Same box as DeepMind's open nav: under the bar, one screen, gutter inset. */
   header nav {
     position: fixed;
-    inset: 0;
+    top: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
+    right: 0;
+    bottom: auto;
+    left: 0;
     z-index: 11;
-    width: auto;
-    height: auto;
-    max-width: 100vw;
+    height: calc(100dvh - var(--layout-header-height) - env(safe-area-inset-top, 0px));
+    max-width: none;
     background: #000;
-    padding-top: var(--layout-header-height);
+    padding: 0 var(--layout-gutter) calc(var(--theme-layout-spacing-1-5) + env(safe-area-inset-bottom, 0px));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--theme-layout-spacing-base);
     opacity: 0;
     transition: opacity 0.25s ease;
     pointer-events: none;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: auto;
   }
 
   header nav.show {
@@ -364,6 +377,8 @@ header nav a.active {
 
   header nav > ul {
     display: block !important;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
   header nav > ul li:first-child {
@@ -376,7 +391,7 @@ header nav a.active {
     line-height: 120%;
     font-weight: 500;
     letter-spacing: -0.01em;
-    padding: 12px 20px;
+    padding: 12px 0;
     color: #fff;
   }
 
@@ -389,7 +404,8 @@ header nav a.active {
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 4px 28px;
-    margin: 0 20px 20px;
+    margin: 0;
+    width: 100%;
     padding-top: 12px;
     border-top: 1px dashed rgba(255, 255, 255, 0.28);
     font-family: var(--font-sans);
@@ -411,11 +427,21 @@ header nav ul {
   padding: 0;
 }
 
+@media (max-width: 767px) {
+  header nav > ul {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+}
+
 
 .hero-reserve {
   position: absolute;
   left: 0;
-  width: 100%;
+  right: 0;
+  width: auto;
+  overflow: hidden;
+  contain: paint;
   visibility: hidden;
   pointer-events: none;
 }
@@ -429,16 +455,21 @@ section.main {
 
 /* Homepage hero — sticky pin behind opaque `.home-cover` (DeepMind cover-scroll). */
 section.main.statement-hero {
-  --hero-stack: var(--layout-header-height);
+  --hero-stack: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
   position: sticky;
   top: 0;
   z-index: 0;
-  height: 80svh;
-  min-height: 80svh;
-  max-height: 80svh;
+  height: 80vh;
+  height: 80dvh;
+  min-height: 80vh;
+  min-height: 80dvh;
+  max-height: 80vh;
+  max-height: 80dvh;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  /* `clip` keeps the grid from widening the page. `hidden` on this sticky box
+     lets iOS paint the hero through the next section above the toolbar. */
+  overflow: clip;
   width: 100%;
   box-sizing: border-box;
 }
@@ -448,6 +479,14 @@ section.main.statement-hero {
   position: relative;
   z-index: 1;
   background: #fff;
+}
+
+@media (max-width: 767px) {
+  /* Own layer so the white stack stays painted through the iOS bottom inset,
+     instead of the sticky hero showing as a black band above the toolbar. */
+  .home-cover {
+    transform: translateZ(0);
+  }
 }
 
 section.main.statement-hero .bg.bg--grid {
@@ -487,9 +526,10 @@ section.main.statement-hero .statement-hero__copy {
 section.main.statement-hero .statement-hero__headline {
   position: relative;
   margin: 0;
-  width: max(70vw, min(var(--layout-display), var(--layout-split)));
-  min-width: 70vw;
-  max-width: none;
+  /* 11em keeps “Improving how we think / about the future” on two lines at every size. */
+  width: 100%;
+  min-width: 0;
+  max-width: 11em;
   color: #fff;
   font-family: var(--font-serif);
   font-size: clamp(56px, 5.2vw, 75px);
@@ -530,6 +570,11 @@ section.main.statement-hero .statement-hero__description {
     align-items: flex-start;
   }
 
+  section.main.statement-hero .statement-hero__headline,
+  section.main.statement-hero .statement-hero__description {
+    min-width: 0;
+  }
+
   section.main.statement-hero .statement-hero__headline {
     position: relative;
     top: auto;
@@ -553,7 +598,8 @@ section.main.statement-hero .statement-hero__description {
 
 @media (max-width: 1023px) {
   section.main:not(.statement-hero) {
-    min-height: 100svh;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 
@@ -641,6 +687,7 @@ section.main .bg.bg--grid {
   --grid-cover: 141.42%;
   background: none;
   overflow: hidden;
+  contain: paint;
 }
 
 section.main .bg.bg--grid .hero-grid__lines {
@@ -817,8 +864,8 @@ section.item.full .thumb {
 
 @media (max-width: 1023px) {
   section.item.full .thumb {
-    margin-left: -20px;
-    width: calc(100% + 40px);
+    margin-left: calc(-1 * var(--layout-gutter));
+    width: calc(100% + (2 * var(--layout-gutter)));
     padding-bottom: 67%;
     height: auto;
   }
@@ -958,9 +1005,16 @@ section.item.half .block::before {
 }
 
 section.item.half .thumb {
-  margin-left: -20px;
-  margin-right: -20px;
+  margin-left: calc(-1 * var(--layout-gutter));
+  margin-right: calc(-1 * var(--layout-gutter));
   padding-bottom: 67%;
+}
+
+@media (max-width: 767px) {
+  section.text.with-bg .thumb {
+    margin-left: calc(-1 * var(--layout-gutter));
+    margin-right: calc(-1 * var(--layout-gutter));
+  }
 }
 
 section.item.half .f--subtitle {
@@ -1015,6 +1069,7 @@ section.item.half .date {
 @media (max-width: 767px) {
   .cookie-banner {
     width: calc(100% - 50px);
+    bottom: calc(25px + env(safe-area-inset-bottom, 0px));
   }
 
   .cookie-banner .cookie-info {
@@ -1104,7 +1159,8 @@ section.items .nav button:disabled {
 .work-hero {
   display: flex;
   align-items: flex-end;
-  min-height: calc(100svh - var(--layout-header-height));
+  min-height: calc(100vh - var(--layout-header-height));
+  min-height: calc(100dvh - var(--layout-header-height) - env(safe-area-inset-top, 0px));
   background: #fff;
   color: var(--color-green);
   padding: 120px 0 64px;
@@ -1655,6 +1711,7 @@ section.cta .cta-support p {
 footer {
   background: #000;
   color: #fff;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 footer a {
@@ -1668,19 +1725,7 @@ footer .copy {
 footer .f--h2 {
   color: #fff;
   text-wrap: balance;
-  line-height: 1.25;
-}
-
-footer .hidden-md .menu {
-  width: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 22px;
-  margin-bottom: 0;
-}
-
-footer .hidden-md .menu li + li {
-  margin-top: 0;
+  line-height: 120%;
 }
 
 footer .hidden-md .menu a,
@@ -1716,26 +1761,24 @@ footer .copy .text {
 }
 
 @media (max-width: 1023px) {
-  footer .copy .text {
-    border-bottom: 0;
-    margin-bottom: 0;
-    padding-bottom: 0;
+  /* Same footer block height as forecastingresearch.org: the subscribe
+     control sits above a 150px gap, then a stacked link list. */
+  footer .newsletter {
+    margin-bottom: 150px;
   }
 
   footer .footer-meta {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
+    gap: 0;
   }
 
   footer .footer-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
     margin-left: 0;
-    width: 100%;
-  }
-
-  /* theme-sections adds li+li margin-top; keep bottom-row items on one baseline */
-  footer .copy ul.footer-links li + li {
-    margin-top: 0;
+    width: 45%;
   }
 }
 

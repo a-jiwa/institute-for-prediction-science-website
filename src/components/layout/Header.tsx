@@ -17,9 +17,23 @@ export function Header() {
   }, [location.pathname])
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => {
+    const root = document.documentElement
+    if (menuOpen) {
+      root.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden'
+      root.style.overscrollBehavior = 'none'
+      document.body.style.overscrollBehavior = 'none'
+    } else {
+      root.style.overflow = ''
       document.body.style.overflow = ''
+      root.style.overscrollBehavior = ''
+      document.body.style.overscrollBehavior = ''
+    }
+    return () => {
+      root.style.overflow = ''
+      document.body.style.overflow = ''
+      root.style.overscrollBehavior = ''
+      document.body.style.overscrollBehavior = ''
     }
   }, [menuOpen])
 

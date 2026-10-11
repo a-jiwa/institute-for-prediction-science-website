@@ -115,16 +115,31 @@
     --layout-column-gap: 48px;
     --layout-stack-gap: 24px;
     --layout-logo-height: 48px;
-    --layout-scroll-offset: calc(var(--layout-header-height) + 16px);
+    --layout-scroll-offset: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px) + 16px);
 
     color: var(--theme-color-text-primary);
     font-family: var(--theme-font-body);
     background: transparent;
   }
 
+  /* Portrait phones use the smaller spacing step. Header chrome switches at 767,
+     the same breakpoint as DeepMind's menu. Desktop keeps the 88px bar. */
   @media (max-width: 768px) and (orientation: portrait) {
     html.theme-ips {
       --theme-layout-spacing-base: max(16px, min(1.1vw, 34px));
+    }
+  }
+
+  @media (max-width: 767px) {
+    html.theme-ips {
+      --layout-header-height: calc((var(--theme-type-fluid-sm) * 1.35) + 32px);
+      overscroll-behavior: none;
+    }
+  }
+
+  @media (max-width: 767px) and (max-height: 480px) and (orientation: landscape) {
+    html.theme-ips {
+      --layout-header-height: 8vh;
     }
   }
 }
@@ -135,6 +150,18 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-synthesis: none;
+  }
+
+  /* Tailwind's preflight locks a 1.5 line-height and 100% text-size-adjust.
+     DeepMind leaves both at the browser default, which is what phones use. */
+  @media (max-width: 767px) {
+    html.theme-ips {
+      line-height: normal;
+      -webkit-text-size-adjust: auto;
+      text-size-adjust: auto;
+      /* Clip sideways overflow. `clip` does not create a horizontal scrollport. */
+      overflow-x: clip;
+    }
   }
 
   h1,
