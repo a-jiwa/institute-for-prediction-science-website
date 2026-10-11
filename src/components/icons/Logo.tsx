@@ -213,11 +213,19 @@ export function Logo({ className = '', variant = 'green', animateChars = false }
       if (cancelled) return
       const chars = text.querySelectorAll('.logo-char')
       if (!chars.length) return
+      const slow = new Set<number>()
+      while (slow.size < Math.min(2, chars.length)) {
+        slow.add(Math.floor(Math.random() * chars.length))
+      }
+      const baseDelay = stagger(9, { from: 'random' })
       animation = animate(chars, {
         opacity: [0, 1],
-        duration: 560,
+        duration: (_el, index) => (slow.has(index ?? -1) ? 920 : 560),
         ease: 'out(2)',
-        delay: stagger(9, { from: 'random' }),
+        delay: (el, index, targets) => {
+          const delay = Number(baseDelay(el, index, targets))
+          return delay + (slow.has(index ?? -1) ? 240 : 0)
+        },
       })
     }
 
