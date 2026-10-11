@@ -133,7 +133,7 @@
   @media (max-width: 767px) {
     html.theme-ips {
       --layout-header-height: calc((var(--theme-type-fluid-sm) * 1.35) + 32px);
-      overscroll-behavior: none;
+      background: #fff;
     }
   }
 
@@ -159,8 +159,6 @@
       line-height: normal;
       -webkit-text-size-adjust: auto;
       text-size-adjust: auto;
-      /* Clip sideways overflow. `clip` does not create a horizontal scrollport. */
-      overflow-x: clip;
     }
   }
 

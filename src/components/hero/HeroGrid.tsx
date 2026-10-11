@@ -726,6 +726,9 @@ export function HeroGrid() {
     let morphToS = new Float32Array(0)
 
     const readScrollProgress = () => {
+      // On a phone the hero scrolls away with the page. A scroll-linked
+      // shrink fights that and makes the illustration slide on its own.
+      if (window.matchMedia('(max-width: 767px)').matches) return 0
       const section = el.closest('section') ?? hero
       const rect = section.getBoundingClientRect()
       const span = Math.max(1, rect.height * (HERO_GRID.scroll.distance ?? 0.88))

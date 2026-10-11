@@ -70,14 +70,14 @@ body {
 
 #root {
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100lvh;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100lvh;
   justify-content: space-between;
 }
 
@@ -482,10 +482,15 @@ section.main.statement-hero {
 }
 
 @media (max-width: 767px) {
-  /* Own layer so the white stack stays painted through the iOS bottom inset,
-     instead of the sticky hero showing as a black band above the toolbar. */
-  .home-cover {
-    transform: translateZ(0);
+  /* A sticky 80dvh hero resizes with the Safari toolbar and paints black
+     through the bottom of the screen. On a phone it scrolls with the page. */
+  section.main.statement-hero {
+    position: relative;
+    top: auto;
+    height: 80svh;
+    min-height: 80svh;
+    max-height: none;
+    overflow: hidden;
   }
 }
 
@@ -542,9 +547,10 @@ section.main.statement-hero .statement-hero__headline {
 section.main.statement-hero .statement-hero__description {
   position: relative;
   margin: 32px 0 0;
-  width: max(70vw, min(var(--layout-measure), var(--layout-split)));
-  min-width: 70vw;
-  max-width: none;
+  /* 32em keeps the sentence on two lines at every size. */
+  width: 100%;
+  min-width: 0;
+  max-width: 32em;
   color: #fff;
   font-family: var(--font-sans);
   font-size: clamp(18px, 1.4vw, 20px);
@@ -599,7 +605,7 @@ section.main.statement-hero .statement-hero__description {
 @media (max-width: 1023px) {
   section.main:not(.statement-hero) {
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100lvh;
   }
 }
 
@@ -1160,7 +1166,7 @@ section.items .nav button:disabled {
   display: flex;
   align-items: flex-end;
   min-height: calc(100vh - var(--layout-header-height));
-  min-height: calc(100dvh - var(--layout-header-height) - env(safe-area-inset-top, 0px));
+  min-height: calc(100lvh - var(--layout-header-height) - env(safe-area-inset-top, 0px));
   background: #fff;
   color: var(--color-green);
   padding: 120px 0 64px;
