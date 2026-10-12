@@ -6,7 +6,9 @@ export const LOGO_HEIGHT = 48
 const GAP = 10
 const CAP_SIZE = 13
 const FOR_SIZE = 13
-const CAP_TRACKING = '0.08em'
+// Caps sit open, then a small extra tighten on top of the font's own kern pairs.
+const CAP_TRACKING = '0.06em'
+const FOR_TRACKING = '-0.03em'
 const SANS_FAMILY = "'Sans', Helvetica, Arial, sans-serif"
 const SERIF_FAMILY = "'Serif', Georgia, serif"
 const TEXT_GREEN = '#102B23'
@@ -33,6 +35,81 @@ type Ink = { x: number; y: number; width: number; height: number }
 
 const TOP_BASELINE = 15
 const BOTTOM_BASELINE = 43
+const SVG_NS = 'http://www.w3.org/2000/svg'
+
+type RunSpec = {
+  text: string
+  family: string
+  size: number
+  weight: number
+  style?: 'normal' | 'italic'
+}
+
+type LogoKerns = {
+  institute: number[]
+  for: number[]
+  predictive: number[]
+  sciences: number[]
+}
+
+const KERN_RUNS = {
+  institute: { text: 'INSTITUTE', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
+  for: { text: 'for', family: SERIF_FAMILY, size: FOR_SIZE, weight: 500, style: 'italic' },
+  predictive: { text: 'PREDICTIVE', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
+  sciences: { text: 'SCIENCES', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
+} satisfies Record<keyof LogoKerns, RunSpec>
+
+function emToPx(length: string | undefined, fontSize: number) {
+  if (!length) return 0
+  const value = Number.parseFloat(length)
+  if (Number.isNaN(value)) return 0
+  return length.endsWith('em') ? value * fontSize : value
+}
+
+// Each header letter is its own tspan, so the browser shapes it alone and
+// never sees the font's kern pairs. Measure a real run, then put the
+// difference on dx.
+function kernDeltas(spec: RunSpec): number[] {
+  const svg = document.createElementNS(SVG_NS, 'svg')
+  const node = document.createElementNS(SVG_NS, 'text')
+  svg.style.position = 'absolute'
+  svg.style.left = '-9999px'
+  svg.style.top = '0'
+  svg.style.visibility = 'hidden'
+  node.style.fontFamily = spec.family
+  node.style.fontSize = `${spec.size}px`
+  node.style.fontWeight = String(spec.weight)
+  node.style.fontStyle = spec.style ?? 'normal'
+  node.style.fontKerning = 'normal'
+  node.textContent = spec.text
+  svg.appendChild(node)
+  document.body.appendChild(svg)
+  try {
+    const advances: number[] = []
+    let cursor = 0
+    for (let i = 0; i < spec.text.length; i++) {
+      const end = node.getSubStringLength(0, i + 1)
+      advances.push(end - cursor)
+      cursor = end
+    }
+    node.style.fontKerning = 'none'
+    return advances.map((advance, i) => {
+      node.textContent = spec.text[i]
+      return advance - node.getComputedTextLength()
+    })
+  } finally {
+    svg.remove()
+  }
+}
+
+function measureLogoKerns(): LogoKerns {
+  return {
+    institute: kernDeltas(KERN_RUNS.institute),
+    for: kernDeltas(KERN_RUNS.for),
+    predictive: kernDeltas(KERN_RUNS.predictive),
+    sciences: kernDeltas(KERN_RUNS.sciences),
+  }
+}
 
 function glyphBlock() {
   const canvas = document.createElement('canvas')
@@ -56,6 +133,7 @@ function GlyphRun({
   text,
   tracking,
   leadDx,
+  kerns,
   x,
   y,
   fontFamily,
@@ -66,6 +144,7 @@ function GlyphRun({
   text: string
   tracking: string
   leadDx?: string
+  kerns?: number[]
   x?: number
   y?: number
   fontFamily: string
@@ -73,21 +152,30 @@ function GlyphRun({
   fontWeight: number
   fontStyle?: 'normal' | 'italic'
 }) {
-  return [...text].map((char, index) => (
-    <tspan
-      key={`${text}-${index}`}
-      className="logo-char"
-      x={index === 0 ? x : undefined}
-      y={index === 0 ? y : undefined}
-      dx={index === 0 ? leadDx : tracking}
-      fontFamily={fontFamily}
-      fontSize={fontSize}
-      fontWeight={fontWeight}
-      fontStyle={fontStyle}
-    >
-      {char}
-    </tspan>
-  ))
+  return [...text].map((char, index) => {
+    const kern = kerns?.[index] ?? 0
+    const dx = kerns
+      ? `${emToPx(index === 0 ? leadDx : tracking, fontSize) + kern}px`
+      : index === 0
+        ? leadDx
+        : tracking
+    return (
+      <tspan
+        key={`${text}-${index}`}
+        className="logo-char"
+        x={index === 0 ? x : undefined}
+        y={index === 0 ? y : undefined}
+        dx={dx}
+        fontFamily={fontFamily}
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+        fontStyle={fontStyle}
+        style={{ fontKerning: 'none' }}
+      >
+        {char}
+      </tspan>
+    )
+  })
 }
 
 function LogoWordmark({
@@ -95,11 +183,13 @@ function LogoWordmark({
   textX,
   textRef,
   split,
+  kerns,
 }: {
   fill: string
   textX: number
   textRef: RefObject<SVGTextElement | null>
   split: boolean
+  kerns: LogoKerns | null
 }) {
   if (split) {
     return (
@@ -107,6 +197,7 @@ function LogoWordmark({
         <GlyphRun
           text="INSTITUTE"
           tracking={CAP_TRACKING}
+          kerns={kerns?.institute}
           x={textX}
           y={TOP_BASELINE}
           fontFamily={SANS_FAMILY}
@@ -115,7 +206,8 @@ function LogoWordmark({
         />
         <GlyphRun
           text="for"
-          tracking="-0.01em"
+          tracking={FOR_TRACKING}
+          kerns={kerns?.for}
           x={textX}
           y={29}
           fontFamily={SERIF_FAMILY}
@@ -127,6 +219,7 @@ function LogoWordmark({
           text="PREDICTIVE"
           tracking={CAP_TRACKING}
           leadDx="0.28em"
+          kerns={kerns?.predictive}
           fontFamily={SANS_FAMILY}
           fontSize={CAP_SIZE}
           fontWeight={500}
@@ -135,6 +228,7 @@ function LogoWordmark({
         <GlyphRun
           text="SCIENCES"
           tracking={CAP_TRACKING}
+          kerns={kerns?.sciences}
           x={textX}
           y={BOTTOM_BASELINE}
           fontFamily={SANS_FAMILY}
@@ -146,7 +240,7 @@ function LogoWordmark({
   }
 
   return (
-    <text ref={textRef} fill={fill} stroke="none">
+    <text ref={textRef} fill={fill} stroke="none" style={{ fontKerning: 'normal' }}>
       <tspan
         x={textX}
         y={TOP_BASELINE}
@@ -164,7 +258,7 @@ function LogoWordmark({
         fontSize={FOR_SIZE}
         fontWeight={500}
         fontStyle="italic"
-        letterSpacing="-0.01em"
+        letterSpacing={FOR_TRACKING}
       >
         for
       </tspan>
@@ -194,14 +288,16 @@ function LogoWordmark({
 
 export function Logo({ className = '', variant = 'green', animateChars = false }: LogoProps) {
   const fill = variant === 'white' ? '#ffffff' : TEXT_INK
+  const svgRef = useRef<SVGSVGElement>(null)
   const markRef = useRef<SVGPathElement>(null)
   const textRef = useRef<SVGTextElement>(null)
   const [ink, setInk] = useState<Ink | null>(null)
   const [markBox, setMarkBox] = useState<Ink | null>(null)
   const [textBox, setTextBox] = useState<Ink | null>(null)
+  const [kerns, setKerns] = useState<LogoKerns | null>(null)
 
   useEffect(() => {
-    if (!animateChars) return
+    if (!animateChars || !kerns) return
     const text = textRef.current
     if (!text) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -239,7 +335,7 @@ export function Logo({ className = '', variant = 'green', animateChars = false }
       cancelled = true
       animation?.revert()
     }
-  }, [animateChars])
+  }, [animateChars, kerns])
 
   useLayoutEffect(() => {
     let cancelled = false
@@ -255,11 +351,26 @@ export function Logo({ className = '', variant = 'green', animateChars = false }
       setTextBox({ x: text.x, y: text.y, width: text.width, height: text.height })
     }
     measure()
-    document.fonts?.ready.then(measure)
+    document.fonts?.ready.then(() => {
+      if (cancelled) return
+      setKerns(measureLogoKerns())
+      measure()
+    })
     return () => {
       cancelled = true
     }
   }, [])
+
+  useLayoutEffect(() => {
+    if (!kerns) return
+    const mark = markRef.current?.getBBox()
+    const text = textRef.current?.getBBox()
+    const block = glyphBlock()
+    if (!mark || !text || !block || text.width === 0) return
+    setMarkBox({ x: mark.x, y: mark.y, width: mark.width, height: mark.height })
+    setInk({ x: text.x, y: block.y, width: text.width, height: block.height })
+    setTextBox({ x: text.x, y: text.y, width: text.width, height: text.height })
+  }, [kerns])
 
   const scale = ink && markBox ? ink.height / markBox.height : 37 / 46.86
   const iconWidth = (markBox?.width ?? 46.86) * scale
@@ -278,6 +389,7 @@ export function Logo({ className = '', variant = 'green', animateChars = false }
 
   return (
     <svg
+      ref={svgRef}
       className={className}
       width={vbW}
       height={vbH}
@@ -290,7 +402,7 @@ export function Logo({ className = '', variant = 'green', animateChars = false }
       <g transform={`translate(${iconLeft} ${iconTop}) scale(${scale})`}>
         <path ref={markRef} d={IHS_LOGO_MARK} fill={fill} />
       </g>
-      <LogoWordmark fill={fill} textX={TEXT_X} textRef={textRef} split={animateChars} />
+      <LogoWordmark fill={fill} textX={TEXT_X} textRef={textRef} split={animateChars} kerns={kerns} />
     </svg>
   )
 }

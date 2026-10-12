@@ -99,7 +99,7 @@
     --theme-border-width-subtle: var(--token-border-width-subtle);
     --theme-focus-width: 2px;
     --theme-focus-offset: 2px;
-    --layout-header-height: 88px;
+    --layout-header-height: 72px;
     --layout-depth-header: 100;
     --theme-motion-ease-decelerate: var(--token-ease-out-expo);
     --theme-motion-duration-fast: 150ms;
@@ -122,9 +122,9 @@
     background: transparent;
   }
 
-  /* Portrait phones use the smaller spacing step. Header chrome switches at 767,
-     the same breakpoint as DeepMind's menu. Desktop keeps the 88px bar. */
-  @media (max-width: 768px) and (orientation: portrait) {
+  /* Layout changes only at 768px, 1024px, and 1200px.
+     Portrait phones use the smaller spacing step. The header stays 72px at every width. */
+  @media (max-width: 767px) and (orientation: portrait) {
     html.theme-ips {
       --theme-layout-spacing-base: max(16px, min(1.1vw, 34px));
     }
@@ -132,14 +132,7 @@
 
   @media (max-width: 767px) {
     html.theme-ips {
-      --layout-header-height: calc((var(--theme-type-fluid-sm) * 1.35) + 32px);
       background: #fff;
-    }
-  }
-
-  @media (max-width: 767px) and (max-height: 480px) and (orientation: landscape) {
-    html.theme-ips {
-      --layout-header-height: 8vh;
     }
   }
 }

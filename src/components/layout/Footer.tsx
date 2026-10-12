@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
-import { footerNavLinks, footerPageLinks, footerReachLinks, legalLinks } from '../../data/navigation'
+import { footerNavLinks, footerPageLinks, footerReachLinks } from '../../data/navigation'
 import { SmartLink } from '../ui/SmartLink'
-import { BLOG_SUBSCRIBE_URL, CONTACT_EMAIL, Logo, SITE_NAME } from '../icons/Logo'
+import { BLOG_SUBSCRIBE_URL, CONTACT_EMAIL, Logo, SITE_NAME, WORDMARK_NAME } from '../icons/Logo'
 import { assetUrl } from '../../utils/assetUrl'
 
 function FooterIcon() {
@@ -85,15 +85,17 @@ export function Footer() {
             </div>
             <div className="hidden-md">
               <div className="grid">
-                {[footerPageLinks, footerReachLinks].filter((column) => column.length > 0).map((column) => (
-                  <ul className="menu" key={column[0]?.href}>
-                    {column.map((link) => (
-                      <li key={link.href}>
-                        <FooterNavLink {...link} />
-                      </li>
-                    ))}
-                  </ul>
-                ))}
+                {[footerPageLinks, footerReachLinks]
+                  .filter((column) => column.length > 0)
+                  .map((column) => (
+                    <ul className="menu" key={column[0]?.href}>
+                      {column.map((link) => (
+                        <li key={link.href}>
+                          <FooterNavLink {...link} />
+                        </li>
+                      ))}
+                    </ul>
+                  ))}
               </div>
             </div>
           </div>
@@ -106,17 +108,12 @@ export function Footer() {
               <SmartLink href="/" className="logo" aria-label={SITE_NAME}>
                 <FooterIcon />
               </SmartLink>
-              <div className="text">© 2026 {SITE_NAME}</div>
-              <ul className="footer-links">
-                {legalLinks.map((link) => (
-                  <li key={link.href}>
-                    <SmartLink href={link.href}>{link.label}</SmartLink>
-                  </li>
-                ))}
-                <li className="footer-links__email">
-                  <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-                </li>
-              </ul>
+              <div className="footer-base">
+                <div className="text">© 2026 {WORDMARK_NAME}</div>
+                <a className="footer-email" href={`mailto:${CONTACT_EMAIL}`}>
+                  {CONTACT_EMAIL}
+                </a>
+              </div>
             </div>
             </div>
           </div>

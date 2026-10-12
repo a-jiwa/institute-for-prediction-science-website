@@ -1,23 +1,35 @@
 import { useEffect, useRef } from 'react'
-import { animate, splitText, stagger } from 'animejs'
+import { splitText } from 'animejs'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
 import { HeroGrid } from '../hero/HeroGrid'
 import { assetUrl } from '../../utils/assetUrl'
 import { useLenis } from '../layout/CookieBanner'
 
-/** Full travel at the end of a letter's move, as a fraction of the hero's height. */
-const HERO_PARALLAX = 0.24
+/** How far the whole title rises compared with the scroll. */
+const TEXT_PARALLAX = 0.36
+/** How far a letter would rise if it stayed visible, as a fraction of the hero height. */
+const LETTER_LIFT = 0.45
 /** Higher follows the scroll more tightly. Low enough to hide 1px steps. */
-const PARALLAX_FOLLOW = 14
-/** Random start delay per letter, as a fraction of the hero scroll. */
-const CHAR_DELAY = 0.62
-/** How much scroll a letter uses to fade and lift once its delay is met. */
-const CHAR_SPAN = 0.06
+const PARALLAX_FOLLOW = 16
+/** Scroll progress where the first letter starts to rise. */
+const WAVE_START = 0.08
+/** How much of the scroll the wave takes to reach the last letter. */
+const WAVE_SPREAD = 0.18
+/** Scroll progress one letter takes to finish rising. Longer is slower. */
+const LETTER_RISE_SPAN = 1
+/** Scroll progress one letter takes to fade. Much shorter than the rise. */
+const LETTER_FADE_SPAN = 0.1
+/** A whisper of randomness so neighbours do not move in lockstep. */
+const WAVE_JITTER = 0.012
 
-/** Ease-out. The letter holds, then most of the move happens immediately. */
-function easeOut(t: number) {
-  return 1 - (1 - t) ** 3
+function clamp01(value: number) {
+  return Math.min(1, Math.max(0, value))
+}
+
+/** Opacity is mostly gone early in the letter's fade. */
+function fadeOut(t: number) {
+  return 1 - (1 - t) ** 4
 }
 
 export function HeroSection() {
@@ -27,8 +39,11 @@ export function HeroSection() {
   useEffect(() => {
     const headline = headlineRef.current
     const section = headline?.closest('section')
-    if (!headline || !section) return
+    const copy = section?.querySelector<HTMLElement>('.statement-hero__copy')
+    if (!headline || !section || !copy) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const phoneCopy = window.matchMedia('(max-width: 767px)')
 
     const split = splitText(headline, {
       chars: { class: 'hero-char' },
@@ -39,8 +54,6 @@ export function HeroSection() {
     let current = 0
     let raf = 0
     let last = 0
-    let introPlayed = false
-    let intro: { complete: () => void; revert: () => void } | undefined
     let charNodes: HTMLElement[] = []
     let offsets: number[] = []
 
@@ -48,50 +61,28 @@ export function HeroSection() {
       const next = [...headline.querySelectorAll<HTMLElement>('.hero-char')]
       if (next.length === charNodes.length && next.every((el, index) => el === charNodes[index])) return
       charNodes = next
-      offsets = next.map(() => Math.random() * CHAR_DELAY)
-    }
-
-    split.addEffect(({ chars }) => {
-      const nodes = chars as HTMLElement[]
-      if (introPlayed || window.scrollY > 8) {
-        introPlayed = true
-        nodes.forEach((el) => {
-          el.style.opacity = '1'
-        })
-        return
-      }
-      introPlayed = true
-      const slow = new Set<number>()
-      while (slow.size < Math.min(2, nodes.length)) {
-        slow.add(Math.floor(Math.random() * nodes.length))
-      }
-      const baseDelay = stagger(22, { from: 'random' })
-      intro = animate(nodes, {
-        opacity: [0, 1],
-        duration: (_el, index) => (slow.has(index ?? -1) ? 920 : 520),
-        ease: 'out(2)',
-        delay: (el, index, targets) => {
-          const delay = Number(baseDelay(el, index, targets))
-          return delay + (slow.has(index ?? -1) ? 240 : 0)
-        },
+      const last = Math.max(1, next.length - 1)
+      offsets = next.map((_, index) => {
+        const along = index / last
+        const jitter = (Math.random() - 0.5) * 2 * WAVE_JITTER
+        return clamp01(WAVE_START + along * WAVE_SPREAD + jitter)
       })
-      return () => intro?.revert()
-    })
+    }
 
     const apply = (progress: number) => {
       syncChars()
-      if (progress > 0.01 && intro) {
-        intro.complete()
-        intro = undefined
-      }
-      const travel = height * HERO_PARALLAX
+      const driftProgress = 1 - (1 - progress) ** 1.35
+      const drift = (-driftProgress * height * TEXT_PARALLAX).toFixed(2)
+      copy.style.transform = phoneCopy.matches
+        ? `translate3d(0, ${drift}px, 0)`
+        : `translate3d(-50%, ${drift}px, 0)`
+      const travel = height * LETTER_LIFT
       charNodes.forEach((el, index) => {
         const offset = offsets[index] ?? 0
-        const local = Math.min(1, Math.max(0, (progress - offset) / CHAR_SPAN))
-        const eased = easeOut(local)
-        el.style.transform = `translate3d(0, ${(-eased * travel).toFixed(2)}px, 0)`
-        if (progress > 0.004) el.style.opacity = (1 - eased).toFixed(3)
-        else if (introPlayed && el.style.opacity === '') el.style.opacity = '1'
+        const risen = clamp01((progress - offset) / LETTER_RISE_SPAN)
+        const faded = clamp01((progress - offset) / LETTER_FADE_SPAN)
+        el.style.transform = `translate3d(0, ${(-risen * travel).toFixed(2)}px, 0)`
+        el.style.opacity = (1 - fadeOut(faded)).toFixed(3)
       })
     }
 
@@ -137,7 +128,7 @@ export function HeroSection() {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
       lenis?.off('scroll', onScroll)
-      intro?.revert()
+      copy.style.transform = ''
       split.revert()
     }
   }, [lenis])
@@ -149,12 +140,8 @@ export function HeroSection() {
       <div className="statement-hero__content">
         <div className="statement-hero__copy">
           <h1 className="statement-hero__headline" ref={headlineRef}>
-            Improving how we think about the future
+            Developing better ways to<br />think about what comes next.
           </h1>
-          <p className="statement-hero__description">
-            We study, teach, and apply the science of prediction, so people and organisations can act with
-            greater clarity under uncertainty.
-          </p>
         </div>
       </div>
     </section>
@@ -274,17 +261,9 @@ export function AboutTextSection() {
             <p className="home-about__label">What we do</p>
             <div className="home-about__main">
               <p>
-                The Institute for Predictive Sciences develops and applies the science of forecasting to help
-                people and organisations make better decisions under uncertainty.
-              </p>
-            </div>
-          </div>
-          <div className="home-about__right">
-            <div className="home-about__secondary">
-              <p>
-                We put prediction into practice through competitions, training and research, building the methods,
-                tools and evidence needed to measure judgment, learn from outcomes and systematically improve how
-                decisions are made.
+                We develop better ways to think about the future through research, training and competitions,
+                advancing the science of prediction and helping people and organisations make better decisions
+                under uncertainty.
               </p>
             </div>
           </div>
@@ -303,17 +282,36 @@ const services = [
   {
     id: 'competitions',
     title: 'Competitions',
-    text: 'We run our own forecasting competitions and design bespoke competitions for universities, companies and other organisations. They provide a practical way to measure predictive ability, compare approaches and learn from real world outcomes.',
+    text: 'We run forecasting competitions for universities, companies and other organisations, measuring predictive ability against real world outcomes.',
+    scheme: 'blue',
+    layers: [
+      { src: '/assets/img/services/layers/protection-back.png', role: 'art-group' },
+      { src: '/assets/img/services/layers/protection-mid.png', role: 'art-hand' },
+      { src: '/assets/img/services/layers/protection-front.png', role: 'art-spark' },
+    ],
   },
   {
     id: 'training',
     title: 'Training',
-    text: 'We help individuals and organisations develop their forecasting skills through practical training. Participants learn to reason more carefully about uncertainty, make probabilistic predictions and improve by evaluating their forecasts over time.',
+    text: 'We train people to reason about uncertainty, make probabilistic predictions and improve by reviewing their forecasts.',
+    scheme: 'green',
+    layers: [
+      { src: '/assets/img/services/layers/national-lie.png', role: 'art-ground' },
+      { src: '/assets/img/services/layers/national-stand.png', role: 'art-point' },
+      { src: '/assets/img/services/layers/national-mid.png', role: 'art-globe' },
+      { src: '/assets/img/services/layers/national-front.png', role: 'art-spark' },
+    ],
   },
   {
     id: 'lab',
     title: 'Lab',
-    text: 'We research how forecasting works and experiment with new ways to apply it. This includes studying forecasting methods, exploring prediction market data and developing tools and applications that make predictive information more useful.',
+    text: 'We study forecasting methods and prediction market data, and build tools that make predictive information more useful.',
+    scheme: 'red',
+    layers: [
+      { src: '/assets/img/services/layers/missions-back.png', role: 'art-chair' },
+      { src: '/assets/img/services/layers/missions-mid.png', role: 'art-lean' },
+      { src: '/assets/img/services/layers/missions-front.png', role: 'art-diagram' },
+    ],
   },
 ]
 
@@ -321,37 +319,26 @@ export function ServicesIntroSection() {
   return (
     <section className="text home-services" id="services">
       <div className="container">
-        <div className="grid vstart-md">
-          <div className="col-6-md">
-            <div className="home-services-intro">
-              <div className="f--subtitle">Services</div>
-              <h2 className="editorial-heading">Our work in practice</h2>
-              <p>
-                We approach forecasting from three directions, measuring how well people predict, helping them
-                improve and exploring new ways to apply forecasting in practice.
-              </p>
-            </div>
-          </div>
-          <div className="col-6-md">
-            <ol className="home-services-list">
-              {services.map((service, index) => (
-                <li key={service.id}>
-                  <SmartLink href={`/services#${service.id}`}>
-                    <span className="work-index">{String(index + 1).padStart(2, '0')}</span>
-                    <span>
-                      <h3 className="editorial-subheading">{service.title}</h3>
-                      <p>{service.text}</p>
-                    </span>
-                  </SmartLink>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-        <div className="home-services-cta">
-          <Btn href="/services" orange>
-            Our services
-          </Btn>
+        <div className="home-service-cards">
+          {services.map((service) => (
+            <SmartLink
+              className="home-service-card"
+              data-scheme={service.scheme}
+              href={`/services#${service.id}`}
+              key={service.id}
+            >
+              <span className="home-service-card__art">
+                {service.layers.map((layer) => (
+                  <img alt="" className={layer.role} key={layer.src} src={assetUrl(layer.src)} />
+                ))}
+              </span>
+              <h3 className="editorial-subheading">{service.title}</h3>
+              <p>{service.text}</p>
+              <Btn decorative orange>
+                Discover more
+              </Btn>
+            </SmartLink>
+          ))}
         </div>
       </div>
     </section>

@@ -272,24 +272,21 @@ h4,
 
 .btn svg {
   margin-left: 10px;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.btn svg + svg {
-  display: none;
-  margin-left: 14px;
-}
-
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
   .btn:hover {
     text-shadow: 0 0.25px currentColor;
-    padding-right: 0;
   }
 
   .btn:hover svg {
-    display: none;
+    transform: translateX(5px);
   }
+}
 
-  .btn:hover svg + svg {
-    display: block;
+@media (prefers-reduced-motion: reduce) {
+  .btn svg {
+    transition: none;
   }
 }

@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import { navLinks, footerLinks } from '../../data/navigation'
+import { navLinks } from '../../data/navigation'
 import { Logo, WORDMARK_NAME } from '../icons/Logo'
 import { useHeaderScroll } from '../../hooks/useHeaderScroll'
 import { useLenis } from './CookieBanner'
@@ -9,6 +9,8 @@ export function Header() {
   const headerRef = useRef<HTMLElement>(null)
   const menuWasOpen = useRef(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [menuPresent, setMenuPresent] = useState(false)
+  const [menuShown, setMenuShown] = useState(false)
   const lenis = useLenis()
   useHeaderScroll(headerRef, lenis)
   const location = useLocation()
@@ -18,7 +20,43 @@ export function Header() {
   }, [location.pathname])
 
   useEffect(() => {
-    if (!menuOpen) return
+    if (menuOpen) {
+      setMenuPresent(true)
+      setMenuShown(true)
+      return
+    }
+    setMenuShown(false)
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (menuOpen || !menuPresent) return
+    const nav = headerRef.current?.querySelector('nav')
+    if (!nav) {
+      setMenuPresent(false)
+      return
+    }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let finished = false
+    const finish = () => {
+      if (finished) return
+      finished = true
+      setMenuPresent(false)
+    }
+    const onEnd = (event: Event) => {
+      const transition = event as TransitionEvent
+      if (transition.target !== nav || transition.propertyName !== 'opacity') return
+      finish()
+    }
+    nav.addEventListener('transitionend', onEnd)
+    const timer = window.setTimeout(finish, reduce ? 0 : 500)
+    return () => {
+      nav.removeEventListener('transitionend', onEnd)
+      window.clearTimeout(timer)
+    }
+  }, [menuOpen, menuPresent])
+
+  useEffect(() => {
+    if (!menuPresent) return
     const block = (event: TouchEvent) => {
       const nav = headerRef.current?.querySelector('nav')
       if (nav?.contains(event.target as Node)) return
@@ -26,13 +64,13 @@ export function Header() {
     }
     document.addEventListener('touchmove', block, { passive: false })
     return () => document.removeEventListener('touchmove', block)
-  }, [menuOpen])
+  }, [menuPresent])
 
   useEffect(() => {
     if (!lenis) return
-    if (menuOpen) lenis.stop()
+    if (menuPresent) lenis.stop()
     else lenis.start()
-  }, [menuOpen, lenis])
+  }, [menuPresent, lenis])
 
   useEffect(() => {
     if (menuOpen) {
@@ -65,13 +103,14 @@ export function Header() {
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
             >
-              <svg className="hamb__icon" viewBox="0 0 22 10" width="22" height="10" aria-hidden="true">
-                <rect className="hamb__bar hamb__bar--top" x="0" y="0" width="22" height="2" rx="0" />
+              <svg className="hamb__icon" viewBox="0 0 22 18" width="22" height="18" aria-hidden="true">
+                <rect className="hamb__bar hamb__bar--top" x="0" y="8" width="22" height="2" rx="0" />
+                <rect className="hamb__bar hamb__bar--middle" x="0" y="8" width="22" height="2" rx="0" />
                 <rect className="hamb__bar hamb__bar--bottom" x="0" y="8" width="22" height="2" rx="0" />
               </svg>
             </button>
 
-            <nav className={menuOpen ? 'show' : ''}>
+            <nav className={menuPresent ? (menuShown ? 'present shown' : 'present') : undefined}>
               <ul className="grid hend-sm">
                 {navLinks.map((link) => (
                   <NavItem
@@ -82,20 +121,6 @@ export function Header() {
                   />
                 ))}
               </ul>
-
-              <div className="links grid hspace-between-xs">
-                {footerLinks.map((link) =>
-                  link.external ? (
-                    <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link key={link.href} to={link.href} onClick={() => setMenuOpen(false)}>
-                      {link.label}
-                    </Link>
-                  ),
-                )}
-              </div>
             </nav>
           </div>
         </div>
