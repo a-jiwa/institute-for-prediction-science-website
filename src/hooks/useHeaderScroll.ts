@@ -57,7 +57,11 @@ export function useHeaderScroll(
             ? Math.max(0, fullHeight - heroBottom)
             : y
 
-      header.style.setProperty('--header-compact', compactProgress(pastHero).toFixed(4))
+      const mobileHeader = window.matchMedia('(max-width: 767px)').matches
+      header.style.setProperty(
+        '--header-compact',
+        mobileHeader ? '0' : compactProgress(pastHero).toFixed(4),
+      )
       header.style.transform = ''
       header.toggleAttribute('data-scrolled', !overHero)
     }

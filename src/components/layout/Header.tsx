@@ -7,6 +7,7 @@ import { useLenis } from './CookieBanner'
 
 export function Header() {
   const headerRef = useRef<HTMLElement>(null)
+  const menuWasOpen = useRef(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const lenis = useLenis()
   useHeaderScroll(headerRef, lenis)
@@ -17,24 +18,14 @@ export function Header() {
   }, [location.pathname])
 
   useEffect(() => {
-    const root = document.documentElement
-    if (menuOpen) {
-      root.style.overflow = 'hidden'
-      document.body.style.overflow = 'hidden'
-      root.style.overscrollBehavior = 'none'
-      document.body.style.overscrollBehavior = 'none'
-    } else {
-      root.style.overflow = ''
-      document.body.style.overflow = ''
-      root.style.overscrollBehavior = ''
-      document.body.style.overscrollBehavior = ''
+    if (!menuOpen) return
+    const block = (event: TouchEvent) => {
+      const nav = headerRef.current?.querySelector('nav')
+      if (nav?.contains(event.target as Node)) return
+      event.preventDefault()
     }
-    return () => {
-      root.style.overflow = ''
-      document.body.style.overflow = ''
-      root.style.overscrollBehavior = ''
-      document.body.style.overscrollBehavior = ''
-    }
+    document.addEventListener('touchmove', block, { passive: false })
+    return () => document.removeEventListener('touchmove', block)
   }, [menuOpen])
 
   useEffect(() => {
@@ -42,6 +33,19 @@ export function Header() {
     if (menuOpen) lenis.stop()
     else lenis.start()
   }, [menuOpen, lenis])
+
+  useEffect(() => {
+    if (menuOpen) {
+      menuWasOpen.current = true
+      return
+    }
+    if (!menuWasOpen.current) return
+    const y = window.scrollY
+    requestAnimationFrame(() => {
+      window.scrollTo(0, y + 1)
+      window.scrollTo(0, y)
+    })
+  }, [menuOpen])
 
   return (
     <header ref={headerRef} className={menuOpen ? 'menu-open' : undefined}>

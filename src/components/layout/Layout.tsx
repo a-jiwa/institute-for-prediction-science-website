@@ -54,7 +54,7 @@ export function Layout() {
   }, [pathname, hash])
 
   return (
-    <div className="wrapper">
+    <div className="wrapper min-h-[100lvh] w-full bg-white">
       <Header />
       <main>
         <Outlet />

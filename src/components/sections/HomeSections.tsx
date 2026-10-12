@@ -1,16 +1,156 @@
+import { useEffect, useRef } from 'react'
+import { animate, splitText, stagger } from 'animejs'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
 import { HeroGrid } from '../hero/HeroGrid'
 import { assetUrl } from '../../utils/assetUrl'
+import { useLenis } from '../layout/CookieBanner'
+
+/** Full travel at the end of a letter's move, as a fraction of the hero's height. */
+const HERO_PARALLAX = 0.24
+/** Higher follows the scroll more tightly. Low enough to hide 1px steps. */
+const PARALLAX_FOLLOW = 14
+/** Random start delay per letter, as a fraction of the hero scroll. */
+const CHAR_DELAY = 0.62
+/** How much scroll a letter uses to fade and lift once its delay is met. */
+const CHAR_SPAN = 0.06
+
+/** Ease-out. The letter holds, then most of the move happens immediately. */
+function easeOut(t: number) {
+  return 1 - (1 - t) ** 3
+}
 
 export function HeroSection() {
+  const headlineRef = useRef<HTMLHeadingElement>(null)
+  const lenis = useLenis()
+
+  useEffect(() => {
+    const headline = headlineRef.current
+    const section = headline?.closest('section')
+    if (!headline || !section) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const split = splitText(headline, {
+      chars: { class: 'hero-char' },
+    })
+
+    let height = section.offsetHeight
+    let target = 0
+    let current = 0
+    let raf = 0
+    let last = 0
+    let introPlayed = false
+    let intro: { complete: () => void; revert: () => void } | undefined
+    let charNodes: HTMLElement[] = []
+    let offsets: number[] = []
+
+    const syncChars = () => {
+      const next = [...headline.querySelectorAll<HTMLElement>('.hero-char')]
+      if (next.length === charNodes.length && next.every((el, index) => el === charNodes[index])) return
+      charNodes = next
+      offsets = next.map(() => Math.random() * CHAR_DELAY)
+    }
+
+    split.addEffect(({ chars }) => {
+      const nodes = chars as HTMLElement[]
+      if (introPlayed || window.scrollY > 8) {
+        introPlayed = true
+        nodes.forEach((el) => {
+          el.style.opacity = '1'
+        })
+        return
+      }
+      introPlayed = true
+      const slow = new Set<number>()
+      while (slow.size < Math.min(2, nodes.length)) {
+        slow.add(Math.floor(Math.random() * nodes.length))
+      }
+      const baseDelay = stagger(22, { from: 'random' })
+      intro = animate(nodes, {
+        opacity: [0, 1],
+        duration: (_el, index) => (slow.has(index ?? -1) ? 920 : 520),
+        ease: 'out(2)',
+        delay: (el, index, targets) => {
+          const delay = Number(baseDelay(el, index, targets))
+          return delay + (slow.has(index ?? -1) ? 240 : 0)
+        },
+      })
+      return () => intro?.revert()
+    })
+
+    const apply = (progress: number) => {
+      syncChars()
+      if (progress > 0.01 && intro) {
+        intro.complete()
+        intro = undefined
+      }
+      const travel = height * HERO_PARALLAX
+      charNodes.forEach((el, index) => {
+        const offset = offsets[index] ?? 0
+        const local = Math.min(1, Math.max(0, (progress - offset) / CHAR_SPAN))
+        const eased = easeOut(local)
+        el.style.transform = `translate3d(0, ${(-eased * travel).toFixed(2)}px, 0)`
+        if (progress > 0.004) el.style.opacity = (1 - eased).toFixed(3)
+        else if (introPlayed && el.style.opacity === '') el.style.opacity = '1'
+      })
+    }
+
+    const readTarget = () => {
+      if (height <= 0) return 0
+      const covered = Math.min(height, Math.max(0, window.scrollY))
+      return covered / height
+    }
+
+    const tick = (now: number) => {
+      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016
+      last = now
+      current += (target - current) * (1 - Math.exp(-dt * PARALLAX_FOLLOW))
+      if (Math.abs(target - current) < 0.0008) {
+        current = target
+        apply(current)
+        raf = 0
+        last = 0
+        return
+      }
+      apply(current)
+      raf = requestAnimationFrame(tick)
+    }
+
+    const onScroll = () => {
+      target = readTarget()
+      if (!raf) raf = requestAnimationFrame(tick)
+    }
+
+    const onResize = () => {
+      height = section.offsetHeight
+      onScroll()
+    }
+
+    current = target = readTarget()
+    apply(current)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    lenis?.on('scroll', onScroll)
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+      lenis?.off('scroll', onScroll)
+      intro?.revert()
+      split.revert()
+    }
+  }, [lenis])
+
   return (
     <section className="main statement-hero">
       <HeroGrid />
 
       <div className="statement-hero__content">
         <div className="statement-hero__copy">
-          <h1 className="statement-hero__headline">Improving how we think about the future</h1>
+          <h1 className="statement-hero__headline" ref={headlineRef}>
+            Improving how we think about the future
+          </h1>
           <p className="statement-hero__description">
             We study, teach, and apply the science of prediction, so people and organisations can act with
             greater clarity under uncertainty.

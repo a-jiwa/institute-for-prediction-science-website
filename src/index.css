@@ -68,19 +68,27 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+  min-height: 100vh;
+  min-height: 100lvh;
+  /* White canvas so the strip behind Safari's toolbar is the page, not black. */
+  background: #fff;
 }
 
 body {
   min-height: 100%;
-  min-height: 100dvh;
+  min-height: 100vh;
+  /* Large viewport includes the area the address bar covers, so the page
+     paints behind the toolbar instead of stopping short of it. */
+  min-height: 100lvh;
 }
 
 #root,
 .wrapper {
   width: 100%;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100lvh;
   padding: 0;
+  background: #fff;
 }
 
 .wrapper {
@@ -223,14 +231,24 @@ header {
       env(safe-area-inset-top, 0px)
   );
   padding: env(safe-area-inset-top, 0px) 0 0;
-  background-color: #000;
+  /* The bar stays visually black, but the color lives on a pseudo-element.
+     Safari 26 samples background-color on fixed elements and paints that
+     color into the address-bar gap, which cuts the page off. */
+  background-color: transparent;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
   color: #fff;
 }
 
-header[data-scrolled] {
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-color: #000;
+}
+
+header[data-scrolled] {
   border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -345,13 +363,18 @@ header nav a.active {
 }
 
 @media (max-width: 767px) {
-  /* The short mobile bar does not compact further. */
+  /* Phone bar and logo stay full size while scrolling. */
   header {
+    --header-compact: 0;
     --header-height-compact: var(--layout-header-height);
   }
 
+  header .logo svg,
+  .logo__svg {
+    max-height: min(var(--layout-logo-height), calc(var(--layout-header-height) - 8px));
+  }
+
   header.menu-open {
-    background: #000;
     border-bottom-color: transparent;
   }
 
@@ -360,33 +383,46 @@ header nav a.active {
     z-index: 12;
   }
 
-  /* Same box as DeepMind's open nav: under the bar, one screen, gutter inset. */
+  /* The open menu is fixed, but its bottom edge stays a full toolbar-height
+     above the layout viewport. Safari 26 turns the address bar into a solid
+     bar when a fixed box (or a fixed header's overflowing child) touches that
+     edge, and it keeps the color after the menu closes. */
   header nav {
+    display: none;
+  }
+
+  header nav.show {
     position: fixed;
     top: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
     right: 0;
-    bottom: auto;
     left: 0;
+    bottom: calc(100lvh - 100svh);
     z-index: 11;
-    height: calc(100dvh - var(--layout-header-height) - env(safe-area-inset-top, 0px));
     max-width: none;
-    background: #000;
+    background-color: transparent;
     padding: 0 var(--layout-gutter) calc(var(--theme-layout-spacing-1-5) + env(safe-area-inset-bottom, 0px));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     gap: var(--theme-layout-spacing-base);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
+    pointer-events: all;
     overflow-x: clip;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
-  header nav.show {
-    opacity: 1;
-    pointer-events: all;
+  header nav.show::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-color: #000;
+  }
+
+  header nav.show > * {
+    position: relative;
+    z-index: 1;
   }
 
   header nav > ul {
@@ -467,25 +503,40 @@ section.main {
   min-height: 340px;
 }
 
-/* Homepage hero — sticky pin behind opaque `.home-cover` (DeepMind cover-scroll). */
+/* Homepage hero stays pinned. The page below slides over it. */
 section.main.statement-hero {
   --hero-stack: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
   position: sticky;
   top: 0;
   z-index: 0;
-  height: 80vh;
-  height: 80dvh;
-  min-height: 80vh;
-  min-height: 80dvh;
-  max-height: 80vh;
-  max-height: 80dvh;
+  /* svh does not resize with the Safari toolbar, so the pinned hero cannot
+     grow through the section that covers it. */
+  height: 70vh;
+  height: 70svh;
+  min-height: 70vh;
+  min-height: 70svh;
+  max-height: 70vh;
+  max-height: 70svh;
   margin: 0;
   padding: 0;
-  /* `clip` keeps the grid from widening the page. `hidden` on this sticky box
-     lets iOS paint the hero through the next section above the toolbar. */
   overflow: clip;
   width: 100%;
   box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+  /* A sticky 70svh hero ends on the address-bar edge. Safari 26 samples
+     that sticky box and paints its black into the toolbar, which cuts the
+     page off. On a phone the hero scrolls with the page and uses the large
+     viewport, so the black continues behind the bar. */
+  section.main.statement-hero {
+    position: relative;
+    top: auto;
+    height: 70lvh;
+    min-height: 70lvh;
+    max-height: 70lvh;
+    overflow: hidden;
+  }
 }
 
 /* Next homepage block scrolls over the pinned hero. */
@@ -493,19 +544,6 @@ section.main.statement-hero {
   position: relative;
   z-index: 1;
   background: #fff;
-}
-
-@media (max-width: 767px) {
-  /* A sticky 80dvh hero resizes with the Safari toolbar and paints black
-     through the bottom of the screen. On a phone it scrolls with the page. */
-  section.main.statement-hero {
-    position: relative;
-    top: auto;
-    height: 80svh;
-    min-height: 80svh;
-    max-height: none;
-    overflow: hidden;
-  }
 }
 
 section.main.statement-hero .bg.bg--grid {
@@ -556,6 +594,21 @@ section.main.statement-hero .statement-hero__headline {
   font-weight: 300;
   letter-spacing: -0.02em;
   line-height: 1.08;
+}
+
+section.main.statement-hero .statement-hero__headline [data-word] {
+  display: inline;
+}
+
+section.main.statement-hero .hero-char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  section.main.statement-hero .hero-char {
+    opacity: 0;
+  }
 }
 
 section.main.statement-hero .statement-hero__description {
@@ -1729,9 +1782,11 @@ section.cta .cta-support p {
 }
 
 footer {
+  position: relative;
+  z-index: 1;
   background: #000;
   color: #fff;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
 }
 
 footer a {
@@ -1739,7 +1794,7 @@ footer a {
 }
 
 footer .copy {
-  border-top-color: rgba(255, 255, 255, 0.28);
+  border-top: 1px dashed rgba(255, 255, 255, 0.55);
 }
 
 footer .f--h2 {
@@ -1780,6 +1835,19 @@ footer .copy .text {
   font-size: clamp(11px, 3.2vw, 12px);
 }
 
+@media (min-width: 1024px) {
+  footer .col-5-md,
+  footer .col-7-md {
+    min-width: 0;
+  }
+
+  footer .visible-md .menu {
+    justify-content: flex-end;
+    column-gap: 28px;
+    row-gap: 16px;
+  }
+}
+
 /* Reference copyright block wraps to an extra line just above the tablet breakpoint. */
 @media (min-width: 1024px) and (max-width: 1170px) {
   footer .copy {
@@ -1788,15 +1856,27 @@ footer .copy .text {
 }
 
 @media (max-width: 1023px) {
-  /* Same footer block height as forecastingresearch.org: the subscribe
-     control sits above a 150px gap, then a stacked link list. */
+  /* forecastingresearch.org keeps a deep gap under Subscribe for the
+     footer illustration, then a four-row link list and a taller legal block. */
+  footer {
+    padding-bottom: max(28px, env(safe-area-inset-bottom, 0px));
+  }
+
   footer .newsletter {
-    margin-bottom: 150px;
+    margin-bottom: 190px;
   }
 
   /* Two link columns on the reference site are four items tall. */
   footer .hidden-md .menu {
     min-height: 160px;
+  }
+
+  footer .copy {
+    border-top: 1px dashed rgba(255, 255, 255, 0.55);
+  }
+
+  footer .copy .text {
+    border-bottom: 0;
   }
 
   footer .footer-meta {
@@ -1805,12 +1885,28 @@ footer .copy .text {
     gap: 0;
   }
 
+  /* Copyright sits above the rule. Policies on the left, email on the right. */
   footer .footer-links {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 10px 24px;
     margin-left: 0;
-    width: 45%;
+    width: 100%;
+  }
+
+  footer .copy .footer-links li + li {
+    margin-top: 0;
+  }
+
+  footer .footer-links__email {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  footer .footer-links a,
+  footer .copy .text {
+    white-space: normal;
   }
 }
 

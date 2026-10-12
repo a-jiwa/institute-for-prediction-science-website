@@ -6,4 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/forecasting-institute/' : '/',
   plugins: [react(), tailwindcss()],
+  server: {
+    host: true,
+  },
 }))

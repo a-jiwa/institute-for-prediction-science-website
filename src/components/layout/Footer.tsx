@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import { footerNavLinks, legalLinks } from '../../data/navigation'
+import { footerNavLinks, footerPageLinks, footerReachLinks, legalLinks } from '../../data/navigation'
 import { SmartLink } from '../ui/SmartLink'
 import { BLOG_SUBSCRIBE_URL, CONTACT_EMAIL, Logo, SITE_NAME } from '../icons/Logo'
 import { assetUrl } from '../../utils/assetUrl'
@@ -85,7 +85,7 @@ export function Footer() {
             </div>
             <div className="hidden-md">
               <div className="grid">
-                {[footerNavLinks.slice(0, 3), footerNavLinks.slice(3)].map((column) => (
+                {[footerPageLinks, footerReachLinks].filter((column) => column.length > 0).map((column) => (
                   <ul className="menu" key={column[0]?.href}>
                     {column.map((link) => (
                       <li key={link.href}>
@@ -103,9 +103,9 @@ export function Footer() {
           <div className="col-12-sm">
             <div className="copy">
             <div className="footer-meta">
-              <div className="logo">
+              <SmartLink href="/" className="logo" aria-label={SITE_NAME}>
                 <FooterIcon />
-              </div>
+              </SmartLink>
               <div className="text">© 2026 {SITE_NAME}</div>
               <ul className="footer-links">
                 {legalLinks.map((link) => (
@@ -113,7 +113,7 @@ export function Footer() {
                     <SmartLink href={link.href}>{link.label}</SmartLink>
                   </li>
                 ))}
-                <li>
+                <li className="footer-links__email">
                   <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
                 </li>
               </ul>
