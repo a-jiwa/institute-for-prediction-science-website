@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage'
 import { ResearchPage } from './pages/ResearchPage'
 import { AboutPage } from './pages/AboutPage'
 import { WorkPage } from './pages/WorkPage'
+import { ServicePage } from './pages/ServicePage'
 import { CareersPage } from './pages/CareersPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { DetailPage } from './pages/DetailPage'
@@ -21,6 +22,7 @@ function App() {
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/research/:slug" element={<DetailPage type="research" />} />
             <Route path="/services" element={<WorkPage />} />
+            <Route path="/services/:slug" element={<ServicePage />} />
             <Route path="/our-work" element={<Navigate to="/services" replace />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/careers" element={<CareersPage />} />

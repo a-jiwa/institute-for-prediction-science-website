@@ -1,146 +1,84 @@
-import { useEffect, useRef } from 'react'
-import { splitText } from 'animejs'
+import { useLayoutEffect, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
+import { animate, stagger } from 'animejs'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
 import { HeroGrid } from '../hero/HeroGrid'
+import { toneForPath } from '../../data/pageTones'
 import { assetUrl } from '../../utils/assetUrl'
-import { useLenis } from '../layout/CookieBanner'
 
-/** How far the whole title rises compared with the scroll. */
-const TEXT_PARALLAX = 0.36
-/** How far a letter would rise if it stayed visible, as a fraction of the hero height. */
-const LETTER_LIFT = 0.45
-/** Higher follows the scroll more tightly. Low enough to hide 1px steps. */
-const PARALLAX_FOLLOW = 16
-/** Scroll progress where the first letter starts to rise. */
-const WAVE_START = 0.08
-/** How much of the scroll the wave takes to reach the last letter. */
-const WAVE_SPREAD = 0.18
-/** Scroll progress one letter takes to finish rising. Longer is slower. */
-const LETTER_RISE_SPAN = 1
-/** Scroll progress one letter takes to fade. Much shorter than the rise. */
-const LETTER_FADE_SPAN = 0.1
-/** A whisper of randomness so neighbours do not move in lockstep. */
-const WAVE_JITTER = 0.012
+const homeHeroLines = [
+  'Developing better ways to',
+  'think about what comes next.',
+] as const
 
-function clamp01(value: number) {
-  return Math.min(1, Math.max(0, value))
-}
-
-/** Opacity is mostly gone early in the letter's fade. */
-function fadeOut(t: number) {
-  return 1 - (1 - t) ** 4
-}
-
-export function HeroSection() {
+export function HeroSection({
+  lines = homeHeroLines,
+  compact = false,
+}: {
+  lines?: readonly string[]
+  compact?: boolean
+} = {}) {
+  const { pathname } = useLocation()
+  const tone = toneForPath(pathname)
   const headlineRef = useRef<HTMLHeadingElement>(null)
-  const lenis = useLenis()
+  const lineKey = lines.join('\n')
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const headline = headlineRef.current
-    const section = headline?.closest('section')
-    const copy = section?.querySelector<HTMLElement>('.statement-hero__copy')
-    if (!headline || !section || !copy) return
+    if (!headline) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const phoneCopy = window.matchMedia('(max-width: 767px)')
-
-    const split = splitText(headline, {
-      chars: { class: 'hero-char' },
+    const chars = [...headline.querySelectorAll<HTMLElement>('.hero-char')]
+    if (!chars.length) return
+    chars.forEach((char) => {
+      char.style.opacity = '0'
     })
 
-    let height = section.offsetHeight
-    let target = 0
-    let current = 0
-    let raf = 0
-    let last = 0
-    let charNodes: HTMLElement[] = []
-    let offsets: number[] = []
+    let cancelled = false
+    let animation: { revert: () => void } | undefined
 
-    const syncChars = () => {
-      const next = [...headline.querySelectorAll<HTMLElement>('.hero-char')]
-      if (next.length === charNodes.length && next.every((el, index) => el === charNodes[index])) return
-      charNodes = next
-      const last = Math.max(1, next.length - 1)
-      offsets = next.map((_, index) => {
-        const along = index / last
-        const jitter = (Math.random() - 0.5) * 2 * WAVE_JITTER
-        return clamp01(WAVE_START + along * WAVE_SPREAD + jitter)
+    const play = () => {
+      if (cancelled) return
+      animation = animate(chars, {
+        opacity: [0, 1],
+        duration: 80,
+        ease: 'out(5)',
+        delay: stagger(42),
       })
     }
 
-    const apply = (progress: number) => {
-      syncChars()
-      const driftProgress = 1 - (1 - progress) ** 1.35
-      const drift = (-driftProgress * height * TEXT_PARALLAX).toFixed(2)
-      copy.style.transform = phoneCopy.matches
-        ? `translate3d(0, ${drift}px, 0)`
-        : `translate3d(-50%, ${drift}px, 0)`
-      const travel = height * LETTER_LIFT
-      charNodes.forEach((el, index) => {
-        const offset = offsets[index] ?? 0
-        const risen = clamp01((progress - offset) / LETTER_RISE_SPAN)
-        const faded = clamp01((progress - offset) / LETTER_FADE_SPAN)
-        el.style.transform = `translate3d(0, ${(-risen * travel).toFixed(2)}px, 0)`
-        el.style.opacity = (1 - fadeOut(faded)).toFixed(3)
+    document.fonts.ready.then(() => {
+      requestAnimationFrame(() => {
+        if (!cancelled) play()
       })
-    }
-
-    const readTarget = () => {
-      if (height <= 0) return 0
-      const covered = Math.min(height, Math.max(0, window.scrollY))
-      return covered / height
-    }
-
-    const tick = (now: number) => {
-      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016
-      last = now
-      current += (target - current) * (1 - Math.exp(-dt * PARALLAX_FOLLOW))
-      if (Math.abs(target - current) < 0.0008) {
-        current = target
-        apply(current)
-        raf = 0
-        last = 0
-        return
-      }
-      apply(current)
-      raf = requestAnimationFrame(tick)
-    }
-
-    const onScroll = () => {
-      target = readTarget()
-      if (!raf) raf = requestAnimationFrame(tick)
-    }
-
-    const onResize = () => {
-      height = section.offsetHeight
-      onScroll()
-    }
-
-    current = target = readTarget()
-    apply(current)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onResize)
-    lenis?.on('scroll', onScroll)
+    })
 
     return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onResize)
-      lenis?.off('scroll', onScroll)
-      copy.style.transform = ''
-      split.revert()
+      cancelled = true
+      animation?.revert()
+      chars.forEach((char) => {
+        char.style.opacity = ''
+      })
     }
-  }, [lenis])
+  }, [lineKey])
 
   return (
-    <section className="main statement-hero">
-      <HeroGrid />
+    <section className={compact ? 'main statement-hero statement-hero--compact' : 'main statement-hero'}>
+      {tone ? null : <HeroGrid />}
 
       <div className="statement-hero__content">
         <div className="statement-hero__copy">
           <h1 className="statement-hero__headline" ref={headlineRef}>
-            Developing better ways to<br />think about what comes next.
+            {lines.map((line) => (
+              <span className="statement-hero__line" key={line}>
+                {[...line].map((char, index) => (
+                  <span className="hero-char" key={`${line}-${index}`}>
+                    {char}
+                  </span>
+                ))}
+              </span>
+            ))}
           </h1>
         </div>
       </div>
@@ -258,7 +196,7 @@ export function AboutTextSection() {
       <div className="container">
         <div className="home-about__row">
           <div className="home-about__left">
-            <p className="home-about__label">What we do</p>
+            <p className="home-about__label">Who we are</p>
             <div className="home-about__main">
               <p>
                 We develop better ways to think about the future through research, training and competitions,
@@ -282,7 +220,7 @@ const services = [
   {
     id: 'competitions',
     title: 'Competitions',
-    text: 'We run forecasting competitions for universities, companies and other organisations, measuring predictive ability against real world outcomes.',
+    text: 'We run custom forecasting competitions that score predictions against real world outcomes.',
     scheme: 'blue',
     layers: [
       { src: '/assets/img/services/layers/protection-back.png', role: 'art-group' },
@@ -293,7 +231,7 @@ const services = [
   {
     id: 'training',
     title: 'Training',
-    text: 'We train people to reason about uncertainty, make probabilistic predictions and improve by reviewing their forecasts.',
+    text: 'We provide training services that help people make better forecasts by reviewing their predictions.',
     scheme: 'green',
     layers: [
       { src: '/assets/img/services/layers/national-lie.png', role: 'art-ground' },
@@ -305,7 +243,7 @@ const services = [
   {
     id: 'lab',
     title: 'Lab',
-    text: 'We study forecasting methods and prediction market data, and build tools that make predictive information more useful.',
+    text: 'The prediction lab researches forecasting methods and builds tools that put that evidence to use.',
     scheme: 'red',
     layers: [
       { src: '/assets/img/services/layers/missions-back.png', role: 'art-chair' },
@@ -319,6 +257,10 @@ export function ServicesIntroSection() {
   return (
     <section className="text home-services" id="services">
       <div className="container">
+        <p className="home-about__label">What we do</p>
+        <p className="home-services__intro">
+          We put forecasting into practice through competitions, training and research.
+        </p>
         <div className="home-service-cards">
           {services.map((service) => (
             <SmartLink
@@ -332,11 +274,13 @@ export function ServicesIntroSection() {
                   <img alt="" className={layer.role} key={layer.src} src={assetUrl(layer.src)} />
                 ))}
               </span>
-              <h3 className="editorial-subheading">{service.title}</h3>
-              <p>{service.text}</p>
-              <Btn decorative orange>
-                Discover more
-              </Btn>
+              <div className="home-service-card__copy">
+                <h3 className="editorial-subheading">{service.title}</h3>
+                <p>{service.text}</p>
+                <Btn decorative orange>
+                  Discover more
+                </Btn>
+              </div>
             </SmartLink>
           ))}
         </div>

@@ -231,7 +231,7 @@ header {
   background-color: transparent;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
-  color: #fff;
+  color: var(--tone-ink);
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -248,11 +248,11 @@ header::before {
      and show the page above the bar. Cover that padding and a little above
      the screen so the bar meets the top. */
   top: calc((var(--header-safe-top) + 120px) * -1);
-  background-color: #000;
+  background-color: var(--tone-fill);
 }
 
 header[data-scrolled] {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: var(--tone-border);
 }
 
 header .logo {
@@ -295,7 +295,7 @@ header .logo svg,
     padding: 0;
     background: transparent;
     cursor: pointer;
-    color: #fff;
+    color: var(--tone-ink);
   }
 
   .hamb__icon {
@@ -342,10 +342,14 @@ header nav a {
   display: block;
   padding: 0;
   position: relative;
-  color: #fff;
+  color: var(--tone-ink);
   font-family: var(--font-sans);
   font-weight: 400;
-  transition: color 0.25s ease, font-weight 0.25s ease, opacity 0.25s ease;
+  /* Leaving the selected state. */
+  transition:
+    color 0.08s cubic-bezier(0.2, 0, 0, 1),
+    font-weight 0.08s cubic-bezier(0.2, 0, 0, 1),
+    opacity 0.25s ease;
 }
 
 header nav a:hover {
@@ -355,6 +359,11 @@ header nav a:hover {
 header nav a.active {
   font-weight: 600;
   opacity: 1;
+  /* Becoming selected. The duration is taken from the state you enter. */
+  transition:
+    color 0.08s cubic-bezier(0.2, 0, 0, 1),
+    font-weight 0.08s cubic-bezier(0.2, 0, 0, 1),
+    opacity 0.08s cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (min-width: 768px) {
@@ -424,7 +433,7 @@ header nav a.active {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background-color: #000;
+    background-color: var(--tone-fill);
   }
 
   header nav.present > * {
@@ -488,18 +497,18 @@ header nav a.active {
     text-transform: none;
     text-align: center;
     padding: 16px 0;
-    color: rgba(255, 255, 255, 0.42);
+    color: color-mix(in srgb, var(--tone-ink) 42%, transparent);
   }
 
   header nav > ul a:hover {
     opacity: 1;
-    color: rgba(255, 255, 255, 0.72);
+    color: color-mix(in srgb, var(--tone-ink) 72%, transparent);
   }
 
   header nav > ul a.active,
   header nav > ul a.active:hover {
     font-weight: 700;
-    color: #fff;
+    color: var(--tone-ink);
     opacity: 1;
   }
 }
@@ -529,27 +538,55 @@ section.main {
   min-height: 340px;
 }
 
+main,
+footer {
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.32s ease;
+}
+
 /* Homepage hero stays pinned. The page below slides over it. */
 section.main.statement-hero {
   --hero-stack: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
   position: sticky;
   top: 0;
   z-index: 0;
-  height: 410px;
-  min-height: 410px;
-  max-height: 410px;
+  height: 560px;
+  min-height: 560px;
+  max-height: 560px;
   margin: 0;
   padding: 0;
   overflow: clip;
   width: 100%;
   box-sizing: border-box;
+  background: var(--tone-fill);
+  color: var(--tone-ink);
 }
 
 /* Next homepage block scrolls over the pinned hero. */
 .home-cover {
+  --home-section-gap: 80px;
   position: relative;
   z-index: 1;
   background: #fff;
+}
+
+/* One gap from the hero, between each homepage section, and above the footer. */
+.home-cover section.home-about,
+.home-cover section.home-services {
+  padding-top: var(--home-section-gap);
+  padding-bottom: 0;
+}
+
+.home-cover section.cta {
+  padding-top: var(--home-section-gap);
+  padding-bottom: var(--home-section-gap);
+}
+
+@media (max-width: 767px) {
+  .home-cover {
+    --home-section-gap: 64px;
+  }
 }
 
 section.main.statement-hero .bg.bg--grid {
@@ -574,15 +611,17 @@ section.main.statement-hero .statement-hero__copy {
   bottom: 0;
   left: 50%;
   width: 100%;
-  max-width: var(--layout-max-width);
+  /* Same 64rem column as the page body, so the title lines up on wide screens. */
+  max-width: 64rem;
   transform: translateX(-50%);
-  will-change: transform;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: 0 var(--layout-gutter);
+  container-type: inline-size;
+  /* Center in the hero below the fixed header, not in the full block. */
+  padding: var(--hero-stack) var(--layout-gutter) 0;
   --layout-split: calc((100% - var(--layout-column-gap)) / 2);
 }
 
@@ -590,30 +629,33 @@ section.main.statement-hero .statement-hero__copy {
 section.main.statement-hero .statement-hero__headline {
   position: relative;
   margin: 0;
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   min-width: 0;
-  /* Breaks after “to”, so the two lines are close in length, like the DeepMind hero. */
-  max-width: 22ch;
-  color: #fff;
+  color: var(--tone-ink);
   font-family: var(--font-serif);
-  /* Same scale as DeepMind's heading, enlarged so Martina Plantijn Light matches the height of their letters. */
-  font-size: calc(1.24 * max(1.5rem, min(3vw, 3rem)));
+  /* DeepMind's heading size, shrunk only so the longer line still fits the column. */
+  font-size: min(var(--token-fluid-font-size-3xl), calc(100cqw / 12.5));
   font-style: normal;
   font-weight: 300;
   letter-spacing: -0.01em;
   line-height: 1.12;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-section.main.statement-hero .statement-hero__headline [data-word] {
-  display: inline;
-}
-
-section.main.statement-hero .hero-char {
-  display: inline-block;
-  will-change: transform, opacity;
+section.main.statement-hero .statement-hero__line {
+  display: block;
+  white-space: nowrap;
 }
 
 @media (max-width: 767px) {
+  section.main.statement-hero {
+    height: 400px;
+    min-height: 400px;
+    max-height: 400px;
+  }
+
   /* Single mobile treatment: centered stack. */
   section.main.statement-hero .statement-hero__copy {
     top: 0;
@@ -623,7 +665,7 @@ section.main.statement-hero .hero-char {
     width: auto;
     max-width: none;
     transform: none;
-    padding: 12px 0;
+    padding: var(--hero-stack) 0 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -635,10 +677,21 @@ section.main.statement-hero .hero-char {
     position: relative;
     top: auto;
     left: auto;
-    width: 100%;
-    max-width: none;
-    /* Shrink just enough that both lines fit the screen. */
-    font-size: min(29.76px, calc((100vw - 2 * var(--layout-gutter) - 8px) / 12.1));
+  }
+}
+
+/* Services and other inner pages: same hero, shorter band. */
+section.main.statement-hero.statement-hero--compact {
+  height: 280px;
+  min-height: 280px;
+  max-height: 280px;
+}
+
+@media (max-width: 767px) {
+  section.main.statement-hero.statement-hero--compact {
+    height: 220px;
+    min-height: 220px;
+    max-height: 220px;
   }
 }
 
@@ -1458,7 +1511,7 @@ section#join-us {
 .home-about {
   background: #fff;
   color: #000;
-  padding: 69px 0 80px;
+  padding: 80px 0 0;
 }
 
 .home-about__row {
@@ -1489,12 +1542,12 @@ section#join-us {
 
 .home-about__label {
   margin: 0 0 43px;
-  color: var(--color-orange);
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 24px;
+  color: var(--color-green);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   text-align: center;
   text-transform: uppercase;
 }
@@ -1529,6 +1582,20 @@ section#join-us {
   margin-top: 40px;
 }
 
+/* Center the label. The arrow hangs past the end and is not part of that measure. */
+.home-about-cta .btn {
+  position: relative;
+  padding-right: 0;
+}
+
+.home-about-cta .btn svg {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  margin-left: 0;
+  translate: 0 -50%;
+}
+
 @media (max-width: 1023px) {
   .home-about__row {
     flex-direction: column;
@@ -1561,7 +1628,7 @@ section#join-us {
 
 @media (max-width: 767px) {
   .home-about {
-    padding: 65px 0;
+    padding: 64px 0 0;
   }
 
   .home-about__row {
@@ -1579,7 +1646,7 @@ section#join-us {
   .home-about__label {
     margin-bottom: 17px;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 1.1;
     text-align: center;
   }
 
@@ -1615,6 +1682,35 @@ section#join-us {
   scroll-margin-top: var(--layout-scroll-offset);
 }
 
+.home-services .home-about__label {
+  margin-bottom: 14px;
+}
+
+.home-services__intro {
+  max-width: 36rem;
+  margin: 0 auto 40px;
+  color: #000;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 26px;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+@media (max-width: 767px) {
+  .home-services .home-about__label {
+    margin-bottom: 10px;
+  }
+
+  .home-services__intro {
+    margin-bottom: 28px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
 /* Same column as the rest of the page, stepped a little into the side margins. */
 .home-services > .container {
   max-width: var(--layout-max-width);
@@ -1645,10 +1741,10 @@ section#join-us {
 }
 
 .home-service-card {
-  --service-surface: #e4f3ff;
-  --service-accent: #bae1ff;
-  --service-border: #d4edff;
-  --service-action: #2f6f99;
+  --service-surface: #fff;
+  --service-accent: #fff;
+  --service-border: #000;
+  --service-action: #000;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1657,30 +1753,21 @@ section#join-us {
   min-height: 288px;
   padding: 32px 28px 28px;
   overflow: hidden;
-  border: 1px solid var(--service-border);
-  border-radius: 28px;
-  background: var(--service-surface);
-  color: #2f3034;
+  border: 0;
+  border-radius: 8px;
+  background: #f4f4f4;
+  color: #000;
   text-align: left;
   cursor: pointer;
-  transition:
-    transform 0.1s cubic-bezier(0.2, 0, 0, 1),
-    box-shadow 0.1s cubic-bezier(0.2, 0, 0, 1),
-    background-color 0.16s cubic-bezier(0.2, 0, 0, 1);
+  transition: background-color 0.16s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.home-service-card[data-scheme='green'] {
-  --service-surface: #e5fae3;
-  --service-accent: #bef2b8;
-  --service-border: #d7f7d3;
-  --service-action: #2f7a48;
-}
-
+.home-service-card[data-scheme='green'],
 .home-service-card[data-scheme='red'] {
-  --service-surface: #fff2f8;
-  --service-accent: #ffdeec;
-  --service-border: #ffebf3;
-  --service-action: #b84e78;
+  --service-surface: #fff;
+  --service-accent: #fff;
+  --service-border: #000;
+  --service-action: #000;
 }
 
 .home-service-card__art {
@@ -1692,8 +1779,10 @@ section#join-us {
   width: 72%;
   height: 88%;
   margin: 0;
-  opacity: 0.6;
+  opacity: 1;
   pointer-events: none;
+  filter: grayscale(1);
+  mix-blend-mode: multiply;
   transition: opacity 0.16s cubic-bezier(0.2, 0, 0, 1);
 }
 
@@ -1746,30 +1835,40 @@ section#join-us {
   transform-origin: 30% 32%;
 }
 
+.home-service-card__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .home-service-card h3 {
   position: relative;
   z-index: 1;
   margin: 0;
+  font-family: var(--theme-font-sans);
   font-weight: 500;
   font-size: 26px;
   letter-spacing: -0.01em;
   line-height: 1.12;
-  color: #2f3034;
+  color: #000;
   text-align: left;
 }
 
 .home-service-card p {
   position: relative;
   z-index: 1;
-  margin: 12px 0 0;
-  max-width: none;
+  margin: 8px 0 0;
+  max-width: 23em;
   font-family: var(--theme-font-body);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 1.5;
-  color: #2f3034;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: #000;
   text-align: left;
-  text-wrap: pretty;
 }
 
 .home-service-card .btn {
@@ -1779,9 +1878,14 @@ section#join-us {
   margin-top: auto;
   padding-top: 22px;
   padding-right: 0;
+  color: #000;
   text-shadow: none;
   filter: none;
   transition: none;
+}
+
+.home-service-card .btn svg * {
+  fill: currentColor;
 }
 
 .home-service-card:hover .btn,
@@ -1791,8 +1895,12 @@ section#join-us {
   padding-right: 0;
 }
 
+.home-service-card .btn.orange {
+  color: #000;
+}
+
 .home-service-card:focus-visible {
-  outline: 2px solid #2f3034;
+  outline: 2px solid #000;
   outline-offset: 4px;
 }
 
@@ -1805,56 +1913,50 @@ section#join-us {
 
 @media (max-width: 767px) {
   .home-service-card {
-    min-height: 248px;
-    padding: 32px 28px 28px;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    padding: 16px 12px 16px 16px;
   }
 
-  @media (max-width: 480px) {
-    .home-service-card {
-      min-height: 280px;
-    }
+  .home-service-card__art {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    flex: 0 0 clamp(80px, 26vw, 132px);
+    width: clamp(80px, 26vw, 132px);
+    height: auto;
+    aspect-ratio: 1;
+    margin: 0;
+  }
+
+  .home-service-card__art img {
+    object-position: center;
+  }
+
+  .home-service-card__copy {
+    flex: 1 1 auto;
   }
 
   .home-service-card h3 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .home-service-card p {
-    max-width: 86%;
-    font-size: 16px;
+    margin-top: 6px;
+    font-size: 15px;
     line-height: 1.4;
   }
 
   .home-service-card .btn {
-    padding-top: 8px;
-    color: var(--service-action);
-    opacity: 0;
-    transition: opacity 0.16s cubic-bezier(0.2, 0, 0, 1);
-  }
-
-  .home-service-card .btn svg * {
-    fill: currentColor;
-  }
-
-  .home-service-card:hover .btn,
-  .home-service-card:focus-visible .btn {
+    margin-top: 0;
+    padding-top: 12px;
+    color: #000;
     opacity: 1;
-  }
-
-  .home-service-card p::before {
-    content: "";
-    float: right;
-    width: 26%;
-    height: 5lh;
-    shape-outside: polygon(100% 1lh, 100% 100%, 0 100%);
-    shape-margin: 0;
-  }
-
-  .home-service-card__art {
-    right: 12px;
-    bottom: 12px;
-    width: 56%;
-    height: 56%;
   }
 }
 
@@ -1887,6 +1989,10 @@ section#join-us {
     object-position: center;
   }
 
+  .home-service-card__copy {
+    align-items: center;
+  }
+
   .home-service-card h3 {
     max-width: 16ch;
     margin-top: 16px;
@@ -1895,10 +2001,8 @@ section#join-us {
   }
 
   .home-service-card p {
-    max-width: 32ch;
+    max-width: 28ch;
     margin-top: 14px;
-    font-size: 15px;
-    line-height: 1.45;
     text-align: center;
     text-wrap: balance;
   }
@@ -1915,12 +2019,49 @@ section#join-us {
 }
 
 .home-service-card:hover {
-  transform: translateY(-2px);
-  background: color-mix(in srgb, var(--service-accent) 92%, #fff);
-  box-shadow: 0 6px 12px -10px color-mix(in srgb, var(--service-accent) 28%, #141414);
+  background: #ebebeb;
 }
 
-/* Services page: the picture sits with the opening; the rest of the section reads full width. */
+/* About uses the same column and body type as the services chapters. */
+.home-cover.about-page .page-stories {
+  padding-top: 0;
+  padding-bottom: 96px;
+}
+
+.home-cover.about-page .page-story {
+  padding-top: var(--home-section-gap);
+  padding-bottom: 0;
+}
+
+.about-page .page-story__copy p {
+  margin: 0;
+  max-width: 62ch;
+  color: #081c39;
+  font-family: var(--theme-font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  text-wrap: pretty;
+}
+
+.about-page .page-story__copy p + p {
+  margin-top: 20px;
+}
+
+@media (max-width: 767px) {
+  .home-cover.about-page .page-stories {
+    padding-bottom: 64px;
+  }
+
+  .about-page .page-story__copy p {
+    max-width: none;
+    font-size: 18px;
+    line-height: 26px;
+  }
+}
+
+/* About page: the picture floats beside the opening, and the rest of the section reads full width. */
 .page-intro {
   padding-top: calc(var(--layout-header-height) + 56px);
   padding-bottom: 8px;
@@ -1929,6 +2070,14 @@ section#join-us {
 .page-stories {
   padding: 8px 0 24px;
   background: #fff;
+}
+
+.home-cover.services-page .page-stories {
+  padding-top: 0;
+}
+
+.home-cover.services-page .page-story:first-child {
+  padding-top: var(--home-section-gap);
 }
 
 .page-story {
@@ -2032,8 +2181,109 @@ section#join-us {
   }
 }
 
-.home-service-card:active {
-  transform: translateY(-1px);
+/* Services page keeps the side-by-side chapter layout. */
+.services-page .home-about__secondary p {
+  max-width: 40em;
+  margin-inline: auto;
+  color: #081c39;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+}
+
+.services-page .page-story__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+}
+
+.services-page .page-story:nth-child(even) .page-story__layout {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.services-page .page-story__copy {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.services-page .page-story:nth-child(even) .page-story__copy {
+  grid-column: 2;
+}
+
+.services-page .page-story__art {
+  float: none;
+  grid-column: 2;
+  grid-row: 1;
+  width: clamp(180px, 22vw, 240px);
+  margin: 4px 0 0;
+}
+
+.services-page .page-story:nth-child(even) .page-story__art {
+  grid-column: 1;
+  margin: 4px 0 0;
+}
+
+.services-page .page-story h2 {
+  color: #081c39;
+  font-family: var(--theme-font-sans);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+}
+
+.services-page .page-story__copy p {
+  margin-top: 20px;
+  max-width: 62ch;
+  color: #081c39;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  text-wrap: auto;
+}
+
+.services-page .page-story__copy p.page-story__lead {
+  margin-top: 14px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.services-page .page-story__more {
+  margin-top: 28px;
+}
+
+.service-detail__section + .service-detail__section {
+  margin-top: 56px;
+}
+
+@media (max-width: 767px) {
+  .services-page .page-story__layout,
+  .services-page .page-story:nth-child(even) .page-story__layout {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .services-page .page-story__art,
+  .services-page .page-story:nth-child(even) .page-story__art {
+    grid-column: 1;
+    grid-row: 1;
+    width: clamp(168px, 62vw, 240px);
+    margin: 0 auto 20px;
+  }
+
+  .services-page .page-story__copy,
+  .services-page .page-story:nth-child(even) .page-story__copy {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .services-page .page-story__copy p,
+  .services-page .page-story__copy p.page-story__lead {
+    max-width: none;
+    font-size: 18px;
+    line-height: 26px;
+  }
 }
 
 .home-service-card[data-scheme='blue']:hover .art-group {
@@ -2177,7 +2427,7 @@ footer .footer-base {
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 0;
   flex: 0 1 auto;
   min-width: 0;
   margin-left: auto;
@@ -2220,7 +2470,7 @@ footer .copy .text {
     align-items: flex-end;
     justify-content: flex-start;
     margin-left: auto;
-    gap: 4px;
+    gap: 0;
   }
 
   footer .footer-email {
@@ -2297,7 +2547,7 @@ footer .copy .text {
   }
 
   footer .logo svg {
-    height: calc(2lh + 4px);
+    height: 2lh;
     width: auto;
   }
 
@@ -3076,4 +3326,153 @@ footer .newsletter .btn {
   .essay-contributors {
     margin-top: 40px;
   }
+}
+
+/* Pastel page tones. Blue, green, and pink are the DeepMind header set.
+   Sand and lilac use the same recipe — accent mixed 40% into white for the
+   fill, 62% for the edge — so About and Services sit in the same family.
+   Registered as colors so a page change blends instead of cutting. */
+@property --tone-fill {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #000000;
+}
+
+@property --tone-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.12);
+}
+
+@property --tone-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+html {
+  --scheme-blue-accent: #bae1ff;
+  --scheme-blue-fill: #e4f3ff;
+  --scheme-blue-border: #d4edff;
+  --scheme-green-accent: #bef2b8;
+  --scheme-green-fill: #e5fae3;
+  --scheme-green-border: #d7f7d3;
+  --scheme-pink-accent: #ffdeec;
+  --scheme-pink-fill: #fff2f8;
+  --scheme-pink-border: #ffebf3;
+  --scheme-sand-accent: #efe0a6;
+  --scheme-sand-fill: #f9f3dd;
+  --scheme-sand-border: #f5ecca;
+  --scheme-lilac-accent: #ead4ff;
+  --scheme-lilac-fill: #f7eeff;
+  --scheme-lilac-border: #f2e4ff;
+  --tone-fill: #000000;
+  --tone-border: rgba(255, 255, 255, 0.12);
+  --tone-ink: #ffffff;
+  --tone-ink-soft: rgba(47, 48, 52, 0.66);
+  transition:
+    --tone-fill 0.6s ease,
+    --tone-border 0.6s ease,
+    --tone-ink 0.6s ease;
+}
+
+html[data-tone] {
+  --tone-ink: #2f3034;
+}
+
+html[data-tone='blue'] {
+  --tone-accent: var(--scheme-blue-accent);
+  --tone-fill: var(--scheme-blue-fill);
+  --tone-border: var(--scheme-blue-border);
+}
+
+html[data-tone='green'] {
+  --tone-accent: var(--scheme-green-accent);
+  --tone-fill: var(--scheme-green-fill);
+  --tone-border: var(--scheme-green-border);
+}
+
+html[data-tone='pink'] {
+  --tone-accent: var(--scheme-pink-accent);
+  --tone-fill: var(--scheme-pink-fill);
+  --tone-border: var(--scheme-pink-border);
+}
+
+html[data-tone='sand'] {
+  --tone-accent: var(--scheme-sand-accent);
+  --tone-fill: var(--scheme-sand-fill);
+  --tone-border: var(--scheme-sand-border);
+}
+
+html[data-tone='lilac'] {
+  --tone-accent: var(--scheme-lilac-accent);
+  --tone-fill: var(--scheme-lilac-fill);
+  --tone-border: var(--scheme-lilac-border);
+}
+
+/* Stays on screen across routes, so the band can ease from one colour to the next
+   while the page content fades. Height follows the hero on that route. */
+.tone-field {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 0;
+  height: 560px;
+  pointer-events: none;
+  background: var(--tone-fill);
+  transition: height 0.6s ease;
+}
+
+html[data-tone] .tone-field {
+  height: 280px;
+}
+
+@media (max-width: 767px) {
+  .tone-field {
+    height: 400px;
+  }
+
+  html[data-tone] .tone-field {
+    height: 220px;
+  }
+}
+
+header .logo svg :is(path, text) {
+  fill: var(--tone-ink);
+}
+
+html[data-tone] .about-statement p {
+  color: var(--tone-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  .tone-field,
+  main,
+  footer {
+    transition: none;
+  }
+}
+
+/* Services index: each story keeps its own pastel, under the sand header. */
+.services-page .page-stories:has(.page-story + .page-story) .page-story[data-scheme] h2::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 3px;
+  margin-bottom: 14px;
+  background: var(--story-accent);
+}
+
+.services-page .page-story[data-scheme='competitions'] {
+  --story-accent: var(--scheme-blue-accent);
+}
+
+.services-page .page-story[data-scheme='training'] {
+  --story-accent: var(--scheme-green-accent);
+}
+
+.services-page .page-story[data-scheme='lab'] {
+  --story-accent: var(--scheme-pink-accent);
 }

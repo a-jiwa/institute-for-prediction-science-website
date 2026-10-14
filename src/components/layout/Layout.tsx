@@ -1,12 +1,22 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
+import { toneForPath, type PageTone } from '../../data/pageTones'
 import { toRouterPath } from '../../utils/assetUrl'
+
+function applyTone(tone: PageTone | null) {
+  if (tone) document.documentElement.dataset.tone = tone
+  else delete document.documentElement.dataset.tone
+}
 
 export function Layout() {
   const { pathname, hash } = useLocation()
   const navigate = useNavigate()
+
+  useLayoutEffect(() => {
+    applyTone(toneForPath(pathname))
+  }, [pathname])
 
   useEffect(() => {
     const isHeaderWhite = pathname.startsWith('/privacy-policy')
@@ -31,10 +41,11 @@ export function Layout() {
       if (routerPathname === pathname && !url.hash) return
 
       event.preventDefault()
+      applyTone(toneForPath(routerPathname))
       document.body.classList.add('animate-out')
       window.setTimeout(() => {
         navigate(routerPath)
-      }, 250)
+      }, 320)
     }
 
     document.addEventListener('click', onClick)
@@ -55,6 +66,7 @@ export function Layout() {
 
   return (
     <div className="wrapper min-h-[100lvh] w-full bg-white">
+      <div className="tone-field" aria-hidden="true" />
       <Header />
       <main>
         <Outlet />
