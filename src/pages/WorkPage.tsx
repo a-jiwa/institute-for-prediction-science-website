@@ -1,56 +1,50 @@
-import { CtaSection } from '../components/sections/CtaSection'
-import { HeroSection } from '../components/sections/HomeSections'
-import { Btn } from '../components/ui/Btn'
 import { CONTACT_EMAIL } from '../components/icons/Logo'
+import { SmartLink } from '../components/ui/SmartLink'
 import { services } from '../data/services'
-import { assetUrl } from '../utils/assetUrl'
+
+const CONTACT_HREF = `mailto:${CONTACT_EMAIL}`
 
 export function WorkPage() {
   return (
-    <>
-      <HeroSection lines={['Services']} compact />
+    <div className="home-cover">
+      <div className="ka">
+        <section className="ka-intro ka-intro--title">
+          <div className="ka-contain">
+            <div className="ka-intro__copy">
+              <h2>Services</h2>
+            </div>
+          </div>
+        </section>
 
-      <div className="home-cover services-page">
-        <div className="page-stories">
-          {services.map((service) => (
-            <article className="page-story" data-scheme={service.id} id={service.id} key={service.id}>
-              <div className="container">
-                <div className="page-story__layout">
-                  <figure className="page-story__art">
-                    {service.layers.map((layer) => (
-                      <img alt="" className={layer.role} key={layer.src} src={assetUrl(layer.src)} />
-                    ))}
-                  </figure>
-                  <div className="page-story__copy">
-                    <h2>{service.title}</h2>
-                    <p className="page-story__lead">{service.lead}</p>
-                    {service.paragraphs.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
-                    ))}
-                    <Btn className="page-story__more" href={`/services/${service.id}`} orange>
-                      Learn more
-                    </Btn>
-                  </div>
-                </div>
+        <section className="ka-steps ka-steps--white">
+          <div className="ka-contain">
+            {services.map((service) => (
+              <div className="ka-step" id={service.id} key={service.id}>
+                <h3>{service.title}</h3>
+                <p>{service.lead}</p>
+                <SmartLink className="ka-btn" href={`/services/${service.id}`}>
+                  Learn more
+                </SmartLink>
               </div>
-            </article>
-          ))}
-        </div>
+            ))}
+          </div>
+        </section>
 
-        <CtaSection
-          id="contact-us"
-          title="Contact us"
-          support={
+        <section className="ka-close" id="contact-us">
+          <div className="ka-shape" aria-hidden="true" />
+          <div className="ka-contain">
+            <p className="ka-kicker">Contact us</p>
+            <h2>Have a forecasting project in mind?</h2>
             <p>
               Whether you're interested in running a forecasting competition, developing your team's
               forecasting skills or trying something new, we'd be happy to hear what you have in mind.
             </p>
-          }
-          action={{ label: 'Get in touch', href: `mailto:${CONTACT_EMAIL}` }}
-        >
-          <p>Have a forecasting project in mind?</p>
-        </CtaSection>
+            <a className="ka-btn" href={CONTACT_HREF}>
+              Get in touch
+            </a>
+          </div>
+        </section>
       </div>
-    </>
+    </div>
   )
 }

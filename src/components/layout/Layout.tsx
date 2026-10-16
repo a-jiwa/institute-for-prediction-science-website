@@ -20,9 +20,13 @@ export function Layout() {
 
   useEffect(() => {
     const isHeaderWhite = pathname.startsWith('/privacy-policy')
+    const path = pathname.replace(/\/+$/, '')
+    const hideHeaderBorder = path === '/services/competitions' || path === '/services/training'
     document.body.classList.toggle('header-white', isHeaderWhite)
+    document.body.classList.toggle('header-no-border', hideHeaderBorder)
     return () => {
       document.body.classList.remove('header-white')
+      document.body.classList.remove('header-no-border')
     }
   }, [pathname])
 
@@ -40,20 +44,17 @@ export function Layout() {
       const routerPathname = routerPath.split('#')[0].split('?')[0]
       if (routerPathname === pathname && !url.hash) return
 
+      // Capture phase so React Router <Link> sees defaultPrevented and does not
+      // also push — otherwise Back needs two presses to leave the page.
       event.preventDefault()
-      applyTone(toneForPath(routerPathname))
-      document.body.classList.add('animate-out')
-      window.setTimeout(() => {
-        navigate(routerPath)
-      }, 320)
+      navigate(routerPath)
     }
 
-    document.addEventListener('click', onClick)
-    return () => document.removeEventListener('click', onClick)
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
   }, [navigate, pathname])
 
   useEffect(() => {
-    document.body.classList.remove('animate-out')
     if (hash) {
       const el = document.querySelector(hash)
       if (el) {

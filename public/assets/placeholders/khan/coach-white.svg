@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="975" height="1069" viewBox="0 0 975 1069" fill="none">
+  <!-- Matches card-1.webp bounds: white shell left-rounded, continues off right -->
+  <path
+    d="M153 113H975V939H153C135.327 939 121 924.673 121 907V145C121 127.327 135.327 113 153 113Z"
+    fill="#fff"
+  />
+
+  <!-- Popup — lighter gray, no shadow (card-1 popup region) -->
+  <rect x="42" y="620" width="260" height="390" rx="16" fill="#F7F7F7"/>
+</svg>

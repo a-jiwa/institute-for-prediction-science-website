@@ -43,4 +43,3 @@ section.post .content h2{margin-top:40px;margin-bottom:15px;color:var(--color-te
 section.post .content h6{font-family:'Google Sans Code',ui-monospace,monospace;font-weight:400;font-size:12px;letter-spacing:0.02em;text-transform:uppercase;text-align:right;margin-bottom:0}
 section.post .content h6+h6{margin-top:4px}
 .btn.orange{color:var(--color-orange);text-decoration:none;display:inline-flex;align-items:center;font-family:var(--font-mono);letter-spacing:0.02em;text-transform:uppercase}
-body.animate-out main,body.animate-out footer{opacity:0}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="975" height="1069" viewBox="0 0 975 1069" fill="none">
+  <!-- Matches acc-3.webp two overlapping screens -->
+  <path
+    d="M260 35H975V560H260C246.745 560 236 549.255 236 536V59C236 45.745 246.745 35 260 35Z"
+    fill="#fff"
+  />
+  <path
+    d="M55 432H975V1069H31V456C31 442.745 41.745 432 55 432Z"
+    fill="#fff"
+  />
+</svg>

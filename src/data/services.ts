@@ -22,8 +22,8 @@ export type Service = {
 export const services: readonly Service[] = [
   {
     id: 'competitions',
-    title: 'Competitions',
-    lead: 'We run custom forecasting competitions for universities, companies and other organisations, measuring predictions against real-world outcomes.',
+    title: 'Custom Competitions',
+    lead: 'We run custom forecasting competitions for universities, companies and other organisations. Participants forecast the same questions and are scored against real outcomes, leaving a clear record of which approaches work.',
     paragraphs: [
       'Participants forecast the same questions and are scored consistently, creating a clear record of forecasting ability and revealing which approaches work best.',
       'Each competition is tailored to the organisation’s needs, helping it evaluate predictive skill and learn from outcomes.',
@@ -74,8 +74,8 @@ export const services: readonly Service[] = [
   },
   {
     id: 'training',
-    title: 'Training',
-    lead: 'We help individuals and teams develop their forecasting skills through practice, feedback and measurable results.',
+    title: 'Prediction Training',
+    lead: 'We help individuals and teams develop their forecasting through practice and feedback. They make probabilistic forecasts, review what happened, and use that record to improve their judgement.',
     paragraphs: [
       'Participants make probabilistic forecasts, track their accuracy and learn from past predictions. By reviewing what went right and wrong, they can identify weaknesses, improve their judgement and become better forecasters.',
     ],
@@ -126,8 +126,8 @@ export const services: readonly Service[] = [
   },
   {
     id: 'lab',
-    title: 'Lab',
-    lead: 'We research forecasting methods and build tools that make forecasting and prediction-market data more useful.',
+    title: 'Prediction Labs',
+    lead: 'We research forecasting methods and build tools that turn forecasts and prediction-market data into practical insight for decisions.',
     paragraphs: [
       'Through experimentation and analysis, we investigate how people predict, evaluate new approaches and develop applications that turn predictive information into practical insights for decision-making.',
     ],

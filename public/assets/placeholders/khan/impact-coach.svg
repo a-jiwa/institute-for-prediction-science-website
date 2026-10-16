@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1102" height="683" viewBox="0 0 1102 683" fill="none">
+  <!-- Full-bleed chrome — same fill footprint as accordion.webp -->
+  <rect width="1102" height="683" fill="#F8FAFB"/>
+
+  <!-- White application panel — same crop as accordion (rounded TL, off right & bottom) -->
+  <path
+    d="M478 128H1102V683H462V144C462 135.163 469.163 128 478 128Z"
+    fill="#fff"
+  />
+
+  <!-- Coach popup — lighter gray -->
+  <rect x="48" y="280" width="320" height="403" rx="16" fill="#F7F7F7"/>
+</svg>

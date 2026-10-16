@@ -1,6 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { animate, stagger } from 'animejs'
 import { SmartLink } from '../ui/SmartLink'
 import { Btn } from '../ui/Btn'
 import { HeroGrid } from '../hero/HeroGrid'
@@ -21,47 +19,6 @@ export function HeroSection({
 } = {}) {
   const { pathname } = useLocation()
   const tone = toneForPath(pathname)
-  const headlineRef = useRef<HTMLHeadingElement>(null)
-  const lineKey = lines.join('\n')
-
-  useLayoutEffect(() => {
-    const headline = headlineRef.current
-    if (!headline) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const chars = [...headline.querySelectorAll<HTMLElement>('.hero-char')]
-    if (!chars.length) return
-    chars.forEach((char) => {
-      char.style.opacity = '0'
-    })
-
-    let cancelled = false
-    let animation: { revert: () => void } | undefined
-
-    const play = () => {
-      if (cancelled) return
-      animation = animate(chars, {
-        opacity: [0, 1],
-        duration: 80,
-        ease: 'out(5)',
-        delay: stagger(42),
-      })
-    }
-
-    document.fonts.ready.then(() => {
-      requestAnimationFrame(() => {
-        if (!cancelled) play()
-      })
-    })
-
-    return () => {
-      cancelled = true
-      animation?.revert()
-      chars.forEach((char) => {
-        char.style.opacity = ''
-      })
-    }
-  }, [lineKey])
 
   return (
     <section className={compact ? 'main statement-hero statement-hero--compact' : 'main statement-hero'}>
@@ -69,14 +26,10 @@ export function HeroSection({
 
       <div className="statement-hero__content">
         <div className="statement-hero__copy">
-          <h1 className="statement-hero__headline" ref={headlineRef}>
+          <h1 className="statement-hero__headline">
             {lines.map((line) => (
               <span className="statement-hero__line" key={line}>
-                {[...line].map((char, index) => (
-                  <span className="hero-char" key={`${line}-${index}`}>
-                    {char}
-                  </span>
-                ))}
+                {line}
               </span>
             ))}
           </h1>
@@ -219,7 +172,7 @@ export function AboutTextSection() {
 const services = [
   {
     id: 'competitions',
-    title: 'Competitions',
+    title: 'Custom Competitions',
     text: 'We run custom forecasting competitions that score predictions against real world outcomes.',
     scheme: 'blue',
     layers: [
@@ -230,7 +183,7 @@ const services = [
   },
   {
     id: 'training',
-    title: 'Training',
+    title: 'Prediction Training',
     text: 'We provide training services that help people make better forecasts by reviewing their predictions.',
     scheme: 'green',
     layers: [
@@ -242,7 +195,7 @@ const services = [
   },
   {
     id: 'lab',
-    title: 'Lab',
+    title: 'Prediction Labs',
     text: 'The prediction lab researches forecasting methods and builds tools that put that evidence to use.',
     scheme: 'red',
     layers: [
