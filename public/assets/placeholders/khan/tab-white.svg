@@ -54,7 +54,7 @@
         font-weight="500"
         font-style="normal"
         letter-spacing="0.06em"
-      >PREDICTIVE</tspan>
+      >PREDICTION</tspan>
       <tspan
         x="72"
         y="43"
@@ -62,7 +62,7 @@
         font-size="13"
         font-weight="500"
         letter-spacing="0.06em"
-      >SCIENCES</tspan>
+      >SCIENCE</tspan>
     </text>
   </g>
   <!-- Header right title -->

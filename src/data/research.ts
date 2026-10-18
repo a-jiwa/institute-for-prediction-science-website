@@ -48,7 +48,7 @@ const FEED: Array<{
 }> = [
   {
     slug: 'inkling',
-    title: 'Introducing the Institute for Predictive Sciences',
+    title: 'Introducing the Institute for Prediction Science',
     excerpt:
       'We apply the science of forecasting to help people and organisations make better decisions under uncertainty.',
     image: '/assets/img/research/dmi-01.webp',

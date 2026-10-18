@@ -103,7 +103,7 @@ export function DetailPage({ type }: DetailPageProps) {
             <p className="leading-relaxed">
               {'excerpt' in item && typeof item.excerpt === 'string' && item.excerpt
                 ? item.excerpt
-                : 'Learn more about this role and how to get involved with The Institute for Predictive Sciences.'}
+                : 'Learn more about this role and how to get involved with The Institute for Prediction Science.'}
             </p>
 
             <div className="mt-10">

@@ -15,14 +15,14 @@ const TEXT_GREEN = '#102B23'
 const TEXT_INK = '#000000'
 const TEXT_X = 72
 
-export const SITE_NAME = 'The Institute for Predictive Sciences'
-export const WORDMARK_NAME = 'Institute for Predictive Sciences'
-export const CONTACT_EMAIL = 'info@predictivesciences.org'
+export const SITE_NAME = 'The Institute for Prediction Science'
+export const WORDMARK_NAME = 'Institute for Prediction Science'
+export const CONTACT_EMAIL = 'info@predictionscience.org'
 export const BLOG_URL = 'https://adnaanjiwa.substack.com'
 export const BLOG_SUBSCRIBE_URL =
   'https://adnaanjiwa.substack.com/subscribe?utm_source=menu&simple=true&next=https%3A%2F%2Fadnaanjiwa.substack.com%2F'
-export const LINKEDIN_URL = 'https://www.linkedin.com/company/institute-for-predictive-sciences'
-export const X_URL = 'https://x.com/PredictiveSci'
+export const LINKEDIN_URL = 'https://www.linkedin.com/company/institute-for-prediction-science'
+export const X_URL = 'https://x.com/PredictionSci'
 
 type LogoProps = {
   className?: string
@@ -48,15 +48,15 @@ type RunSpec = {
 type LogoKerns = {
   institute: number[]
   for: number[]
-  predictive: number[]
-  sciences: number[]
+  prediction: number[]
+  science: number[]
 }
 
 const KERN_RUNS = {
   institute: { text: 'INSTITUTE', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
   for: { text: 'for', family: SERIF_FAMILY, size: FOR_SIZE, weight: 500, style: 'italic' },
-  predictive: { text: 'PREDICTIVE', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
-  sciences: { text: 'SCIENCES', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
+  prediction: { text: 'PREDICTION', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
+  science: { text: 'SCIENCE', family: SANS_FAMILY, size: CAP_SIZE, weight: 500 },
 } satisfies Record<keyof LogoKerns, RunSpec>
 
 function emToPx(length: string | undefined, fontSize: number) {
@@ -106,8 +106,8 @@ function measureLogoKerns(): LogoKerns {
   return {
     institute: kernDeltas(KERN_RUNS.institute),
     for: kernDeltas(KERN_RUNS.for),
-    predictive: kernDeltas(KERN_RUNS.predictive),
-    sciences: kernDeltas(KERN_RUNS.sciences),
+    prediction: kernDeltas(KERN_RUNS.prediction),
+    science: kernDeltas(KERN_RUNS.science),
   }
 }
 
@@ -216,19 +216,19 @@ function LogoWordmark({
           fontStyle="italic"
         />
         <GlyphRun
-          text="PREDICTIVE"
+          text="PREDICTION"
           tracking={CAP_TRACKING}
           leadDx="0.28em"
-          kerns={kerns?.predictive}
+          kerns={kerns?.prediction}
           fontFamily={SANS_FAMILY}
           fontSize={CAP_SIZE}
           fontWeight={500}
           fontStyle="normal"
         />
         <GlyphRun
-          text="SCIENCES"
+          text="SCIENCE"
           tracking={CAP_TRACKING}
-          kerns={kerns?.sciences}
+          kerns={kerns?.science}
           x={textX}
           y={BOTTOM_BASELINE}
           fontFamily={SANS_FAMILY}
@@ -270,7 +270,7 @@ function LogoWordmark({
         fontStyle="normal"
         letterSpacing={CAP_TRACKING}
       >
-        PREDICTIVE
+        PREDICTION
       </tspan>
       <tspan
         x={textX}
@@ -280,7 +280,7 @@ function LogoWordmark({
         fontWeight={500}
         letterSpacing={CAP_TRACKING}
       >
-        SCIENCES
+        SCIENCE
       </tspan>
     </text>
   )
