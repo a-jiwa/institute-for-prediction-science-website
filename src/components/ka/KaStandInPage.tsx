@@ -45,6 +45,7 @@ export function KaStandInPage() {
       />
       <KaSteps />
       <KaAssessSplit
+        media="calendar"
         title={KA_ASSESS_TEACH.title}
         paragraphs={KA_ASSESS_TEACH.paragraphs}
         image={KA_ASSESS_TEACH.image}

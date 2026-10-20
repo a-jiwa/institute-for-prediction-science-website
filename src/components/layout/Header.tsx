@@ -138,11 +138,18 @@ function NavItem({
   location: ReturnType<typeof useLocation>
   onNavigate?: () => void
 }) {
+  const [linkPath, linkHash] = link.href.split('#')
+  const path = linkPath || '/'
   const active =
     !link.external &&
-    (link.href === '/'
-      ? location.pathname === '/'
-      : location.pathname.startsWith(link.href.split('#')[0]))
+    (linkHash === 'services'
+      ? (location.pathname === '/' && location.hash === '#services') ||
+        location.pathname.startsWith('/services')
+      : linkHash
+        ? location.pathname === path && location.hash === `#${linkHash}`
+        : path === '/'
+          ? location.pathname === '/' && !location.hash
+          : location.pathname.startsWith(path))
 
   if (link.external) {
     return (

@@ -68,10 +68,13 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   min-height: 100lvh;
   /* White canvas so the strip behind Safari's toolbar is the page, not black. */
   background: #fff;
+  /* Labs floaters / negative shape insets must not create sideways scroll. */
+  overflow-x: clip;
 }
 
 body {
@@ -85,10 +88,12 @@ body {
 #root,
 .wrapper {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   min-height: 100lvh;
   padding: 0;
   background: #fff;
+  overflow-x: clip;
 }
 
 .wrapper {
@@ -190,6 +195,8 @@ body {
 }
 
 header > .container {
+  position: relative;
+  z-index: 1;
   height: 100%;
 }
 
@@ -225,12 +232,11 @@ header {
   height: calc(var(--layout-header-height) + var(--header-safe-top));
   padding: var(--header-safe-top) 0 0;
   --header-safe-top: env(safe-area-inset-top, 0px);
-  /* The bar stays visually black, but the color lives on a pseudo-element.
+  /* The bar stays visually filled, but the color lives on a pseudo-element.
      Safari 26 samples background-color on fixed elements and paints that
      color into the address-bar gap, which cuts the page off. */
   background-color: transparent;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s ease;
+  border-bottom: none;
   color: var(--tone-ink);
   -webkit-user-select: none;
   user-select: none;
@@ -248,16 +254,12 @@ header::before {
      and show the page above the bar. Cover that padding and a little above
      the screen so the bar meets the top. */
   top: calc((var(--header-safe-top) + 120px) * -1);
-  background-color: var(--tone-fill);
-}
-
-header[data-scrolled] {
-  border-bottom-color: var(--tone-border);
-}
-
-body.header-no-border header,
-body.header-no-border header[data-scrolled] {
-  border-bottom-color: transparent;
+  /* --wash-header-t is driven per-frame by LabsShapeWash (0 → 1). */
+  background-color: color-mix(
+    in srgb,
+    var(--wash-color, #fcc934) calc(var(--wash-header-t, 0) * 100%),
+    var(--tone-fill)
+  );
 }
 
 header .logo {
@@ -349,7 +351,10 @@ header nav a {
   position: relative;
   color: var(--tone-ink);
   font-family: var(--font-sans);
-  font-weight: 400;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
   /* Leaving the selected state. */
   transition:
     color 0.08s cubic-bezier(0.2, 0, 0, 1),
@@ -362,7 +367,7 @@ header nav a:hover {
 }
 
 header nav a.active {
-  font-weight: 600;
+  font-weight: 700;
   opacity: 1;
   /* Becoming selected. The duration is taken from the state you enter. */
   transition:
@@ -382,15 +387,6 @@ header nav a.active {
 }
 
 @media (max-width: 767px) {
-  header.menu-open {
-    border-bottom-color: transparent;
-  }
-
-  /* The 1px border sits outside the header fill. Cover it so the menu meets the bar. */
-  header.menu-open::before {
-    bottom: -1px;
-  }
-
   header.menu-open .logo {
     position: relative;
     z-index: 12;
@@ -438,7 +434,11 @@ header nav a.active {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background-color: var(--tone-fill);
+    background-color: color-mix(
+      in srgb,
+      var(--wash-color, #fcc934) calc(var(--wash-header-t, 0) * 100%),
+      var(--tone-fill)
+    );
   }
 
   header nav.present > * {
@@ -495,9 +495,9 @@ header nav a.active {
 
   header nav > ul a {
     font-family: var(--font-sans);
-    font-size: 40px;
+    font-size: 44px;
     line-height: 1.12;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.01em;
     text-transform: none;
     text-align: center;
@@ -629,28 +629,28 @@ section.main.statement-hero .statement-hero__copy {
   --layout-split: calc((100% - var(--layout-column-gap)) / 2);
 }
 
-/* Desktop / tablet: one fluid treatment (no mid-size text step). */
+/* Same short measure as the About page headline, so the line length stays compact. */
 section.main.statement-hero .statement-hero__headline {
   position: relative;
   margin: 0;
-  width: max-content;
-  max-width: 100%;
+  width: auto;
+  max-width: 11.5em;
   min-width: 0;
   color: var(--tone-ink);
   font-family: var(--font-serif);
-  /* DeepMind's heading size, shrunk only so the longer line still fits the column. */
-  font-size: min(var(--token-fluid-font-size-3xl), calc(100cqw / 12.5));
+  font-size: clamp(2.35rem, 1.35rem + 3.4vw, 4.15rem);
   font-style: normal;
   font-weight: 300;
-  letter-spacing: -0.01em;
-  line-height: 1.12;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
 
 section.main.statement-hero .statement-hero__line {
   display: block;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 @media (max-width: 767px) {
@@ -1807,35 +1807,43 @@ section#join-us {
 }
 
 /* Pivots stay put so a piece turns or grows instead of sliding off its neighbour. */
-.home-service-card[data-scheme='blue'] .art-group {
+.home-service-card[data-scheme='blue'] .art-group,
+.ka-step__media[data-scheme='blue'] .art-group {
   transform-origin: 48% 72%;
 }
 
-.home-service-card[data-scheme='blue'] .art-hand {
+.home-service-card[data-scheme='blue'] .art-hand,
+.ka-step__media[data-scheme='blue'] .art-hand {
   transform-origin: 82% 34%;
 }
 
-.home-service-card[data-scheme='blue'] .art-spark {
+.home-service-card[data-scheme='blue'] .art-spark,
+.ka-step__media[data-scheme='blue'] .art-spark {
   transform-origin: 34% 44%;
 }
 
-.home-service-card[data-scheme='green'] .art-point {
+.home-service-card[data-scheme='green'] .art-point,
+.ka-step__media[data-scheme='green'] .art-point {
   transform-origin: 20% 90%;
 }
 
-.home-service-card[data-scheme='green'] .art-globe {
+.home-service-card[data-scheme='green'] .art-globe,
+.ka-step__media[data-scheme='green'] .art-globe {
   transform-origin: 31% 90%;
 }
 
-.home-service-card[data-scheme='green'] .art-spark {
+.home-service-card[data-scheme='green'] .art-spark,
+.ka-step__media[data-scheme='green'] .art-spark {
   transform-origin: 42% 34%;
 }
 
-.home-service-card[data-scheme='red'] .art-lean {
+.home-service-card[data-scheme='red'] .art-lean,
+.ka-step__media[data-scheme='red'] .art-lean {
   transform-origin: 84% 90%;
 }
 
-.home-service-card[data-scheme='red'] .art-diagram {
+.home-service-card[data-scheme='red'] .art-diagram,
+.ka-step__media[data-scheme='red'] .art-diagram {
   transform-origin: 30% 32%;
 }
 
@@ -2322,15 +2330,52 @@ section#join-us {
   transform: rotate(-1.2deg) scale(1.03);
 }
 
+/* Services How it works: art only animates when Learn more is hovered/focused. */
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='blue'] .art-group {
+  transform: scale(1.015);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='blue'] .art-hand {
+  transform: rotate(1.4deg) scale(1.015);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='blue'] .art-spark {
+  transform: rotate(8deg) scale(1.08);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='green'] .art-point {
+  transform: rotate(-1deg);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='green'] .art-globe {
+  transform: rotate(-1.3deg) scale(1.025);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='green'] .art-spark {
+  transform: rotate(9deg) scale(1.09);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='red'] .art-lean {
+  transform: rotate(-1.3deg) scale(1.012);
+}
+
+.ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme='red'] .art-diagram {
+  transform: rotate(-1.2deg) scale(1.03);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-service-card,
   .home-service-card img,
   .home-service-card__art,
-  .home-service-card .btn {
+  .home-service-card .btn,
+  .ka-step__media,
+  .ka-step__media img,
+  .ka-step__art {
     transition: none;
   }
 
-  .home-service-card[data-scheme]:hover :is(.art-group, .art-hand, .art-spark, .art-point, .art-globe, .art-lean, .art-diagram) {
+  .home-service-card[data-scheme]:hover :is(.art-group, .art-hand, .art-spark, .art-point, .art-globe, .art-lean, .art-diagram),
+  .ka-step:has(.ka-btn:is(:hover, :focus-visible)) .ka-step__media[data-scheme] :is(.art-group, .art-hand, .art-spark, .art-point, .art-globe, .art-lean, .art-diagram) {
     transform: none;
   }
 }
@@ -3364,11 +3409,11 @@ html {
   --scheme-pink-fill: #fff2f8;
   --scheme-pink-border: #ffebf3;
   --scheme-sand-accent: #efe0a6;
-  --scheme-sand-fill: #f9f3dd;
-  --scheme-sand-border: #f5ecca;
+  --scheme-sand-fill: #ffffff;
+  --scheme-sand-border: #e8e8e8;
   --scheme-lilac-accent: #ead4ff;
-  --scheme-lilac-fill: #f7eeff;
-  --scheme-lilac-border: #f2e4ff;
+  --scheme-lilac-fill: #ffffff;
+  --scheme-lilac-border: #e8e8e8;
   --tone-fill: #000000;
   --tone-border: rgba(255, 255, 255, 0.12);
   --tone-ink: #ffffff;
@@ -3386,9 +3431,9 @@ html[data-tone='blue'] {
 }
 
 html[data-tone='green'] {
-  --tone-accent: #f8f1c8;
-  --tone-fill: #f8f1c8;
-  --tone-border: #efe6b6;
+  --tone-accent: #f1ede7;
+  --tone-fill: #ffffff;
+  --tone-border: #e8e8e8;
 }
 
 html[data-tone='pink'] {
@@ -3407,6 +3452,19 @@ html[data-tone='lilac'] {
   --tone-accent: var(--scheme-lilac-accent);
   --tone-fill: var(--scheme-lilac-fill);
   --tone-border: var(--scheme-lilac-border);
+}
+
+/* Toned routes: full-page gray matches the header/hero bands; footer stays black. */
+html[data-tone],
+html[data-tone] #root,
+html[data-tone] .wrapper,
+html[data-tone] main,
+html[data-tone] .home-cover {
+  background: var(--tone-fill);
+}
+
+html[data-tone] footer {
+  background: #000;
 }
 
 /* Stays on screen across routes. Height matches the hero on that route. */
@@ -3596,8 +3654,8 @@ html[data-tone] .about-statement p {
       -45deg,
       #e7e4dc,
       #e7e4dc 10px,
-      #f4f1ea 10px,
-      #f4f1ea 20px
+      #f1ede7 10px,
+      #f1ede7 20px
     );
   color: #5c6570;
   font-family: var(--font-mono);
@@ -3661,11 +3719,11 @@ html[data-tone] .about-statement p {
 .ka-ph--bleed img {
   position: static;
   inset: auto;
-  width: calc(100% + 3.625rem);
+  width: 100%;
   height: auto;
   max-width: none;
   object-fit: contain;
-  object-position: left bottom;
+  object-position: 100% 100%;
 }
 
 /* SVG chrome + HTML stage (demo app surface) */
@@ -3924,7 +3982,7 @@ html[data-tone] .about-statement p {
 }
 
 .ka-pink .ka-app-stage.ka-ph--bleed {
-  width: calc(100% + 3.625rem);
+  width: calc(100% + var(--ka-pink-pad-x, 3.625rem));
 }
 
 .ka-pink .ka-app-stage__shell {
@@ -4868,13 +4926,12 @@ html[data-tone] .about-statement p {
 
 .ka-impact h2,
 .ka-impact h3,
-.ka-impact .ka-kicker,
 .ka-impact strong,
 .ka-impact span {
   color: inherit;
 }
 
-.ka-impact p {
+.ka-impact p:not(.ka-kicker) {
   color: #4a4a4a;
 }
 
@@ -4891,54 +4948,81 @@ html[data-tone] .about-statement p {
 
 .ka-impact p.ka-kicker {
   margin-bottom: 1.25rem;
-  font-size: 1.25rem;
+  color: var(--color-orange);
+  font-size: var(--ka-h4);
   font-weight: var(--ka-weight-bold);
   letter-spacing: var(--ka-tracking-normal);
-  line-height: 1.33;
+  line-height: var(--ka-leading-xlarge);
   text-align: center;
 }
 
-/* Khan card_large: 4/12 copy + 8/12 visual, 48×58×0 pad, copy vertically centered */
+/*
+  Khan card_large (schools Impact):
+  12-col grid — copy span 4, visual span 8; pad 3rem / 3.625rem desktop,
+  2.3rem / 1.875rem below 62em; image bleeds into right pad (object-position 100% 100%).
+*/
 .ka-pink {
+  --ka-pink-pad-x: 3.625rem;
+  --ka-pink-pad-t: 3rem;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: 2rem;
-  align-items: start;
-  margin-top: var(--ka-gutter);
-  padding: 48px 58px 0;
-  border-radius: 16px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--ka-gutter);
+  row-gap: var(--ka-space-5);
+  align-items: stretch;
+  margin-block: var(--ka-gutter);
+  padding: var(--ka-pink-pad-t) var(--ka-pink-pad-x) 0;
+  border-radius: var(--ka-radius);
   background: #f8a2d6;
+  color: #191918;
   overflow: clip;
 }
 
 .ka-pink__copy {
+  grid-column: span 4;
   align-self: center;
-  max-width: 28.32rem;
+  width: 100%;
+  max-width: none;
+  text-align: start;
 }
 
 .ka-pink h3 {
   margin: 0 0 1.5rem;
+  color: #191918;
   font-size: 2rem;
-  font-weight: var(--ka-weight-bold);
-  letter-spacing: var(--ka-tracking-tight);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 1.25;
   text-align: start;
+  text-wrap: pretty;
 }
 
 .ka-pink p {
   margin: 0;
+  color: #191918;
   font-size: 1rem;
-  font-weight: var(--ka-weight-body);
+  font-weight: 500;
   letter-spacing: var(--ka-tracking-normal);
   line-height: 1.5;
   text-align: start;
+  text-wrap: pretty;
 }
 
-.ka-pink .ka-ph--bleed {
+.ka-pink .ka-ph--bleed,
+.ka-pink .ka-app-stage.ka-ph--bleed {
+  grid-column: span 8;
   justify-self: stretch;
+  width: 100%;
+  min-width: 0;
   place-items: start;
   overflow: visible;
   background: transparent;
+}
+
+.ka-pink .ka-ph--bleed img {
+  width: calc(100% + var(--ka-pink-pad-x));
+  max-width: none;
+  object-fit: contain;
+  object-position: 100% 100%;
 }
 
 .ka-stat-card {
@@ -5017,6 +5101,29 @@ html[data-tone] .about-statement p {
 
 .ka-assess .ka-audience {
   margin-top: var(--ka-space-7);
+}
+
+/* Test Less, Teach More calendar — match Khan interim-assessment (544×240). */
+.ka-assess--calendar .ka-ph--shot {
+  aspect-ratio: auto;
+  width: min(100%, 544px);
+  height: 240px;
+  max-width: 544px;
+  margin-inline: 0;
+  border-radius: 16px;
+  overflow: clip;
+  background: transparent;
+}
+
+.ka-assess--calendar .ka-ph--shot img {
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 767px) {
+  .ka-assess--calendar .ka-ph--shot {
+    margin-inline: auto;
+  }
 }
 
 .ka-stat-mark {
@@ -5179,10 +5286,35 @@ html[data-tone] .about-statement p {
 }
 
 .ka-close {
-  overflow: hidden;
-  background: #ddf0fe;
+  position: relative;
+  /* Safari: overflow ≠ visible on this ancestor breaks mix-blend-mode. */
+  overflow: visible;
+  background: var(--tone-fill);
   text-align: center;
+  scroll-margin-top: var(--layout-scroll-offset);
 }
+
+.ka .ka-close p.ka-kicker {
+  color: var(--color-orange);
+}
+
+.ka-close h2 {
+  position: relative;
+  z-index: 1;
+  color: #191918;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+.ka-close__copy > p:not(.ka-kicker),
+.ka-close .ka-contain > p:not(.ka-kicker) {
+  position: relative;
+  z-index: 1;
+  color: #4a4a4a;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
 
 .ka-split {
   display: grid;
@@ -5206,15 +5338,11 @@ html[data-tone] .about-statement p {
 }
 
 .ka-steps {
-  background: #eef7fe;
+  background: #fff;
 }
 
 .ka-steps.ka-lab {
   background: #fff;
-}
-
-.ka-intro--title + .ka-steps.ka-lab {
-  padding-top: clamp(4.5rem, 3rem + 5vw, 7.5rem);
 }
 
 .ka-lab .ka-steps__head {
@@ -5225,33 +5353,11 @@ html[data-tone] .about-statement p {
   margin-bottom: 0;
 }
 
-.ka.ka-lab-page .ka-intro h2,
-.ka.ka-lab-page .ka-steps h2 {
-  color: #000;
-}
-
-/* Page title stays a step above the section headings at every width. */
-.ka.ka-lab-page .ka-intro__copy h2 {
-  font-size: clamp(2.25rem, 1.55rem + 2.8vw, 3.75rem);
-  font-weight: 620;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-}
-
 .ka.ka-lab-page .ka-steps h2 {
   font-size: clamp(1.375rem, 1.2rem + 0.85vw, 1.875rem);
   font-weight: var(--ka-weight-bold);
   letter-spacing: -0.02em;
   line-height: 1.2;
-}
-
-/* Opening line under the title: larger and darker than the section body. */
-.ka.ka-lab-page .ka-intro__copy p {
-  color: #1a1a1a;
-  font-size: clamp(1.1875rem, 1.05rem + 0.65vw, 1.5rem);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.4;
 }
 
 @media (max-width: 767px) {
@@ -5266,15 +5372,17 @@ html[data-tone] .about-statement p {
   background: #fff;
 }
 
-/* Text-only services list: one centered column, not the old split row. */
+/* Text-only services list: full content rail (beats .ka-step p:not(.ka-step__lead)). */
 .ka-steps--white .ka-step {
-  max-width: 40rem;
-  margin-inline: auto;
+  max-width: none;
+  margin-inline: 0;
 }
 
 .ka-steps--white .ka-step h3,
+.ka-steps--white .ka-step p:not(.ka-step__lead),
 .ka-steps--white .ka-step p {
   max-width: none;
+  width: 100%;
 }
 
 .ka-steps--white .ka-step + .ka-step {
@@ -5328,6 +5436,35 @@ html[data-tone] .about-statement p {
   line-height: var(--ka-leading-large);
 }
 
+/*
+  How it works steps: larger type; tight kicker→title (one unit),
+  a little more title→body. em gaps track the fluid sizes.
+*/
+.ka-steps:not(.ka-steps--white) .ka-step p.ka-kicker {
+  margin-bottom: 0.3em;
+  font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  line-height: 1.2;
+}
+
+.ka-steps:not(.ka-steps--white) .ka-step h3 {
+  margin-bottom: 0.4em;
+  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  line-height: 1.15;
+}
+
+.ka-steps:not(.ka-steps--white) .ka-step p:not(.ka-kicker):not(.ka-step__lead) {
+  margin-bottom: var(--ka-space-2);
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+}
+
+.ka-steps:not(.ka-steps--white) .ka-step li {
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+}
+
+.ka-steps:not(.ka-steps--white) .ka-step ul {
+  margin-top: 0;
+}
+
 .ka-step__lead {
   max-width: 32rem;
   margin: 0 0 var(--ka-space-4);
@@ -5350,9 +5487,46 @@ html[data-tone] .about-statement p {
   scroll-margin-top: var(--layout-scroll-offset);
 }
 
+/* Services How it works: coloured panels + home layered art / hover. */
+.ka-step__media {
+  position: relative;
+  aspect-ratio: 1090 / 680;
+  width: 100%;
+  max-width: 544px;
+  margin-inline: auto;
+  border-radius: 16px;
+  overflow: clip;
+  cursor: default;
+}
+
+.ka-step__art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  pointer-events: none;
+  /* Same as home cards: grayscale art multiplies into the panel colour. */
+  filter: grayscale(1);
+  mix-blend-mode: multiply;
+}
+
+.ka-step__art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: contain;
+  object-position: center bottom;
+  transition: transform 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
 /* Khan interim-assessment media: same asset ratio as source (1090×680), 16px radius */
 .ka-step .ka-ph--cover,
-.ka-step .ka-ph--screen {
+.ka-step .ka-ph--screen,
+.ka-step .ka-ph--shot {
   aspect-ratio: 1090 / 680;
   width: 100%;
   max-width: 544px;
@@ -5363,16 +5537,22 @@ html[data-tone] .about-statement p {
 }
 
 .ka-step .ka-ph--cover img,
-.ka-step .ka-ph--screen img {
+.ka-step .ka-ph--screen img,
+.ka-step .ka-ph--shot img {
   object-fit: cover;
   object-position: center;
+}
+
+.ka-step .ka-btn {
+  /* Clear of the copy stack without floating the CTA too far away. */
+  margin-top: var(--ka-space-4);
 }
 
 /* Khan interim-assessment bullets: disc, outside */
 .ka-step ul {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.4rem;
   margin: 1.5rem 0 0;
   padding: 0 0 0 1.2rem;
   list-style: disc outside;
@@ -5458,9 +5638,14 @@ html[data-tone] .about-statement p {
   transform: rotate(-45deg);
 }
 
+.ka-close__copy,
 .ka-close .ka-contain {
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
   max-width: 40rem;
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
 }
 
 .ka-close h2 {
@@ -5471,28 +5656,23 @@ html[data-tone] .about-statement p {
   margin-top: var(--ka-space-6);
 }
 
-.ka-shape {
-  position: absolute;
-  right: -120px;
-  bottom: -160px;
-  width: 420px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #c5e4fb;
-}
-
-@container ka (width < 62em) {
+/*
+  Khan threshold-large is 62em on a 16px container (~992px).
+  `.ka-contain` inherits 20px body, so use rem (root) not em.
+*/
+@container ka (width < 62rem) {
   .ka-pink {
+    --ka-pink-pad-x: 1.875rem;
+    --ka-pink-pad-t: 2.3rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 1.5rem;
-    padding: 37px 30px 0;
+    gap: var(--ka-space-5);
   }
 
   .ka-pink__copy {
+    grid-column: auto;
     align-self: stretch;
-    max-width: none;
     text-align: center;
   }
 
@@ -5510,20 +5690,16 @@ html[data-tone] .about-statement p {
     max-width: 36rem;
   }
 
-  /* Bleed the visual to the pink card’s right edge (Khan card_large). */
-  .ka-pink .ka-ph--bleed {
-    width: calc(100% + 30px);
-    margin-right: -30px;
+  .ka-pink .ka-ph--bleed,
+  .ka-pink .ka-app-stage.ka-ph--bleed {
+    grid-column: auto;
+    width: 100%;
   }
 
   .ka-pink .ka-ph--bleed img,
   .ka-pink .ka-app-stage__shell {
-    width: 100%;
-    object-position: right bottom;
-  }
-
-  .ka-pink .ka-app-stage.ka-ph--bleed {
-    width: calc(100% + 30px);
+    width: calc(100% + var(--ka-pink-pad-x));
+    object-position: 100% 100%;
   }
 }
 
@@ -5610,23 +5786,36 @@ html[data-tone] .about-statement p {
     text-align: left;
   }
 
-  /* How it works: left-align with the content rail; always text then image. */
-  .ka-steps .ka-split {
-    text-align: left;
+  /*
+    Services How it works on narrow rails: hide image panels and wrap each
+    step in a rounded bordered card instead of stacking text + media.
+    Yellow wash band: no card chrome — copy sits on the wash.
+  */
+  .ka-steps .ka-step {
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-items: stretch;
     justify-items: stretch;
-    gap: 1.25rem;
+    padding: 1.5rem;
+    border: 2px solid var(--ka-step-tone, #e4e4e6);
+    border-radius: 16px;
+    text-align: left;
   }
 
-  .ka-steps .ka-step > :not(.ka-ph) {
-    order: 1;
+  .ka-wash-region .ka-steps .ka-step {
+    padding: 0;
+    border: none;
+    border-radius: 0;
   }
 
+  .ka-steps .ka-step__media,
   .ka-steps .ka-step > .ka-ph,
   .ka-steps .ka-step > .ka-app-stage {
-    order: 2;
-    width: 100%;
-    max-width: none;
-    margin-inline: 0;
+    display: none;
+  }
+
+  .ka-steps .ka-step__copy {
+    min-width: 0;
   }
 
   .ka-steps .ka-step h3,
@@ -5635,7 +5824,45 @@ html[data-tone] .about-statement p {
   }
 
   .ka-steps .ka-step + .ka-step {
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .ka-steps .ka-step {
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-items: stretch;
+    justify-items: stretch;
+    padding: 1.5rem;
+    border: 2px solid var(--ka-step-tone, #e4e4e6);
+    border-radius: 16px;
+    text-align: left;
+  }
+
+  .ka-wash-region .ka-steps .ka-step {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+  }
+
+  .ka-steps .ka-step__media,
+  .ka-steps .ka-step > .ka-ph,
+  .ka-steps .ka-step > .ka-app-stage {
+    display: none;
+  }
+
+  .ka-steps .ka-step__copy {
+    min-width: 0;
+  }
+
+  .ka-steps .ka-step h3,
+  .ka-steps .ka-step p {
+    max-width: none;
+  }
+
+  .ka-steps .ka-step + .ka-step {
+    margin-top: 1.5rem;
   }
 }
 
@@ -6017,7 +6244,7 @@ html[data-tone] .about-statement p {
 }
 
 .ka-about {
-  background: #fef8e7;
+  background: #f1ede7;
   text-align: center;
 }
 
@@ -6236,11 +6463,16 @@ html[data-tone] .about-statement p {
 }
 
 .ka-train-study {
-  background: #fbf6e8;
+  background: #f1ede7;
+}
+
+.ka .ka-train-study > .ka-contain > .ka-kicker {
+  text-align: center;
 }
 
 .ka .ka-train-study > .ka-contain > h2 {
   margin-bottom: clamp(2.25rem, 1.5rem + 2.5vw, 3.75rem);
+  text-align: center;
 }
 
 .ka-train-study__split {
@@ -6506,242 +6738,974 @@ html[data-tone] .about-statement p {
 }
 
 /* About page: Khan Academy /about layout, kept to the institute’s own work. */
-.ka-about-hero,
-.ka-about-reach,
-.ka-about-split {
+.ka-about-hero {
   position: relative;
   padding: var(--ka-section) 0;
 }
 
-.ka-about-hero {
-  overflow: hidden;
-  background: #fbf7ee;
-  padding-top: clamp(4.5rem, 3rem + 5vw, 7rem);
-  padding-bottom: clamp(4.5rem, 3rem + 6vw, 8rem);
-  text-align: center;
+/*
+  Labs pattern: one isolation group that owns the cream fill.
+  mix-blend difference on white titles only samples backdrop inside this group.
+*/
+.ka-about-page {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--tone-fill);
+  max-width: 100%;
+  overflow-x: clip;
 }
 
-.ka-about-hero__shapes {
+/*
+  What we do → end only. Expanding circle is clipped to this box — never
+  paints into Who we are / earlier cream. Full when the band docks under the header.
+*/
+.ka-wash-region {
+  position: relative;
+  max-width: 100%;
+  --wash-color: #fcc934;
+  /* Title + body on the yellow wash. */
+  --wash-ink: #202020;
+  --wash-ink-t: 0;
+  --wash-ox: 70%;
+  --wash-oy: 12%;
+  --wash-r: 0px;
+}
+
+.ka-wash-region[data-wash='full'] {
+  background-color: var(--wash-color);
+}
+
+.ka-shape-wash {
   position: absolute;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
+  background: var(--wash-color);
+  clip-path: circle(var(--wash-r) at var(--wash-ox) var(--wash-oy));
+  will-change: clip-path;
 }
 
-.ka-about-hero__orb {
-  position: absolute;
-  top: 68%;
-  left: 0;
-  width: min(26vw, 17rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #f97b4f;
-  transform: translate(-58%, -50%);
+.ka-wash-region[data-wash='full'] .ka-shape-wash {
+  /*
+    Solid fill only after the circle already covers the region (see
+    LabsShapeWash expand phase) — avoids a visible snap from a mid-size
+    circle to a full yellow field.
+  */
+  clip-path: none;
 }
 
-.ka-about-hero__scallop {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: min(42vw, 22rem);
-  height: auto;
-  color: #6d5efc;
-}
-
-.ka-about-hero .ka-contain {
+.ka-wash-region > *:not(.ka-shape-wash) {
   position: relative;
   z-index: 1;
 }
 
-.ka-about-hero .ka-kicker {
-  margin-bottom: 1.25rem;
-  color: #191918;
-  font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
-  font-weight: var(--ka-weight-body);
+@media (prefers-reduced-motion: reduce) {
+  .ka-shape-wash {
+    will-change: auto;
+  }
 }
 
+/*
+  Contact + “Guess less” stay solid dark — no wash-ink, no shape intersection.
+  Service card body can still ease toward wash-ink; per-service h3s stay dark.
+  Only #services.ka-about-hero h1 intersects with shapes.
+*/
+.ka-wash-region[data-wash-ink='on'] .ka-steps {
+  color: color-mix(
+    in srgb,
+    var(--wash-ink) calc(var(--wash-ink-t) * 100%),
+    #4a4a4a
+  );
+}
+
+.ka-wash-region .ka-steps .ka-step__copy > h3,
+.ka-wash-region[data-wash-ink='on'] .ka-steps .ka-step__copy > h3,
+.ka-wash-region .ka-steps .ka-step__copy > p:not(.ka-kicker),
+.ka-wash-region[data-wash-ink='on'] .ka-steps .ka-step__copy > p:not(.ka-kicker) {
+  color: #202020;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+  -webkit-text-fill-color: #202020;
+}
+
+.ka-wash-region[data-wash-ink='on'] #services .ka-kicker,
+.ka-wash-region[data-wash-ink='on'] .ka-steps .ka-kicker {
+  color: var(--wash-kicker, var(--color-orange));
+}
+
+.ka-wash-region .ka-assess,
+.ka-wash-region .ka-close {
+  color: #202020;
+}
+
+.ka-wash-region .ka-assess h2,
+.ka-wash-region .ka-close h2 {
+  color: #202020;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+.ka-wash-region .ka-close .ka-kicker {
+  color: var(--color-orange);
+}
+
+/* Charcoal fill + wash yellow label on the yellow band. */
+.ka-wash-region .ka-btn {
+  border-color: #202020;
+  background: #202020;
+  color: #fcc934;
+}
+
+.ka-wash-region .ka-btn:hover {
+  border-color: #202020;
+  background: #2a2a2a;
+  color: #fcc934;
+}
+
+/* Decorative shapes behind the cards — no text blend on this band. */
+.ka-wash-region .ka-steps.ka-steps--shapes {
+  z-index: auto;
+  overflow: visible;
+}
+
+.ka-wash-region .ka-steps__shapes {
+  position: absolute;
+  top: -8%;
+  right: 0;
+  bottom: -8%;
+  left: 0;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Yellow clover floaters don’t sit on the wash — only the wash fill + card art. */
+.ka-wash-region .ka-labs-shape--clover {
+  display: none;
+}
+
+.ka-wash-region .ka-steps.ka-steps--shapes > .ka-contain {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+  Shape field sits on each title band. Extend vertically so shapes can drift
+  past the band edges — keep left/right flush so they don’t widen the page.
+*/
+.ka-about-hero__shapes,
+.ka-close__shapes,
+.ka-steps__shapes {
+  position: absolute;
+  top: -18%;
+  right: 0;
+  bottom: -18%;
+  left: 0;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ka-steps__shapes {
+  top: -8%;
+  bottom: -8%;
+}
+
+/* No nested isolation / z-index on title bands — that traps blend (titles stay white). */
+.ka-about-page > .ka-about-hero,
+.ka-about-page > .ka-close,
+.ka-about-page > .ka-intro,
+.ka-wash-region > .ka-about-hero,
+.ka-wash-region > .ka-close {
+  position: relative;
+  z-index: auto;
+  isolation: auto;
+  background-color: transparent;
+  overflow: visible;
+}
+
+.ka-about-page > .ka-reach,
+.ka-about-page > .ka-story,
+.ka-about-page > .ka-steps,
+.ka-about-page > .ka-assess,
+.ka-wash-region > .ka-assess {
+  position: relative;
+  z-index: 2;
+  background-color: transparent;
+}
+
+/* Steps in the wash stay at auto so difference can sample the blue + shapes. */
+.ka-wash-region > .ka-steps {
+  position: relative;
+  z-index: auto;
+  background-color: transparent;
+}
+
+/* No z-index on the hero/close copy wrapper — it traps mix-blend so titles
+   stay white. Blended titles keep their own z-index (see #services h1).
+   Step copy can sit above floaters; those titles don’t use difference. */
+.ka-about-hero__copy,
+.ka-close__copy {
+  position: relative;
+  z-index: auto;
+}
+
+.ka-step__copy {
+  position: relative;
+  z-index: 1;
+}
+
+/* Kickers stay above multiply shapes without creating a blend trap for h1. */
+.ka .ka-about-hero p.ka-kicker,
+.ka .ka-close p.ka-kicker {
+  position: relative;
+  z-index: 1;
+}
+
+.ka-about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  background-color: transparent;
+  /* Same band height on About + Services regardless of title length. */
+  min-height: clamp(26rem, 20rem + 12vw, 32rem);
+  padding-top: clamp(4.5rem, 3rem + 5vw, 7rem);
+  padding-bottom: clamp(4.5rem, 3rem + 6vw, 8rem);
+  box-sizing: border-box;
+  text-align: center;
+  scroll-margin-top: var(--layout-scroll-offset);
+}
+
+/*
+  Services docks flush under the fixed header — the default scroll offset
+  (+16px) left a strip of tone fill above the yellow wash.
+*/
+#services.ka-about-hero {
+  scroll-margin-top: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
+}
+
+/* Kept for any remaining plain heroes. */
+.ka-about-hero--plain {
+  background: #fff;
+}
+
+.ka-about-hero--plain + .ka-steps--white {
+  padding-top: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+}
+
+/*
+  Competitions card frame: no plate/crop. Multiply discs/ornaments so Labs
+  shapes can tint through; white vesica stays opaque. Leave #services / wash
+  stacking alone — changing it breaks the What we do title difference blend.
+*/
+.ka-step:has(> .ka-step__media--frame) {
+  overflow: visible;
+}
+
+.ka-step__media--frame {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+/*
+  Slight reach toward the first card — not as deep as before, or floaters
+  paint through transparent steps and sit on top of step copy.
+*/
+.ka-wash-region > #services .ka-about-hero__shapes {
+  top: -18%;
+  right: 0;
+  bottom: -14%;
+  left: 0;
+}
+
+/* Personalised training: no plate/crop — same float-in contract as frame. */
+.ka-step:has(> .ka-step__media--balance) {
+  overflow: visible;
+}
+
+.ka-step__media--balance {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.ka-step__balance,
+.ka-labs-balance {
+  --balance-settle: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ka-labs-balance__svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ka-labs-balance__svg--blend {
+  -webkit-mix-blend-mode: multiply;
+  mix-blend-mode: multiply;
+}
+
+.ka-labs-balance__svg--back {
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+/* Prediction labs hex card: no plate/crop — same float-in contract. */
+.ka-step:has(> .ka-step__media--hex) {
+  overflow: visible;
+}
+
+.ka-step__media--hex {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.ka-step__hex,
+.ka-labs-hex {
+  --hex-settle: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ka-labs-hex__svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ka-labs-hex__svg--blend {
+  -webkit-mix-blend-mode: multiply;
+  mix-blend-mode: multiply;
+}
+
+.ka-labs-hex__svg--back {
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+.ka-step__frame,
+.ka-labs-frame {
+  --frame-settle: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ka-labs-frame__ornament {
+  display: contents;
+}
+
+.ka-labs-frame__svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  /* No will-change — Safari often drops those layers from mix-blend. */
+}
+
+/* Same contract as .ka-labs-shape — multiply into floating Labs shapes / wash. */
+.ka-labs-frame__svg--blend {
+  -webkit-mix-blend-mode: multiply;
+  mix-blend-mode: multiply;
+}
+
+/* Eye backdrop plate — normal so soft yellow still reads on the wash. */
+.ka-labs-frame__svg--eye-back {
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+/* Labs shapes — position/spin driven by zero-g physics in LabsHeroShapes.tsx.
+   Difference so overlaps invert into each other (and the page behind). */
+.ka-labs-shape {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  width: min(28vw, 13.5rem);
+  height: auto;
+  aspect-ratio: 1;
+  transform-origin: center center;
+  -webkit-mix-blend-mode: difference;
+  mix-blend-mode: difference;
+  /* No will-change / translate3d — Safari often omits those layers from mix-blend. */
+}
+
+/* Fallbacks when a field doesn’t pass inline color (see LABS_SHAPE_COLORS). */
+.ka-labs-shape--hexagon {
+  color: var(--labs-shape-hexagon, #48f08b);
+}
+
+.ka-labs-shape--circle {
+  color: var(--labs-shape-circle, #5e9bff);
+}
+
+.ka-labs-shape--square {
+  color: var(--labs-shape-square, #ffbdf9);
+}
+
+.ka-labs-shape--clover {
+  color: var(--labs-shape-clover, #fcc934);
+}
+
+/* No `.ka-contain` here — its container-type containment blocks mix-blend with shapes. */
+.ka-about-hero__copy {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+/* Kicker stays brand orange (no blend). */
+.ka .ka-about-hero p.ka-kicker {
+  margin-bottom: 1.25rem;
+  color: var(--color-orange);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+/*
+  Labs intersection effect: authored fill + mix-blend-mode difference.
+  On cream/white → near-black (white text); on shapes → inverted colours.
+  Safari needs no overflow clipping on ancestors and a composited text layer.
+*/
 .ka-about-hero h1 {
+  position: relative;
+  z-index: 1;
   max-width: 11.5em;
   margin: 0 auto;
   padding-inline: 0.4em;
-  color: #191918;
+  color: #fff;
   font-family: var(--ka-font);
   font-size: clamp(2.35rem, 1.35rem + 3.4vw, 4.15rem);
   font-weight: var(--ka-weight-bold);
   letter-spacing: -0.04em;
   line-height: 1.05;
   text-wrap: balance;
+  -webkit-mix-blend-mode: difference;
+  mix-blend-mode: difference;
+  /* No translateZ — Labs keeps transform:none; a 3D layer breaks difference in Chromium. */
 }
 
-.ka-about-reach {
-  text-align: center;
+/* Lead sits directly under the blended title (no mix-blend). */
+.ka-about-hero--with-lead .ka-about-hero__lead {
+  position: relative;
+  z-index: 1;
+  max-width: 41.268rem;
+  margin: var(--ka-space-3) auto 0;
+  color: #3d3429;
+  font-size: var(--ka-body);
+  font-weight: var(--ka-weight-body);
+  letter-spacing: var(--ka-tracking-normal);
+  line-height: var(--ka-leading-body);
+  text-wrap: pretty;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
 }
 
-.ka-about-reach h2 {
-  max-width: 16em;
-  margin-inline: auto;
+/*
+  Home hero: same type + measure as the old .ka-reach__lead, with clear
+  air under the mission title (was a full section gap when lead lived below).
+*/
+#about.ka-about-hero--with-lead .ka-about-hero__lead {
+  max-width: 46rem;
+  margin-top: clamp(3.25rem, 2.5rem + 3vw, 5rem);
+  color: #4a4a4a;
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  font-weight: var(--ka-weight-body);
+  letter-spacing: -0.015em;
+  line-height: 1.55;
+}
+
+@media (max-width: 767px) {
+  #about.ka-about-hero--with-lead .ka-about-hero__lead {
+    max-width: none;
+    margin-inline: 0.85rem;
+    padding-inline: 0.35rem;
+    font-size: clamp(1.375rem, 1.2rem + 1.2vw, 1.625rem);
+    line-height: 1.5;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__card {
+    padding: clamp(1.25rem, 1.1rem + 0.8vw, 1.65rem);
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__card-body {
+    min-height: 9.5rem;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__card strong {
+    font-size: min(5.25rem, 30cqw);
+  }
+}
+
+.ka-about-hero--with-lead .ka-btn {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--ka-space-5);
+}
+
+/* Services hero: solid near-black on the yellow wash (no difference tint). */
+#services.ka-about-hero h1 {
+  color: #202020;
+  -webkit-text-fill-color: #202020;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+/*
+  Home/about page vertical rhythm:
+  one shared band (--ka-section) between major blocks; collapse stacked
+  padding when consecutive sections share a white surface so gaps stay even.
+*/
+.ka-about-page > .ka-reach,
+.ka-about-page > .ka-story,
+.ka-about-page > .ka-steps,
+.ka-about-page > .ka-assess,
+.ka-about-page > .ka-close,
+.ka-wash-region > .ka-steps,
+.ka-wash-region > .ka-assess,
+.ka-wash-region > .ka-close {
+  padding-block: var(--ka-section);
+}
+
+.ka-about-page > .ka-reach + .ka-story,
+.ka-about-page > .ka-story + .ka-story,
+.ka-about-page > .ka-steps + .ka-assess,
+.ka-wash-region > .ka-steps + .ka-assess {
+  padding-top: 0;
+}
+
+/* Heroes already carry internal space — half a band into the next content. */
+.ka-about-page > .ka-about-hero + .ka-reach,
+.ka-about-page > .ka-about-hero + .ka-steps,
+.ka-wash-region > .ka-about-hero + .ka-steps {
+  padding-top: calc(var(--ka-section) * 0.55);
+}
+
+.ka-about-page > .ka-steps .ka-step + .ka-step,
+.ka-wash-region > .ka-steps .ka-step + .ka-step {
+  margin-top: var(--ka-section);
+}
+
+/* Stats band: Khan Academy /about, including the same figures and captions. */
+.ka-reach {
+  background: #fff;
   color: #191918;
-  font-size: clamp(1.85rem, 1.25rem + 2vw, 2.75rem);
-  letter-spacing: -0.035em;
-  line-height: 1.15;
+  padding-block: var(--ka-section);
+  font-family: var(--ka-font);
+}
+
+.ka-reach__contain {
+  box-sizing: border-box;
+  width: calc(100% - clamp(2rem, 1.2rem + 4vw, 4rem) * 2);
+  max-width: 70rem;
+  margin-inline: auto;
+}
+
+.ka-reach h2 {
+  max-width: 52rem;
+  margin: 0 auto var(--ka-space-4);
+  color: #081c39;
+  font-family: var(--ka-font);
+  font-size: var(--ka-h1);
+  font-weight: var(--ka-weight-bold);
+  letter-spacing: var(--ka-tracking-tight);
+  line-height: var(--ka-leading-medium);
+  text-align: center;
   text-wrap: balance;
 }
 
-.ka-about-reach h3 {
-  margin: clamp(2.5rem, 2rem + 2vw, 3.5rem) 0 0;
-  color: #191918;
-  font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.45rem);
-  font-weight: var(--ka-weight-bold);
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-  text-align: left;
+/* Main intro under the reach title — larger and more open than story body. */
+.ka-reach__lead {
+  max-width: 46rem;
+  margin: 0 auto var(--ka-space-8);
+  text-align: center;
 }
 
-.ka-about-cards {
+.ka-reach__lead p {
+  margin: 0;
+  color: #4a4a4a;
+  font-family: var(--ka-font);
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  font-weight: var(--ka-weight-body);
+  letter-spacing: -0.015em;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.ka-reach h3 {
+  margin: clamp(2.5rem, 1.9rem + 3vw, 4rem) 0 clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  color: #081c39;
+  font-family: var(--ka-font);
+  font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  font-weight: var(--ka-weight-bold);
+  letter-spacing: var(--ka-tracking-normal);
+  line-height: var(--ka-leading-xlarge);
+  text-align: left;
+  text-wrap: balance;
+}
+
+.ka-reach__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(0.85rem, 0.5rem + 1vw, 1.35rem);
-  margin: clamp(1.75rem, 1.2rem + 2vw, 2.75rem) 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: clamp(1.25rem, 1.1rem + 0.6vw, 1.75rem);
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.ka-about-card {
+.ka-reach__card {
+  box-sizing: border-box;
   display: flex;
+  height: 100%;
+  padding: clamp(1.5rem, 1.35rem + 0.9vw, 2.1rem);
+  border-radius: clamp(0.75rem, -9rem + 25vw, 1rem);
+  color: #191918;
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+}
+
+.ka-reach__card-body {
+  container-type: inline-size;
+  display: flex;
+  flex: 1;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: flex-end;
-  min-height: clamp(13.5rem, 22vw, 18.5rem);
-  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
-  border-radius: 28px;
-  color: #191918;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 11.25rem;
   text-align: left;
-  text-decoration: none;
 }
 
-a.ka-about-card:hover {
-  filter: brightness(0.97);
-}
-
-a.ka-about-card:focus-visible {
-  outline: 2px solid #191918;
-  outline-offset: 3px;
-}
-
-.ka-about-card strong {
-  font-size: clamp(2.4rem, 1.4rem + 3.2vw, 4.25rem);
-  font-weight: var(--ka-weight-bold);
-  letter-spacing: -0.045em;
-  line-height: 0.95;
-}
-
-.ka-about-card span {
-  margin-top: 0.55rem;
-  max-width: 16rem;
-  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
-  font-weight: var(--ka-weight-body);
-  letter-spacing: 0;
-  line-height: 1.35;
-}
-
-.ka-about-card--blue {
-  background: #a9b4ff;
-}
-
-.ka-about-card--pink {
-  background: #f6c6e4;
-}
-
-.ka-about-card--green {
-  background: #8fce93;
-}
-
-.ka-about-card--yellow {
-  background: #f6d56e;
-}
-
-.ka-about-card--sky {
-  background: #8ecfff;
-}
-
-.ka-about-split h2 {
-  max-width: 14em;
+.ka-reach__card strong {
+  margin: 0;
   color: #191918;
-  font-size: clamp(2rem, 1.35rem + 2.2vw, 3.15rem);
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  font-family: inherit;
+  font-size: min(6.4rem, 30cqw);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-align: left;
   text-wrap: balance;
 }
 
-.ka-about-split p {
-  max-width: 36rem;
-  margin-top: var(--ka-space-4);
-}
-
-.ka-about-split p + p {
-  margin-top: var(--ka-space-3);
-}
-
-.ka-about-chart {
-  max-width: 26rem;
+.ka-reach__card span {
   margin: 0;
+  /* Always reserve two lines so 1-line captions don’t shift the number row. */
+  min-height: 2lh;
+  max-width: none;
+  color: #191918;
+  font-family: inherit;
+  font-size: var(--ka-body);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.5;
+  text-align: left;
 }
 
-.ka-about-chart svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.ka-about-chart text {
+/* Split story bands: falling behind + Khan Academy works, matching /about. */
+.ka-story {
+  background: #fff;
+  color: #191918;
+  padding-block: var(--ka-section);
   font-family: var(--ka-font);
 }
 
-.ka-about-chart figcaption {
-  margin-top: 0.75rem;
-  color: #4a4a4a;
-  font-size: 0.95rem;
-  line-height: 1.4;
+.ka-story__contain {
+  box-sizing: border-box;
+  width: calc(100% - clamp(2rem, 1.2rem + 4vw, 4rem) * 2);
+  max-width: 70rem;
+  margin-inline: auto;
 }
 
-.ka-about-page .ka-study h2 {
-  color: #191918;
-  font-size: clamp(1.85rem, 1.2rem + 2.1vw, 2.85rem);
-  letter-spacing: -0.035em;
-  line-height: 1.15;
+.ka-story__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: clamp(1.5rem, 1.357143rem + 0.714286vw, 2rem);
+  align-items: center;
+}
+
+.ka-story__grid--media-start .ka-story__media {
+  order: -1;
+}
+
+.ka-story__copy {
+  min-width: 0;
+}
+
+.ka-story h2 {
+  max-width: none;
+  margin: 0 0 var(--ka-space-4);
+  color: #081c39;
+  font-family: var(--ka-font);
+  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-weight: var(--ka-weight-bold);
+  letter-spacing: var(--ka-tracking-tight);
+  line-height: var(--ka-leading-large);
+  text-wrap: balance;
+}
+
+.ka-story__body {
+  max-width: 60ch;
+}
+
+.ka-story__body p {
+  margin: 0 0 var(--ka-space-4);
+  color: #4a4a4a;
+  font-family: var(--ka-font);
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  font-weight: var(--ka-weight-body);
+  letter-spacing: var(--ka-tracking-normal);
+  line-height: var(--ka-leading-body);
+}
+
+.ka-story__body p:last-child {
+  margin-bottom: 0;
+}
+
+.ka-story__body a {
+  color: inherit;
+  font-weight: var(--ka-weight-body);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.ka-story__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 40px;
+  margin-top: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  padding: 0 16px;
+  border: 1px solid #5753fa;
+  border-radius: 8px;
+  background: #5753fa;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.ka-story__btn:hover {
+  filter: brightness(1.05);
+}
+
+.ka-story__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: clip;
+}
+
+.ka-story__media--3x2 {
+  aspect-ratio: 3 / 2;
+}
+
+.ka-story__media--16x9 {
+  aspect-ratio: 16 / 9;
+}
+
+.ka-story__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @media (max-width: 800px) {
-  .ka-about-hero__orb {
-    top: auto;
-    bottom: 0;
-    width: 9rem;
-    transform: translate(-58%, 42%);
-  }
-
-  .ka-about-hero__scallop {
-    width: 11rem;
+  .ka-story__grid--media-start .ka-story__media {
+    order: 0;
   }
 }
 
-@container ka (width < 50em) {
-  .ka-about-split .ka-split {
-    text-align: left;
-  }
-
-  .ka-about-split h2,
-  .ka-about-split p,
-  .ka-about-chart figcaption {
-    margin-inline: 0;
-    text-align: left;
-  }
+/* Competitions: content bands white; hero keeps tone fill for Labs blend. */
+.ka-about-page.ka-competitions-page .ka-intro,
+.ka-about-page.ka-competitions-page .ka-services,
+.ka-about-page.ka-competitions-page .ka-steps,
+.ka-about-page.ka-competitions-page .ka-subjects,
+.ka-about-page.ka-competitions-page .ka-band,
+.ka-about-page.ka-competitions-page .ka-impact,
+.ka-about-page.ka-competitions-page .ka-quote {
+  background: #fff;
 }
 
-@container ka (width < 40em) {
-  .ka-about-cards {
-    grid-template-columns: 1fr;
-  }
+/*
+  Hero above the next white band so Labs floaters can spill past the
+  title edge instead of being covered/cut off.
 
-  .ka-about-card {
-    min-height: 11rem;
-  }
+  z-index on the hero traps mix-blend difference (title stays white on
+  cream and disappears) — use a solid ink title on these pages instead.
+*/
+.ka-about-page.ka-competitions-page > .ka-about-hero,
+.ka-about-page.ka-training-page > .ka-about-hero,
+.ka-about-page.ka-lab-page > .ka-about-hero {
+  z-index: 3;
+  overflow: visible;
 }
+
+.ka-about-page.ka-competitions-page > .ka-about-hero h1,
+.ka-about-page.ka-training-page > .ka-about-hero h1,
+.ka-about-page.ka-lab-page > .ka-about-hero h1 {
+  color: #191918;
+  -webkit-text-fill-color: #191918;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+.ka-about-page.ka-competitions-page > .ka-about-hero .ka-about-hero__shapes,
+.ka-about-page.ka-training-page > .ka-about-hero .ka-about-hero__shapes,
+.ka-about-page.ka-lab-page > .ka-about-hero .ka-about-hero__shapes {
+  bottom: -42%;
+}
+
+.ka-about-page.ka-competitions-page > .ka-about-hero + .ka-intro {
+  position: relative;
+  z-index: 1;
+  padding-top: 0;
+  padding-bottom: clamp(2rem, 1rem + 3vw, 3.5rem);
+}
+
+.ka-about-page.ka-competitions-page .ka-intro--under-hero .ka-intro__preview {
+  margin-top: 0;
+}
+
+.ka-about-page.ka-competitions-page h2,
+.ka-about-page.ka-competitions-page h3 {
+  color: #191918;
+}
+
+.ka-about-page.ka-competitions-page .ka-dark h3,
+.ka-about-page.ka-competitions-page .ka-dark p {
+  color: #fff;
+}
+
+.ka-about-page.ka-competitions-page .ka-services__lead p:not(.ka-kicker),
+.ka-about-page.ka-competitions-page .ka-step p:not(.ka-kicker),
+.ka-about-page.ka-competitions-page .ka-subjects > .ka-contain > p:not(.ka-kicker):not(.ka-subjects__or),
+.ka-about-page.ka-competitions-page .ka-impact > .ka-contain > p:not(.ka-kicker),
+.ka-about-page.ka-competitions-page .ka-stats__copy p,
+.ka-about-page.ka-competitions-page .ka-quote blockquote p {
+  color: #3d3429;
+}
+
+.ka-about-page.ka-competitions-page p.ka-kicker {
+  color: var(--color-orange);
+}
+
+/* Training: same Labs hero/close pattern as competitions; content bands white. */
+.ka-about-page.ka-training-page .ka-train-gains,
+.ka-about-page.ka-training-page .ka-train-study,
+.ka-about-page.ka-training-page .ka-train-center,
+.ka-about-page.ka-training-page .ka-train-proof {
+  background: #fff;
+}
+
+.ka-about-page.ka-training-page > .ka-about-hero + .ka-train-gains {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(var(--ka-section) * 0.55);
+}
+
+.ka-about-page.ka-training-page h2,
+.ka-about-page.ka-training-page h3 {
+  color: #191918;
+}
+
+.ka-about-page.ka-training-page p.ka-kicker {
+  color: var(--color-orange);
+}
+
+.ka-about-page.ka-training-page .ka-train-close__alt {
+  margin-top: var(--ka-space-4);
+}
+
+.ka-about-page.ka-training-page .ka-train-close__alt a {
+  color: #4a4a4a;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.ka-about-page.ka-training-page .ka-train-gains,
+.ka-about-page.ka-training-page .ka-train-center,
+.ka-about-page.ka-training-page .ka-train-tracks {
+  text-align: center;
+}
+
+.ka-about-page.ka-training-page .ka-train-gains .ka-kicker,
+.ka-about-page.ka-training-page .ka-train-center .ka-kicker,
+.ka-about-page.ka-training-page .ka-train-tracks .ka-kicker,
+.ka-about-page.ka-training-page .ka-train-study > .ka-contain > .ka-kicker {
+  text-align: center;
+}
+
+.ka-about-page.ka-training-page .ka-train-panel .ka-kicker {
+  text-align: inherit;
+}
+
+/* Lab: same Labs hero/close pattern as competitions/training; content band white. */
+.ka-about-page.ka-lab-page .ka-steps.ka-lab {
+  background: #fff;
+}
+
+.ka-about-page.ka-lab-page > .ka-about-hero + .ka-steps {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(var(--ka-section) * 0.55);
+}
+
+.ka-about-page.ka-lab-page h2 {
+  color: #191918;
+}
+
+.ka-about-page.ka-lab-page .ka-lab .ka-steps__head p:not(.ka-kicker) {
+  color: #3d3429;
+}
+
+.ka-about-page.ka-lab-page p.ka-kicker {
+  color: var(--color-orange);
+}
+

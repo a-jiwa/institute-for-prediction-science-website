@@ -1,3 +1,4 @@
+import { LabsHeroShapes } from './LabsHeroShapes'
 import { KA_CLOSE } from './defaults'
 
 type KaCloseProps = {
@@ -15,8 +16,8 @@ export function KaClose({
 }: KaCloseProps) {
   return (
     <section className="ka-close" id={id}>
-      <div className="ka-shape" aria-hidden="true" />
-      <div className="ka-contain">
+      <LabsHeroShapes className="ka-close__shapes" />
+      <div className="ka-close__copy">
         <h2>{title}</h2>
         <p>{body}</p>
         <a className="ka-btn" href={cta.href}>

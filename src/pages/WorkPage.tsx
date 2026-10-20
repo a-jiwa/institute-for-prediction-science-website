@@ -1,38 +1,33 @@
+import { KaAssessSplit, KaSteps, KA_ASSESS_TEACH, LabsHeroShapes } from '../components/ka'
 import { CONTACT_EMAIL } from '../components/icons/Logo'
-import { SmartLink } from '../components/ui/SmartLink'
-import { services } from '../data/services'
 
 const CONTACT_HREF = `mailto:${CONTACT_EMAIL}`
 
 export function WorkPage() {
   return (
     <div className="home-cover">
-      <div className="ka">
-        <section className="ka-intro ka-intro--title">
-          <div className="ka-contain">
-            <div className="ka-intro__copy">
-              <h2>Services</h2>
-            </div>
+      <div className="ka ka-about-page">
+        <section className="ka-about-hero">
+          <LabsHeroShapes className="ka-about-hero__shapes" />
+          <div className="ka-about-hero__copy">
+            <p className="ka-kicker">What we do</p>
+            <h1>Unlocking the power of forecasting</h1>
           </div>
         </section>
 
-        <section className="ka-steps ka-steps--white">
-          <div className="ka-contain">
-            {services.map((service) => (
-              <div className="ka-step" id={service.id} key={service.id}>
-                <h3>{service.title}</h3>
-                <p>{service.lead}</p>
-                <SmartLink className="ka-btn" href={`/services/${service.id}`}>
-                  Learn more
-                </SmartLink>
-              </div>
-            ))}
-          </div>
-        </section>
+        <KaSteps kicker="" title="" />
+
+        <KaAssessSplit
+          media="calendar"
+          title={KA_ASSESS_TEACH.title}
+          paragraphs={KA_ASSESS_TEACH.paragraphs}
+          image={KA_ASSESS_TEACH.image}
+          imageFirst={KA_ASSESS_TEACH.imageFirst}
+        />
 
         <section className="ka-close" id="contact-us">
-          <div className="ka-shape" aria-hidden="true" />
-          <div className="ka-contain">
+          <LabsHeroShapes className="ka-close__shapes" />
+          <div className="ka-close__copy">
             <p className="ka-kicker">Contact us</p>
             <h2>Have a forecasting project in mind?</h2>
             <p>

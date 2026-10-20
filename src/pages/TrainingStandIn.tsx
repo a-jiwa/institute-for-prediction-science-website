@@ -1,7 +1,9 @@
 import { CONTACT_EMAIL } from '../components/icons/Logo'
+import { LabsHeroShapes } from '../components/ka/LabsHeroShapes'
 import { SmartLink } from '../components/ui/SmartLink'
 import { assetUrl } from '../utils/assetUrl'
 
+const CTA_LABEL = 'Request a programme'
 const ENQUIRE_HREF = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Forecasting training')}`
 
 function trackHref(track: string) {
@@ -69,33 +71,29 @@ const TRACKS = [
   },
 ] as const
 
-/** Training page, laid out like the Khan Academy impact page. */
+/** Training page — About/competitions hero + close, existing content bands. */
 export function TrainingStandIn() {
   return (
-    <div className="ka">
-      <section className="ka-train-hero">
-        <div className="ka-contain">
-          <div className="ka-train-hero__grid">
-            <div className="ka-train-hero__copy">
-              <p className="ka-kicker">Forecasting Training</p>
-              <h1>Learn to make better predictions.</h1>
-              <p>
-                Practise estimating the likelihood of future events, record your reasoning, and learn from the
-                results. Our training programmes help individuals and teams improve their forecasting skills through
-                practice and feedback.
-              </p>
-            </div>
-            <img
-              alt=""
-              className="ka-train-hero__art"
-              src={assetUrl('/assets/placeholders/khan/impact-hero.avif')}
-            />
-          </div>
+    <div className="ka ka-about-page ka-training-page">
+      <section className="ka-about-hero ka-about-hero--with-lead">
+        <LabsHeroShapes className="ka-about-hero__shapes" />
+        <div className="ka-about-hero__copy">
+          <p className="ka-kicker">Forecasting training</p>
+          <h1>Learn to make better predictions</h1>
+          <p className="ka-about-hero__lead">
+            Practise estimating the likelihood of future events, record your reasoning, and learn from the results. Our
+            training programmes help individuals and teams improve their forecasting skills through practice and
+            feedback.
+          </p>
+          <a className="ka-btn" href={ENQUIRE_HREF}>
+            {CTA_LABEL}
+          </a>
         </div>
       </section>
 
       <section className="ka-train-gains">
         <div className="ka-contain">
+          <p className="ka-kicker">How it works</p>
           <h2>Practise, review and improve</h2>
           <div className="ka-train-gains__grid">
             {GAINS.map((gain) => (
@@ -110,6 +108,7 @@ export function TrainingStandIn() {
 
       <section className="ka-train-study">
         <div className="ka-contain">
+          <p className="ka-kicker">Research</p>
           <h2>What does forecasting research tell us?</h2>
           <div className="ka-train-study__split">
             <div>
@@ -120,7 +119,7 @@ export function TrainingStandIn() {
                 people make, assess and improve their predictions.
               </p>
               <a className="ka-btn" href={ENQUIRE_HREF}>
-                Request a programme
+                {CTA_LABEL}
               </a>
             </div>
             <img
@@ -134,12 +133,13 @@ export function TrainingStandIn() {
 
       <section className="ka-train-center">
         <div className="ka-contain">
+          <p className="ka-kicker">Method</p>
           <h2>How the training works</h2>
           <p>
             Participants make forecasts, record their reasoning and review the results. Over time, this helps them
             recognise common mistakes, such as being too confident or overlooking alternative outcomes.
           </p>
-          <a className="ka-btn ka-btn--soft" href={ENQUIRE_HREF}>
+          <a className="ka-btn" href={ENQUIRE_HREF}>
             Talk to us
           </a>
         </div>
@@ -154,6 +154,7 @@ export function TrainingStandIn() {
               src={assetUrl('/assets/placeholders/khan/impact-evidence.avif')}
             />
             <div>
+              <p className="ka-kicker">Practice design</p>
               <h2>What makes a good forecasting exercise?</h2>
               <ul>
                 {REVIEW_POINTS.map((point) => (
@@ -166,6 +167,7 @@ export function TrainingStandIn() {
           </div>
 
           <div className="ka-train-tracks">
+            <p className="ka-kicker">Programmes</p>
             <h2>Training for individuals, teams and organisations</h2>
           </div>
           <div className="ka-train-tiers">
@@ -179,25 +181,26 @@ export function TrainingStandIn() {
               </article>
             ))}
           </div>
-
-          <div className="ka-train-band">
-            <h2>Start improving your forecasts.</h2>
-            <p>
-              Learn to assess uncertainty, make more informed predictions and understand how well your forecasts
-              perform.
-            </p>
-            <div className="ka-train-band__actions">
-              <a className="ka-btn" href={ENQUIRE_HREF}>
-                Request a programme
-              </a>
-              <SmartLink className="ka-btn ka-btn--soft" href="/services/competitions">
-                See competitions
-              </SmartLink>
-            </div>
-          </div>
         </div>
       </section>
 
+      <section className="ka-close" id="ka-close">
+        <LabsHeroShapes className="ka-close__shapes" />
+        <div className="ka-close__copy">
+          <p className="ka-kicker">Get started</p>
+          <h2>Start improving your forecasts</h2>
+          <p>
+            Learn to assess uncertainty, make more informed predictions and understand how well your forecasts
+            perform.
+          </p>
+          <a className="ka-btn" href={ENQUIRE_HREF}>
+            {CTA_LABEL}
+          </a>
+          <p className="ka-train-close__alt">
+            <SmartLink href="/services/competitions">See competitions</SmartLink>
+          </p>
+        </div>
+      </section>
     </div>
   )
 }

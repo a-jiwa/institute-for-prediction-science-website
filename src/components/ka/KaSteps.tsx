@@ -1,5 +1,17 @@
+import { SmartLink } from '../ui/SmartLink'
+import { assetUrl } from '../../utils/assetUrl'
 import { KA_STEPS } from './defaults'
+import { LabsBalanceScene } from './LabsBalanceScene'
+import { LabsFrameShapes } from './LabsFrameShapes'
+import { LabsHexScene } from './LabsHexScene'
+import { LABS_SHAPE_COLORS_WARM } from './labsBlend'
+import { LabsHeroShapes } from './LabsHeroShapes'
 import { Placeholder } from './Placeholder'
+
+type ArtLayer = {
+  src: string
+  role: string
+}
 
 type Step = {
   kicker: string
@@ -7,41 +19,110 @@ type Step = {
   body: string
   bullets: string[]
   imageFirst: boolean
-  src: string
+  src?: string
+  scheme?: 'blue' | 'green' | 'red'
+  tone?: string
+  /** Labs media art instead of PNG layers. */
+  art?: 'labs-frame' | 'balance' | 'hex'
+  layers?: ArtLayer[]
+  cta?: { label: string; href: string }
 }
 
 type KaStepsProps = {
   kicker?: string
   title?: string
   items?: Step[]
+  /** Floating Labs shapes behind the step copy (intersection blend). */
+  shapes?: boolean
+}
+
+function StepMedia({ step }: { step: Step }) {
+  if (step.art === 'labs-frame') {
+    return (
+      <div className="ka-step__media ka-step__media--frame" data-scheme={step.scheme}>
+        <LabsFrameShapes className="ka-step__frame" />
+      </div>
+    )
+  }
+
+  if (step.art === 'balance') {
+    return (
+      <div className="ka-step__media ka-step__media--balance" data-scheme={step.scheme}>
+        <LabsBalanceScene className="ka-step__balance" />
+      </div>
+    )
+  }
+
+  if (step.art === 'hex') {
+    return (
+      <div className="ka-step__media ka-step__media--hex" data-scheme={step.scheme}>
+        <LabsHexScene className="ka-step__hex" />
+      </div>
+    )
+  }
+
+  if (step.layers?.length && step.scheme) {
+    return (
+      <div
+        className="ka-step__media"
+        data-scheme={step.scheme}
+        style={step.tone ? { background: step.tone } : undefined}
+      >
+        <span className="ka-step__art">
+          {step.layers.map((layer) => (
+            <img alt="" className={layer.role} key={layer.src} src={assetUrl(layer.src)} />
+          ))}
+        </span>
+      </div>
+    )
+  }
+
+  return <Placeholder frame="shot" label="Image" src={step.src ?? ''} />
 }
 
 export function KaSteps({
   kicker = KA_STEPS.kicker,
   title = KA_STEPS.title,
   items = KA_STEPS.items,
+  shapes = false,
 }: KaStepsProps) {
+  const showHead = Boolean(kicker || title)
+
   return (
-    <section className="ka-steps">
+    <section className={`ka-steps${shapes ? ' ka-steps--shapes' : ''}`}>
+      {shapes ? (
+        <LabsHeroShapes
+          className="ka-steps__shapes"
+          colors={LABS_SHAPE_COLORS_WARM}
+          only={['hexagon', 'square']}
+        />
+      ) : null}
       <div className="ka-contain">
-        <div className="ka-steps__head">
-          <p className="ka-kicker">{kicker}</p>
-          <h2>{title}</h2>
-        </div>
+        {showHead ? (
+          <div className="ka-steps__head">
+            {kicker ? <p className="ka-kicker">{kicker}</p> : null}
+            {title ? <h2>{title}</h2> : null}
+          </div>
+        ) : null}
         {items.map((step) => (
-          <div className="ka-split ka-step" key={step.title}>
-            {step.imageFirst && <Placeholder frame="shot" label="Image" src={step.src} />}
-            <div>
+          <div
+            className="ka-split ka-step"
+            data-scheme={step.scheme}
+            key={step.title}
+            style={step.tone ? ({ '--ka-step-tone': step.tone } as React.CSSProperties) : undefined}
+          >
+            {step.imageFirst ? <StepMedia step={step} /> : null}
+            <div className="ka-step__copy">
               <p className="ka-kicker">{step.kicker}</p>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
-              <ul>
-                {step.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
+              {step.cta ? (
+                <SmartLink className="ka-btn" href={step.cta.href}>
+                  {step.cta.label}
+                </SmartLink>
+              ) : null}
             </div>
-            {!step.imageFirst && <Placeholder frame="shot" label="Image" src={step.src} />}
+            {!step.imageFirst ? <StepMedia step={step} /> : null}
           </div>
         ))}
       </div>

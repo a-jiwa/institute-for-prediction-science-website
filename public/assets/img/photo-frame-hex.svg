@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1090" height="680" viewBox="0 0 1090 680" fill="none">
+  <rect width="1090" height="680" rx="35" fill="#fcc934"/>
+  <g transform="translate(545 340) scale(1.1968) translate(-180 -176)">
+    <path
+      fill="#48f08b"
+      style="mix-blend-mode:multiply;-webkit-mix-blend-mode:multiply"
+      d="M70.991 23.810A36.619 36.619 0 0 1 102.704 5.500L257.296 5.500A36.619 36.619 0 0 1 289.009 23.810L366.305 157.691A36.619 36.619 0 0 1 366.305 194.309L289.009 328.190A36.619 36.619 0 0 1 257.296 346.500L102.704 346.500A36.619 36.619 0 0 1 70.991 328.190L-6.305 194.309A36.619 36.619 0 0 1 -6.305 157.691Z"
+    />
+    <circle cx="-16.876" cy="176" r="30" fill="#5e9bff" style="mix-blend-mode:multiply;-webkit-mix-blend-mode:multiply"/>
+    <circle cx="81.562" cy="346.5" r="30" fill="#5e9bff" style="mix-blend-mode:multiply;-webkit-mix-blend-mode:multiply"/>
+    <circle cx="278.438" cy="346.5" r="30" fill="#5e9bff" style="mix-blend-mode:multiply;-webkit-mix-blend-mode:multiply"/>
+  </g>
+  <g transform="translate(545 340) scale(1.496) translate(-180 -176)">
+    <path
+      fill="#ffbdf9"
+      style="mix-blend-mode:multiply;-webkit-mix-blend-mode:multiply"
+      transform="rotate(30 180 176)"
+      d="M200.460 140.562A23.625 23.625 0 0 1 159.540 140.562L102.022 40.938A23.625 23.625 0 0 1 122.482 5.500L237.518 5.500A23.625 23.625 0 0 1 257.978 40.938Z"
+    />
+  </g>
+</svg>

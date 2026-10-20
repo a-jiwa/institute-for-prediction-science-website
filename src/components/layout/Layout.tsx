@@ -20,13 +20,9 @@ export function Layout() {
 
   useEffect(() => {
     const isHeaderWhite = pathname.startsWith('/privacy-policy')
-    const path = pathname.replace(/\/+$/, '')
-    const hideHeaderBorder = path === '/services/competitions' || path === '/services/training'
     document.body.classList.toggle('header-white', isHeaderWhite)
-    document.body.classList.toggle('header-no-border', hideHeaderBorder)
     return () => {
       document.body.classList.remove('header-white')
-      document.body.classList.remove('header-no-border')
     }
   }, [pathname])
 
@@ -56,17 +52,23 @@ export function Layout() {
 
   useEffect(() => {
     if (hash) {
-      const el = document.querySelector(hash)
-      if (el) {
+      const scrollToHash = () => {
+        const el = document.querySelector(hash)
+        if (!el) return false
         el.scrollIntoView({ behavior: 'smooth' })
-        return
+        return true
       }
+      if (scrollToHash()) return
+      const frame = requestAnimationFrame(() => {
+        if (!scrollToHash()) window.scrollTo(0, 0)
+      })
+      return () => cancelAnimationFrame(frame)
     }
     window.scrollTo(0, 0)
   }, [pathname, hash])
 
   return (
-    <div className="wrapper min-h-[100lvh] w-full bg-white">
+    <div className="wrapper min-h-[100lvh] w-full">
       <div className="tone-field" aria-hidden="true" />
       <Header />
       <main>

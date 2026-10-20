@@ -5,10 +5,7 @@ import { HeroGrid } from '../hero/HeroGrid'
 import { toneForPath } from '../../data/pageTones'
 import { assetUrl } from '../../utils/assetUrl'
 
-const homeHeroLines = [
-  'Developing better ways to',
-  'think about what comes next.',
-] as const
+const homeHeroLines = ['Developing better ways to think about what comes next.'] as const
 
 export function HeroSection({
   lines = homeHeroLines,
@@ -160,7 +157,7 @@ export function AboutTextSection() {
           </div>
         </div>
         <div className="home-about-cta">
-          <Btn href="/about" orange>
+          <Btn href="/#about" orange>
             About us
           </Btn>
         </div>
@@ -172,7 +169,7 @@ export function AboutTextSection() {
 const services = [
   {
     id: 'competitions',
-    title: 'Custom Competitions',
+    title: 'Custom competitions',
     text: 'We run custom forecasting competitions that score predictions against real world outcomes.',
     scheme: 'blue',
     layers: [
@@ -183,7 +180,7 @@ const services = [
   },
   {
     id: 'training',
-    title: 'Prediction Training',
+    title: 'Prediction training',
     text: 'We provide training services that help people make better forecasts by reviewing their predictions.',
     scheme: 'green',
     layers: [
@@ -195,7 +192,7 @@ const services = [
   },
   {
     id: 'lab',
-    title: 'Prediction Labs',
+    title: 'Prediction labs',
     text: 'The prediction lab researches forecasting methods and builds tools that put that evidence to use.',
     scheme: 'red',
     layers: [
@@ -212,7 +209,7 @@ export function ServicesIntroSection() {
       <div className="container">
         <p className="home-about__label">What we do</p>
         <p className="home-services__intro">
-          We put forecasting into practice through competitions, training and research.
+          Unlocking the power of forecasting
         </p>
         <div className="home-service-cards">
           {services.map((service) => (

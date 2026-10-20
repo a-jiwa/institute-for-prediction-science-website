@@ -3,8 +3,6 @@ import { Layout } from './components/layout/Layout'
 import { SmoothScroll } from './components/layout/CookieBanner'
 import { HomePage } from './pages/HomePage'
 import { ResearchPage } from './pages/ResearchPage'
-import { AboutPage } from './pages/AboutPage'
-import { WorkPage } from './pages/WorkPage'
 import { ServicePage } from './pages/ServicePage'
 import { CareersPage } from './pages/CareersPage'
 import { PrivacyPage } from './pages/PrivacyPage'
@@ -21,10 +19,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/research/:slug" element={<DetailPage type="research" />} />
-            <Route path="/services" element={<WorkPage />} />
+            <Route path="/services" element={<Navigate to={{ pathname: '/', hash: 'services' }} replace />} />
             <Route path="/services/:slug" element={<ServicePage />} />
-            <Route path="/our-work" element={<Navigate to="/services" replace />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route path="/our-work" element={<Navigate to={{ pathname: '/', hash: 'services' }} replace />} />
+            <Route path="/about" element={<Navigate to={{ pathname: '/', hash: 'about' }} replace />} />
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/careers/:slug" element={<DetailPage type="career" />} />
             <Route path="/team/:slug" element={<DetailPage type="team" />} />

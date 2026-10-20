@@ -15,12 +15,12 @@ const TEXT_GREEN = '#102B23'
 const TEXT_INK = '#000000'
 const TEXT_X = 72
 
-export const SITE_NAME = 'The Institute for Prediction Science'
+export const SITE_NAME = 'Institute for Prediction Science'
 export const WORDMARK_NAME = 'Institute for Prediction Science'
 export const CONTACT_EMAIL = 'info@predictionscience.org'
-export const BLOG_URL = 'https://adnaanjiwa.substack.com'
+export const BLOG_URL = 'https://predictionscience.substack.com'
 export const BLOG_SUBSCRIBE_URL =
-  'https://adnaanjiwa.substack.com/subscribe?utm_source=menu&simple=true&next=https%3A%2F%2Fadnaanjiwa.substack.com%2F'
+  'https://predictionscience.substack.com/subscribe?utm_source=menu&simple=true&next=https%3A%2F%2Fpredictionscience.substack.com%2F'
 export const LINKEDIN_URL = 'https://www.linkedin.com/company/institute-for-prediction-science'
 export const X_URL = 'https://x.com/PredictionSci'
 

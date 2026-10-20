@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1090" height="680" viewBox="0 0 1090 680" fill="none">
+  <rect width="1090" height="680" rx="35" fill="#ffffff"/>
+  <circle
+    cx="545"
+    cy="340"
+    r="170"
+    fill="#5e9bff"
+    style="mix-blend-mode:multiply"
+  />
+  <circle
+    cx="375"
+    cy="340"
+    r="136"
+    fill="#5e9bff"
+    style="mix-blend-mode:multiply"
+  />
+  <circle
+    cx="715"
+    cy="340"
+    r="204"
+    fill="#5e9bff"
+    style="mix-blend-mode:multiply"
+  />
+</svg>

@@ -118,12 +118,12 @@ const DEFAULT_AUTHORS: ResearchAuthor[] = [
   {
     name: 'Ezra Karger',
     role: 'Director of Research',
-    bio: 'Ezra leads the institute’s research programme on forecasting, judgment, and the use of prediction in high stakes decisions.',
+    bio: 'Ezra leads the institute’s research programme on forecasting, judgement, and the use of prediction in high stakes decisions.',
   },
   {
     name: 'Philip Tetlock',
     role: 'President, Chief Scientist',
-    bio: 'Philip’s work on forecasting tournaments and expert judgment underpins much of the institute’s approach to measuring and improving prediction.',
+    bio: 'Philip’s work on forecasting tournaments and expert judgement underpins much of the institute’s approach to measuring and improving prediction.',
   },
   {
     name: 'Josh Rosenberg',
@@ -268,7 +268,7 @@ export function articleContent(item: ResearchItem): ArticleContent {
         ...lorem(seed + 2, 3).map((text) => ({ type: 'p' as const, text })),
         {
           type: 'p',
-          text: 'The work combines structured elicitation, careful scoring, and iterative feedback. Participants make probabilistic forecasts, receive updates as evidence arrives, and review how their judgment performed against outcomes.',
+          text: 'The work combines structured elicitation, careful scoring, and iterative feedback. Participants make probabilistic forecasts, receive updates as evidence arrives, and review how their judgement performed against outcomes.',
         },
         ...lorem(seed + 3, 2).map((text) => ({ type: 'p' as const, text })),
       ],
@@ -283,7 +283,7 @@ export function articleContent(item: ResearchItem): ArticleContent {
           items: [
             'Measured forecasts reveal where people are overconfident or underconfident.',
             'Training and feedback can improve calibration when practice is repeated.',
-            'Aggregating diverse judgments often outperforms any single expert view.',
+            'Aggregating diverse judgements often outperforms any single expert view.',
             'Practical tools help organisations use forecasts without hiding uncertainty.',
           ],
         },

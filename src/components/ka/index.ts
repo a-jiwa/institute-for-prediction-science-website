@@ -17,6 +17,22 @@ export { KaSteps } from './KaSteps'
 export { KaPullQuote } from './KaPullQuote'
 export { KaCourses } from './KaCourses'
 export { KaClose } from './KaClose'
+export { LabsHeroShapes } from './LabsHeroShapes'
+export { LabsFrameShapes } from './LabsFrameShapes'
+export { LabsBalanceScene } from './LabsBalanceScene'
+export { LabsHexScene } from './LabsHexScene'
+export { LabsShapeWash, LABS_SHAPE_WASH } from './LabsShapeWash'
+export type { LabsShapeWashInk } from './LabsShapeWash'
+export {
+  LABS_SHAPE_COLORS,
+  LABS_SHAPE_COLORS_WARM,
+  fillFromIntersect,
+  intersectFromFill,
+  invertHex,
+  resolveLabsShapeFill,
+  resolveLabsShapeFills,
+} from './labsBlend'
+export type { LabsShapeColorSpec, LabsShapeName } from './labsBlend'
 export { KaStandInPage } from './KaStandInPage'
 
 export * from './defaults'

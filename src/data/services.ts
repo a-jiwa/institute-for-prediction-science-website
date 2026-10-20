@@ -22,7 +22,7 @@ export type Service = {
 export const services: readonly Service[] = [
   {
     id: 'competitions',
-    title: 'Custom Competitions',
+    title: 'Custom competitions',
     lead: 'We run custom forecasting competitions for universities, companies and other organisations. Participants forecast the same questions and are scored against real outcomes, leaving a clear record of which approaches work.',
     paragraphs: [
       'Participants forecast the same questions and are scored consistently, creating a clear record of forecasting ability and revealing which approaches work best.',
@@ -61,7 +61,7 @@ export const services: readonly Service[] = [
         paragraphs: [
           'Once outcomes are known, the record shows who was well calibrated, which approaches held up, and where a confident forecast came apart.',
           'Calibration is whether stated confidence matched how often those forecasts were right. An approach can also be compared with another on the same questions, which is hard to do when people forecast different things in different ways.',
-          'Organisations use that record to see where judgment is strong, where it needs work, and which ways of forecasting are worth keeping.',
+          'Organisations use that record to see where judgement is strong, where it needs work, and which ways of forecasting are worth keeping.',
         ],
       },
     ],
@@ -74,7 +74,7 @@ export const services: readonly Service[] = [
   },
   {
     id: 'training',
-    title: 'Prediction Training',
+    title: 'Prediction training',
     lead: 'We help individuals and teams develop their forecasting through practice and feedback. They make probabilistic forecasts, review what happened, and use that record to improve their judgement.',
     paragraphs: [
       'Participants make probabilistic forecasts, track their accuracy and learn from past predictions. By reviewing what went right and wrong, they can identify weaknesses, improve their judgement and become better forecasters.',
@@ -98,8 +98,8 @@ export const services: readonly Service[] = [
       },
       {
         id: 'where-judgment-slips',
-        title: 'Where judgment slips',
-        lead: 'Looking back shows where judgment is sharp and where it slips.',
+        title: 'Where judgement slips',
+        lead: 'Looking back shows where judgement is sharp and where it slips.',
         paragraphs: [
           'The slips the training looks for are familiar: too much confidence, an alternative that was never considered, or a forecast that was never checked.',
           'Too much confidence shows up when high probabilities are wrong more often than the forecaster expected. A missing alternative shows up when the outcome was thinkable, but it was not in the forecast.',
@@ -111,7 +111,7 @@ export const services: readonly Service[] = [
         title: 'Individuals and teams',
         lead: 'Individuals can take part on their own. Teams can train together.',
         paragraphs: [
-          'On their own, people build a personal record of forecasts and reviews. Over time that record is more useful than a single exercise, because patterns in judgment take more than one question to see.',
+          'On their own, people build a personal record of forecasts and reviews. Over time that record is more useful than a single exercise, because patterns in judgement take more than one question to see.',
           'Teams can train together, so making a forecast and then reviewing it becomes part of how a group reasons about uncertainty.',
           'Shared practice gives a team a common language for confidence, disagreement, and what would change a forecast. The aim is to improve by reviewing forecasts over time.',
         ],
@@ -126,7 +126,7 @@ export const services: readonly Service[] = [
   },
   {
     id: 'lab',
-    title: 'Prediction Labs',
+    title: 'Prediction labs',
     lead: 'We research forecasting methods and build tools that turn forecasts and prediction-market data into practical insight for decisions.',
     paragraphs: [
       'Through experimentation and analysis, we investigate how people predict, evaluate new approaches and develop applications that turn predictive information into practical insights for decision-making.',

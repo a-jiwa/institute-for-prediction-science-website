@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1090" height="680" viewBox="0 0 1090 680" fill="none">
+  <defs>
+    <clipPath id="top-circle">
+      <circle cx="545" cy="255" r="170"/>
+    </clipPath>
+  </defs>
+  <rect width="1090" height="680" rx="35" fill="#fcc934"/>
+  <!-- Lens of top ∩ bottom: white; invisible alone on the yellow -->
+  <circle
+    cx="545"
+    cy="425"
+    r="170"
+    fill="#ffffff"
+    clip-path="url(#top-circle)"
+  />
+  <circle
+    cx="545"
+    cy="340"
+    r="42.5"
+    fill="#5e9bff"
+  />
+</svg>

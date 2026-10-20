@@ -1,6 +1,6 @@
-# The Institute for Prediction Science
+# Institute for Prediction Science
 
-Website for [The Institute for Prediction Science](https://a-jiwa.github.io/forecasting-institute/), built with React, Vite, and Tailwind CSS.
+Website for [Institute for Prediction Science](https://a-jiwa.github.io/forecasting-institute/), built with React, Vite, and Tailwind CSS.
 
 **Live site:** [https://a-jiwa.github.io/forecasting-institute/](https://a-jiwa.github.io/forecasting-institute/)
 
@@ -70,4 +70,4 @@ Fonts, hero videos, and icons are bundled locally under `public/assets/`. Some r
 
 ## Notes
 
-Detail pages cover research articles, careers, and team members for The Institute for Prediction Science.
+Detail pages cover research articles, careers, and team members for Institute for Prediction Science.

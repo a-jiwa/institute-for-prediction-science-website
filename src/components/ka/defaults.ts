@@ -202,54 +202,70 @@ export const KA_ASSESS_SCORES = {
 }
 
 export const KA_ASSESS_TEACH = {
-  title: 'Test less. Coach more.',
+  title: 'Guess less, forecast more.',
   paragraphs: [
-    'The rounds are built to fit a normal session, with a short check a few times a year that finishes in one sitting and leads straight back to practice.',
+    'Our competitions and training are designed to fit into existing organisational schedules, with short, scored forecasting rounds completed in a single session and connected directly to clearer next decisions.',
   ],
   image: '/assets/placeholders/khan/teach.png',
   imageFirst: true,
 }
 
 export const KA_STEPS = {
-  kicker: 'How it runs',
-  title: 'From the brief to the next round, one connected path',
+  kicker: 'How it works',
+  title: 'From assessment to action, one connected experience',
   items: [
     {
-      kicker: 'Show the working',
-      title: 'See how a team reasoned, not only the call they made',
-      body: 'With this round, teams show how they reached a forecast, not only whether the number landed.',
+      kicker: 'Custom competitions',
+      title: 'Run a custom competition with us',
+      body: 'We run custom forecasting competitions for universities, companies and other organisations. Participants forecast the same questions and are scored against real outcomes, leaving a clear record of which approaches work.',
       bullets: [
-        'Capture the reasoning behind a right or wrong call',
-        'Surface the same miss across classrooms and schools',
-        'See unfinished thinking that a score alone misses',
+        'Score the same questions the same way, against real outcomes',
+        'Shape the contest around decisions your organisation faces',
+        'See who was calibrated and which approaches held up',
       ],
       imageFirst: false,
-      src: '/assets/placeholders/khan/step.png',
+      scheme: 'blue' as const,
+      /** Floating Labs frame circles (no coloured media plate). */
+      art: 'labs-frame' as const,
+      cta: {
+        label: 'Learn more',
+        href: '/services/competitions',
+      },
     },
     {
-      kicker: 'Practice that follows',
-      title: 'Send every team straight to the next useful round',
-      body: 'After each contest, teams move into practice shaped to what that round revealed.',
+      kicker: 'Personalised training',
+      title: 'Build sharper judgement through practice and feedback',
+      body: 'We help individuals and teams develop their forecasting through practice and feedback. They make probabilistic forecasts, review what happened, and use that record to improve their judgement.',
       bullets: [
-        'Practice aimed at the calls that need work',
-        'The brief stays at the level of the contest',
-        'Help is there when a team gets stuck',
-        'Progress the team can see and mark',
+        'Practice forecasts with a clear review loop',
+        'Spot overconfidence and missed alternatives',
+        'Build a personal or team record over time',
       ],
       imageFirst: true,
-      src: '/assets/placeholders/khan/step-2.png',
+      scheme: 'green' as const,
+      art: 'balance' as const,
+      cta: {
+        label: 'Learn more',
+        href: '/services/training',
+      },
     },
     {
-      kicker: 'A view of the field',
-      title: 'Watch progress across teams, schools, and the whole field',
-      body: 'Leads get a clear view of growth, of the patterns in the calls, and of where more help is due.',
+      kicker: 'Prediction labs',
+      title: 'Explore our latest research and ventures',
+      body: 'We research forecasting methods and build tools that turn forecasts and prediction-market data into practical insight for decisions.',
       bullets: [
-        'A view from the whole field down to one team',
-        'Notes that support the next round of coaching',
-        'Progress that stays visible across schools',
+        'Study methods that hold up against real outcomes',
+        'Turn prediction-market data into usable insight',
+        'Build tools that support real decisions',
       ],
       imageFirst: false,
-      src: '/assets/placeholders/khan/step-3.png',
+      scheme: 'red' as const,
+      /** Hex + triangle composition from photo-frame-hex.svg. */
+      art: 'hex' as const,
+      cta: {
+        label: 'Learn more',
+        href: '/services/lab',
+      },
     },
   ],
 }

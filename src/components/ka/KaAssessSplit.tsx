@@ -9,6 +9,8 @@ type Action = {
 
 type KaAssessSplitProps = {
   variant?: 'hero' | 'default'
+  /** Calendar / teach graphic: fixed 240px height like Khan interim-assessment. */
+  media?: 'default' | 'calendar'
   title?: string
   body?: string
   paragraphs?: string[]
@@ -19,6 +21,7 @@ type KaAssessSplitProps = {
 
 export function KaAssessSplit({
   variant = 'default',
+  media = 'default',
   title = KA_ASSESS_HERO.title,
   body,
   paragraphs,
@@ -49,21 +52,29 @@ export function KaAssessSplit({
     </div>
   )
 
-  const media = <Placeholder frame="shot" label="Image" src={image} />
+  const mediaEl = <Placeholder frame="shot" label="Image" src={image} />
+
+  const sectionClass = [
+    'ka-assess',
+    variant === 'hero' ? 'ka-assess--hero' : '',
+    media === 'calendar' ? 'ka-assess--calendar' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <section className={`ka-assess${variant === 'hero' ? ' ka-assess--hero' : ''}`}>
+    <section className={sectionClass}>
       <div className="ka-contain">
         <div className="ka-split">
           {imageFirst ? (
             <>
-              {media}
+              {mediaEl}
               {copy}
             </>
           ) : (
             <>
               {copy}
-              {media}
+              {mediaEl}
             </>
           )}
         </div>
