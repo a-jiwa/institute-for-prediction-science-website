@@ -254,7 +254,6 @@ export function useLabsFloatIn(
 
       const followK = 1 - Math.exp(-MOTION_FOLLOW * dt)
       const textK = 1 - Math.exp(-TEXT_FOLLOW * dt)
-      const bandSettle = smoothstep(settleCurrent)
 
       pieces.forEach((piece, i) => {
         const localSettle = localSettleFor(settleCurrent, piece.settleBias)
