@@ -215,9 +215,12 @@ export const KA_STEPS = {
   title: 'From assessment to action, one connected experience',
   items: [
     {
-      kicker: 'Custom competitions',
-      title: 'Run a custom competition with us',
-      body: 'We run custom forecasting competitions for universities, companies and other organisations. Participants forecast the same questions and are scored against real outcomes, leaving a clear record of which approaches work.',
+      kicker: 'Competitions',
+      title: 'Custom forecasting challenges',
+      body: [
+        'We design and run fully managed forecasting competitions for universities, corporate teams, and institutions.',
+        'Whether enriching a curriculum or improving forecasting skills, we turn subject matter into engaging, measurable prediction challenges with zero administrative hassle.',
+      ],
       bullets: [
         'Score the same questions the same way, against real outcomes',
         'Shape the contest around decisions your organisation faces',
@@ -233,9 +236,9 @@ export const KA_STEPS = {
       },
     },
     {
-      kicker: 'Personalised training',
-      title: 'Build sharper judgement through practice and feedback',
-      body: 'We help individuals and teams develop their forecasting through practice and feedback. They make probabilistic forecasts, review what happened, and use that record to improve their judgement.',
+      kicker: 'Training',
+      title: 'Practical judgment programs',
+      body: 'We deliver practical training programs that build calibrated judgment and critical thinking. Through hands-on practice, we teach students, researchers, and professionals how to evaluate evidence, account for uncertainty, and improve predictive accuracy over time.',
       bullets: [
         'Practice forecasts with a clear review loop',
         'Spot overconfidence and missed alternatives',
@@ -250,9 +253,9 @@ export const KA_STEPS = {
       },
     },
     {
-      kicker: 'Prediction labs',
-      title: 'Explore our latest research and ventures',
-      body: 'We research forecasting methods and build tools that turn forecasts and prediction-market data into practical insight for decisions.',
+      kicker: 'Labs',
+      title: 'Forecasting innovation lab',
+      body: 'We conduct applied research, build software, and incubate new tools. Operating as an internal innovation studio, our lab develops practical applications and spins out real-world solutions for policymakers, industry, and the public.',
       bullets: [
         'Study methods that hold up against real outcomes',
         'Turn prediction-market data into usable insight',

@@ -6838,6 +6838,13 @@ html[data-tone] .about-statement p {
   color: #202020;
 }
 
+/* Home contact body matches the service-card body above it. */
+.ka-wash-region .ka-close__copy > p:not(.ka-kicker) {
+  color: #202020;
+  -webkit-text-fill-color: #202020;
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+}
+
 .ka-wash-region .ka-assess h2,
 .ka-wash-region .ka-close h2 {
   color: #202020;
@@ -7150,7 +7157,8 @@ html[data-tone] .about-statement p {
 }
 
 /* Labs shapes — position/spin driven by zero-g physics in LabsHeroShapes.tsx.
-   Difference so overlaps invert into each other (and the page behind). */
+   Difference so overlaps invert into each other (and the page behind).
+   JS paints with 2D translate + rotate (device-pixel snapped); avoid translate3d. */
 .ka-labs-shape {
   position: absolute;
   top: 0;
@@ -7243,38 +7251,89 @@ html[data-tone] .about-statement p {
 }
 
 /*
+  Home mission title: forced break after “today”, but each clause can wrap.
+  Keep a moderate measure + larger type so large screens get a solid
+  multi-line block instead of two stretched single lines.
+*/
+#about.ka-about-hero h1 {
+  max-width: min(15.5em, 42rem);
+  padding-inline: 0.2em;
+  /* Soften non-em text (lighter weight + gray after difference). */
+  color: #cfcfcf;
+  font-size: clamp(2rem, 1.15rem + 2.9vw, 3.75rem);
+  font-weight: var(--ka-weight-body);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+#about.ka-about-hero h1 .ka-about-hero__title-line {
+  display: block;
+  text-wrap: balance;
+}
+
+/* Keep “today” / “tomorrow” at the normal title weight — not heavier. */
+#about.ka-about-hero h1 .ka-about-hero__title-em {
+  color: #fff;
+  font-weight: var(--ka-weight-bold);
+}
+
+#about.ka-about-hero {
+  /* Longer title needs a taller band than the shared hero floor. */
+  min-height: clamp(28rem, 22rem + 14vw, 36rem);
+}
+
+/*
   Home hero: same type + measure as the old .ka-reach__lead, with clear
   air under the mission title (was a full section gap when lead lived below).
 */
 #about.ka-about-hero--with-lead .ka-about-hero__lead {
-  max-width: 46rem;
-  margin-top: clamp(3.25rem, 2.5rem + 3vw, 5rem);
+  max-width: 42rem;
+  margin-top: clamp(3.5rem, 2.75rem + 3vw, 5.5rem);
   color: #4a4a4a;
-  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  font-size: clamp(1.35rem, 1.15rem + 0.85vw, 1.75rem);
   font-weight: var(--ka-weight-body);
   letter-spacing: -0.015em;
   line-height: 1.55;
 }
 
 @media (max-width: 767px) {
+  /*
+    Mobile home hero: one shared measure for kicker / title / lead.
+    Drop the extra per-line side margins so text isn’t pinched inward;
+    keep a modest copy gutter for breathing room without a narrow column.
+  */
+  #about.ka-about-hero {
+    /* Fill most of the first screen on mobile; content stays centered in the band. */
+    min-height: 80svh;
+    padding-top: clamp(3.75rem, 3rem + 4vw, 5rem);
+    padding-bottom: clamp(3.25rem, 2.5rem + 4vw, 4.5rem);
+  }
+
+  #about.ka-about-hero .ka-about-hero__copy {
+    padding-inline: 1.25rem;
+  }
+
+  #about.ka-about-hero h1 {
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: 0;
+    font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
+    letter-spacing: -0.035em;
+    line-height: 1.12;
+  }
+
+  #about.ka-about-hero .ka-kicker {
+    margin-bottom: 1rem;
+  }
+
   #about.ka-about-hero--with-lead .ka-about-hero__lead {
     max-width: none;
-    margin-inline: 0.85rem;
-    padding-inline: 0.35rem;
-    font-size: clamp(1.375rem, 1.2rem + 1.2vw, 1.625rem);
+    margin-top: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
+    margin-inline: 0;
+    padding-inline: 0;
+    font-size: clamp(1.125rem, 1rem + 0.9vw, 1.3rem);
     line-height: 1.5;
-  }
-
-  .ka-about-page > .ka-reach .ka-reach__card {
-    padding: clamp(1.25rem, 1.1rem + 0.8vw, 1.65rem);
-  }
-
-  .ka-about-page > .ka-reach .ka-reach__card-body {
-    min-height: 9.5rem;
-  }
-
-  .ka-about-page > .ka-reach .ka-reach__card strong {
-    font-size: min(5.25rem, 30cqw);
   }
 }
 
@@ -7320,6 +7379,11 @@ html[data-tone] .about-statement p {
 .ka-about-page > .ka-about-hero + .ka-steps,
 .ka-wash-region > .ka-about-hero + .ka-steps {
   padding-top: calc(var(--ka-section) * 0.55);
+}
+
+/* Home stats: sit lower under the hero so float-in never crowds the mission copy. */
+.ka-about-page > .ka-about-hero + .ka-reach {
+  padding-top: calc(var(--ka-section) * 1.15);
 }
 
 .ka-about-page > .ka-steps .ka-step + .ka-step,
@@ -7389,19 +7453,129 @@ html[data-tone] .about-statement p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
   gap: clamp(1.25rem, 1.1rem + 0.6vw, 1.75rem);
+  align-items: start;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Home stat tiles: large on desktop, compact on mobile (see media query). */
+.ka-about-page > .ka-reach .ka-reach__grid {
+  grid-template-columns: repeat(3, minmax(0, 17.5rem));
+  justify-content: center;
+  gap: clamp(1.5rem, 1.25rem + 0.75vw, 2.25rem);
+  width: 100%;
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+.ka-reach__grid > li {
+  min-width: 0;
+}
+
 .ka-reach__card {
   box-sizing: border-box;
   display: flex;
-  height: 100%;
+  aspect-ratio: 1;
+  width: 100%;
+  height: auto;
   padding: clamp(1.5rem, 1.35rem + 0.9vw, 2.1rem);
   border-radius: clamp(0.75rem, -9rem + 25vw, 1rem);
   color: #191918;
   font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+}
+
+.ka-about-page > .ka-reach .ka-reach__card {
+  padding: clamp(1.1rem, 1rem + 0.5vw, 1.5rem);
+  /* Start as Labs rounded-square; JS eases to 0.85rem when settled. */
+  border-radius: 18.6%;
+  /* Float-in uses translate — keep compositing cheap, don’t clip the drift. */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ka-about-page > .ka-reach .ka-reach__card {
+    border-radius: 0.85rem;
+  }
+}
+
+/* Hidden until the float-in settle reveals copy (JS sets opacity). */
+.ka-about-page > .ka-reach .ka-reach__card-body {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ka-about-page > .ka-reach .ka-reach__card-body {
+    opacity: 1;
+  }
+}
+
+.ka-about-page > .ka-reach .ka-reach__grid,
+.ka-about-page > .ka-reach .ka-reach__grid > li {
+  overflow: visible;
+}
+
+.ka-about-page > .ka-reach .ka-reach__card strong.ka-reach__figure {
+  display: inline-flex;
+  align-items: flex-end;
+  font-size: min(5.75rem, 44cqw);
+  line-height: 1;
+}
+
+.ka-reach__card strong .ka-reach__value {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
+}
+
+.ka-reach__card strong .ka-reach__pct {
+  font-size: 0.58em;
+  font-weight: inherit;
+  letter-spacing: -0.02em;
+  margin-inline-start: 0.02em;
+  line-height: 1;
+}
+
+.ka-about-page > .ka-reach .ka-reach__caption {
+  color: color-mix(in srgb, var(--ka-reach-tone, #191918) 42%, #0a0a0a);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+@media (max-width: 767px) {
+  /* Same horizontal inset as `.ka-story__contain` below. */
+  .ka-about-page > .ka-reach .ka-reach__contain {
+    width: calc(100% - clamp(2rem, 1.2rem + 4vw, 4rem) * 2);
+    max-width: 70rem;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    max-width: none;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__card {
+    padding: 0.75rem 0.55rem;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__card strong {
+    font-size: min(2.15rem, 42cqw);
+    letter-spacing: -0.06em;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__card strong .ka-reach__pct {
+    font-size: 0.56em;
+    letter-spacing: -0.04em;
+  }
+
+  .ka-about-page > .ka-reach .ka-reach__caption {
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
 }
 
 .ka-reach__card-body {
@@ -7412,7 +7586,7 @@ html[data-tone] .about-statement p {
   justify-content: flex-end;
   gap: 0.35rem;
   width: 100%;
-  min-height: 11.25rem;
+  min-height: 0;
   text-align: left;
 }
 
@@ -7428,7 +7602,8 @@ html[data-tone] .about-statement p {
   text-wrap: balance;
 }
 
-.ka-reach__card span {
+.ka-reach__card .ka-reach__caption,
+.ka-reach__card-body > span {
   margin: 0;
   /* Always reserve two lines so 1-line captions don’t shift the number row. */
   min-height: 2lh;

@@ -16,41 +16,49 @@ const DEBUG_SHAPES = false
 const DEBUG_INTERVAL_MS = 1000
 
 /** Slow drift (px/s) — floaty, not busy. */
-const CRUISE_SPEED = 9
+const CRUISE_SPEED = 8
 /** How quickly velocity eases toward the cruise heading (higher = snappier). */
-const CRUISE_FOLLOW = 2.4
-const MAX_OMEGA = 8
-/** Scroll → spin; near-zero so Lenis deltas don’t chatter paths. */
-const SCROLL_DEG_PER_PX = 0.08
-const CURSOR_STEER = 1.1
+const CRUISE_FOLLOW = 1.8
+const MAX_OMEGA = 10
+/** Degrees of shape spin per pixel scrolled. */
+const SCROLL_DEG_PER_PX = 0.14
+/** Extra angular velocity from a scroll burst (keeps spinning briefly after). */
+const SCROLL_OMEGA_GAIN = 0.45
+const CURSOR_STEER = 0.85
 const CURSOR_RADIUS = 200
 /** Pull back toward home when farther than this (px). */
-const HOME_LEASH = 150
-const HOME_STEER = 1.15
-const AVOID_STEER = 1.8
+const HOME_LEASH = 160
+const HOME_STEER = 0.9
+const AVOID_STEER = 1.2
 const AVOID_PAD = 48
 const AVOID_SKIRT = 72
 /** Soft velocity shove away from obstacles (px/s² scale), not a hard teleport. */
-const AVOID_PUSH = 22
+const AVOID_PUSH = 14
 const AVOID_ART_SELECTOR =
   '.ka-step__media--frame, .ka-step__media--balance, .ka-step__media--hex'
 const AVOID_COPY_SELECTOR = '.ka-step__copy'
 const AVOID_COPY_PAD = 28
 const AVOID_COPY_SKIRT = 96
-const AVOID_COPY_STRENGTH = 0.42
+const AVOID_COPY_STRENGTH = 0.38
 const RESIZE_EPS = 4
 const POINTER_ACTIVE_MS = 280
 /** Refresh obstacle boxes on this cadence — per-frame layout reads jitter. */
-const AVOID_REFRESH_MS = 140
-/** Visual follow of sim position (higher = tighter, lower = butter). */
-const RENDER_FOLLOW = 5.5
+const AVOID_REFRESH_MS = 180
+/** Seconds to ease toward a new obstacle set (avoids hard steer snaps). */
+const AVOID_BLEND_S = 0.28
+/**
+ * Fixed sim step — keeps motion identical on 60Hz monitors and ProMotion.
+ * Display interpolates between steps so refresh rate doesn’t change the path.
+ */
+const FIXED_DT = 1 / 60
+const MAX_SIM_STEPS = 3
 /** Soft wall band outside the hard pad (px factor of radius). */
-const WALL_SOFT = 1.25
+const WALL_SOFT = 1.35
 /** Low-frequency heading wander (rad/s peak). */
-const WANDER_RATE = 0.55
-const WANDER_FREQ = 0.55
+const WANDER_RATE = 0.35
+const WANDER_FREQ = 0.4
 /** Max turn rate for steering (rad/s) — caps twitchy corrections. */
-const MAX_TURN_RATE = 1.35
+const MAX_TURN_RATE = 0.95
 
 /** Styled resting spots as fractions of the field (x, y). */
 const DEFAULT_HOMES: readonly { x: number; y: number }[] = [
@@ -75,10 +83,10 @@ type Body = {
   name: LabsShapeName
   x: number
   y: number
-  /** Painted position — eases toward sim for less frame-to-frame chatter. */
-  rx: number
-  ry: number
-  rAngle: number
+  /** Previous sim pose — display lerps from these to current. */
+  px: number
+  py: number
+  pAngle: number
   homeX: number
   homeY: number
   vx: number
@@ -131,10 +139,58 @@ function shortestDelta(from: number, to: number) {
   return delta
 }
 
+function shortestAngleDeg(from: number, to: number) {
+  let delta = to - from
+  while (delta > 180) delta -= 360
+  while (delta < -180) delta += 360
+  return delta
+}
+
+/** Snap to the display’s physical pixels — stops shimmer on 1x external monitors. */
+function snapPx(value: number) {
+  const dpr = window.devicePixelRatio || 1
+  return Math.round(value * dpr) / dpr
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t
+}
+
+function lerpAvoid(a: AvoidRect, b: AvoidRect, t: number): AvoidRect {
+  return {
+    left: lerp(a.left, b.left, t),
+    top: lerp(a.top, b.top, t),
+    right: lerp(a.right, b.right, t),
+    bottom: lerp(a.bottom, b.bottom, t),
+    cx: lerp(a.cx, b.cx, t),
+    cy: lerp(a.cy, b.cy, t),
+    strength: lerp(a.strength, b.strength, t),
+    skirt: lerp(a.skirt, b.skirt, t),
+  }
+}
+
+function blendAvoidSets(from: AvoidRect[], to: AvoidRect[], t: number): AvoidRect[] {
+  if (!from.length) return to.map((box) => ({ ...box }))
+  if (!to.length) return from.map((box) => ({ ...box }))
+  const n = Math.max(from.length, to.length)
+  const out: AvoidRect[] = []
+  for (let i = 0; i < n; i++) {
+    const a = from[Math.min(i, from.length - 1)]
+    const b = to[Math.min(i, to.length - 1)]
+    out.push(lerpAvoid(a, b, t))
+  }
+  return out
+}
+
 /** Ease velocity toward cruise along the body’s smoothed heading. */
-function easeCruise(body: Body, dt: number, follow = CRUISE_FOLLOW) {
-  const tx = Math.cos(body.heading) * CRUISE_SPEED
-  const ty = Math.sin(body.heading) * CRUISE_SPEED
+function easeCruise(
+  body: Body,
+  dt: number,
+  cruiseSpeed = CRUISE_SPEED,
+  follow = CRUISE_FOLLOW,
+) {
+  const tx = Math.cos(body.heading) * cruiseSpeed
+  const ty = Math.sin(body.heading) * cruiseSpeed
   const a = 1 - Math.exp(-follow * dt)
   body.vx += (tx - body.vx) * a
   body.vy += (ty - body.vy) * a
@@ -154,45 +210,60 @@ function clampOmega(body: Body) {
   if (body.omega < -MAX_OMEGA) body.omega = -MAX_OMEGA
 }
 
+/** How far past the field edge a centre may sit (0 = fully inside, 0.5 = half off). */
+function edgeInset(radius: number, edgeBleed: number) {
+  const bleed = Math.min(1, Math.max(0, edgeBleed))
+  if (bleed <= 0) return radius * 0.35
+  return radius * (1 - 2 * bleed)
+}
+
 /** Soft walls: ease heading + velocity away before the hard pad. */
-function softContain(body: Body, width: number, height: number, dt: number) {
-  const pad = body.radius * 0.35
-  const band = Math.max(36, body.radius * WALL_SOFT)
-  const minX = pad
-  const maxX = width - pad
-  const minY = pad
-  const maxY = height - pad
-  const push = 14 + CRUISE_SPEED
+function softContain(
+  body: Body,
+  width: number,
+  height: number,
+  dt: number,
+  edgeBleed = 0,
+  cruiseSpeed = CRUISE_SPEED,
+) {
+  const padX = edgeInset(body.radius, edgeBleed)
+  const padY = body.radius * 0.35
+  const band = Math.max(40, body.radius * WALL_SOFT)
+  const minX = padX
+  const maxX = width - padX
+  const minY = padY
+  const maxY = height - padY
+  const push = 10 + cruiseSpeed
 
   if (body.x < minX + band) {
     const t = Math.max(0, 1 - (body.x - minX) / band)
     if (t > 0) {
-      if (body.vx < 0) body.vx *= 1 - Math.min(0.55, t * 0.7)
+      if (body.vx < 0) body.vx *= 1 - Math.min(0.45, t * 0.55)
       body.vx += push * t * t * dt
-      turnToward(body, 0, 1.8 * t, dt)
+      turnToward(body, 0, 1.2 * t, dt)
     }
   } else if (body.x > maxX - band) {
     const t = Math.max(0, 1 - (maxX - body.x) / band)
     if (t > 0) {
-      if (body.vx > 0) body.vx *= 1 - Math.min(0.55, t * 0.7)
+      if (body.vx > 0) body.vx *= 1 - Math.min(0.45, t * 0.55)
       body.vx -= push * t * t * dt
-      turnToward(body, Math.PI, 1.8 * t, dt)
+      turnToward(body, Math.PI, 1.2 * t, dt)
     }
   }
 
   if (body.y < minY + band) {
     const t = Math.max(0, 1 - (body.y - minY) / band)
     if (t > 0) {
-      if (body.vy < 0) body.vy *= 1 - Math.min(0.55, t * 0.7)
+      if (body.vy < 0) body.vy *= 1 - Math.min(0.45, t * 0.55)
       body.vy += push * t * t * dt
-      turnToward(body, Math.PI / 2, 1.8 * t, dt)
+      turnToward(body, Math.PI / 2, 1.2 * t, dt)
     }
   } else if (body.y > maxY - band) {
     const t = Math.max(0, 1 - (maxY - body.y) / band)
     if (t > 0) {
-      if (body.vy > 0) body.vy *= 1 - Math.min(0.55, t * 0.7)
+      if (body.vy > 0) body.vy *= 1 - Math.min(0.45, t * 0.55)
       body.vy -= push * t * t * dt
-      turnToward(body, -Math.PI / 2, 1.8 * t, dt)
+      turnToward(body, -Math.PI / 2, 1.2 * t, dt)
     }
   }
 
@@ -200,9 +271,14 @@ function softContain(body: Body, width: number, height: number, dt: number) {
   body.y = Math.min(maxY, Math.max(minY, body.y))
 }
 
-function sizeForShape(shape: (typeof SHAPES)[number], width: number, height: number) {
+function sizeForShape(
+  shape: (typeof SHAPES)[number],
+  width: number,
+  height: number,
+  scale = 1,
+) {
   const maxSize = Math.min(width, height)
-  const sizePx = Math.min(maxSize * shape.size, width * 0.42, 288)
+  const sizePx = Math.min(maxSize * shape.size * scale, width * 0.55 * scale, 288 * scale)
   const radius = sizePx * 0.46
   return { sizePx, radius }
 }
@@ -213,11 +289,22 @@ function homeForIndex(
   height: number,
   radius: number,
   homes?: readonly { x: number; y: number }[],
+  edgeBleed = 0,
 ) {
   const spot = homes?.[index] ?? DEFAULT_HOMES[index % DEFAULT_HOMES.length]
+  // Honour authored fractions exactly — don’t shift home when scale/radius changes.
+  const x = width * spot.x
+  const y = height * spot.y
+  if (edgeBleed > 0) {
+    const insetX = edgeInset(radius, edgeBleed)
+    return {
+      x: Math.min(width - insetX, Math.max(insetX, x)),
+      y,
+    }
+  }
   return {
-    x: Math.min(width - radius, Math.max(radius, width * spot.x)),
-    y: Math.min(height - radius, Math.max(radius, height * spot.y)),
+    x: Math.min(width - radius, Math.max(radius, x)),
+    y: Math.min(height - radius, Math.max(radius, y)),
   }
 }
 
@@ -365,8 +452,8 @@ function steerFromAvoid(body: Body, obstacles: AvoidRect[], dt: number): boolean
     const falloff = (inside ? 1 : 1 - dist / reach) * strength
     if (falloff < 0.02) continue
     const target = Math.atan2(awayY, awayX)
-    const delta = turnToward(body, target, AVOID_STEER * falloff * falloff * 3, dt)
-    body.omega += delta * falloff * 2.5 * dt
+    const delta = turnToward(body, target, AVOID_STEER * falloff * falloff * 2, dt)
+    body.omega += delta * falloff * 1.2 * dt
     pushX += awayX * falloff
     pushY += awayY * falloff
     pushAmp = Math.max(pushAmp, falloff)
@@ -400,6 +487,14 @@ type LabsHeroShapesProps = {
   only?: readonly LabsShapeName[]
   /** Optional home spots as 0–1 fractions of the field. */
   homes?: readonly { x: number; y: number }[]
+  /** Multiplier on default shape size (1 = normal). */
+  scale?: number
+  /** How far shapes may hang past left/right edges (0.5 = half off-screen). */
+  edgeBleed?: number
+  /** Drift speed multiplier (1 = default cruise, 0.4 ≈ slow float). */
+  speed?: number
+  /** Max wander distance from home before the leash pulls back (px). */
+  leash?: number
 }
 
 export function LabsHeroShapes({
@@ -408,6 +503,10 @@ export function LabsHeroShapes({
   exclude,
   only,
   homes,
+  scale = 1,
+  edgeBleed = 0,
+  speed = 1,
+  leash = HOME_LEASH,
 }: LabsHeroShapesProps = {}) {
   const rootRef = useRef<HTMLDivElement>(null)
   const lenis = useLenis()
@@ -416,6 +515,8 @@ export function LabsHeroShapes({
   const onlyKey = only?.length ? [...only].sort().join(',') : ''
   const homesKey = homes?.map((h) => `${h.x},${h.y}`).join('|') ?? ''
   const shapes = pickShapes(exclude, only)
+  const cruiseSpeed = CRUISE_SPEED * Math.max(0, speed)
+  const homeLeash = Math.max(24, leash)
 
   useLayoutEffect(() => {
     const root = rootRef.current
@@ -432,15 +533,20 @@ export function LabsHeroShapes({
     const bodies: Body[] = []
     let fieldW = 0
     let fieldH = 0
+    let displayAlpha = 1
 
     const paint = () => {
+      const t = displayAlpha
       bodies.forEach((body, index) => {
         const el = nodes[index]
         if (!el) return
-        // left/top (not translate3d) — Safari drops mix-blend on 3D layers.
-        el.style.left = `${body.rx - body.sizePx / 2}px`
-        el.style.top = `${body.ry - body.sizePx / 2}px`
-        el.style.transform = `rotate(${body.rAngle}deg)`
+        const x = snapPx(lerp(body.px, body.x, t) - body.sizePx / 2)
+        const y = snapPx(lerp(body.py, body.y, t) - body.sizePx / 2)
+        const angle = body.pAngle + shortestAngleDeg(body.pAngle, body.angle) * t
+        // 2D translate only — translate3d / will-change can drop mix-blend in Safari.
+        el.style.left = '0'
+        el.style.top = '0'
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`
         el.style.opacity = '1'
       })
     }
@@ -458,8 +564,8 @@ export function LabsHeroShapes({
       const obstacles = collectAvoidRects(root)
 
       activeShapes.forEach((shape, index) => {
-        const { sizePx, radius } = sizeForShape(shape, width, height)
-        let home = homeForIndex(index, width, height, radius, homes)
+        const { sizePx, radius } = sizeForShape(shape, width, height, scale)
+        let home = homeForIndex(index, width, height, radius, homes, edgeBleed)
         // Nudge home off avoid boxes so we never start hidden.
         for (let attempt = 0; attempt < 10; attempt++) {
           if (!obstacles.some((obs) => overlapsAvoid(home.x, home.y, radius, obs))) break
@@ -474,13 +580,13 @@ export function LabsHeroShapes({
           name: shape.name,
           x: home.x,
           y: home.y,
-          rx: home.x,
-          ry: home.y,
-          rAngle: angle,
+          px: home.x,
+          py: home.y,
+          pAngle: angle,
           homeX: home.x,
           homeY: home.y,
-          vx: Math.cos(heading) * CRUISE_SPEED,
-          vy: Math.sin(heading) * CRUISE_SPEED,
+          vx: Math.cos(heading) * cruiseSpeed,
+          vy: Math.sin(heading) * cruiseSpeed,
           heading,
           wanderPhase: rand(0, Math.PI * 2),
           wanderFreq: WANDER_FREQ * rand(0.75, 1.35),
@@ -492,6 +598,7 @@ export function LabsHeroShapes({
         bodies.push(body)
         applyNodeSize(index, sizePx)
       })
+      displayAlpha = 1
       paint()
     }
 
@@ -502,23 +609,25 @@ export function LabsHeroShapes({
       activeShapes.forEach((shape, index) => {
         const body = bodies[index]
         if (!body) return
-        const { sizePx, radius } = sizeForShape(shape, width, height)
-        const home = homeForIndex(index, width, height, radius, homes)
+        const { sizePx, radius } = sizeForShape(shape, width, height, scale)
+        const home = homeForIndex(index, width, height, radius, homes, edgeBleed)
         body.x *= scaleX
         body.y *= scaleY
-        body.rx = body.x
-        body.ry = body.y
+        body.px = body.x
+        body.py = body.y
+        body.pAngle = body.angle
         body.homeX = home.x
         body.homeY = home.y
         body.radius = radius
         body.sizePx = sizePx
         body.x = Math.min(width - radius, Math.max(radius, body.x))
         body.y = Math.min(height - radius, Math.max(radius, body.y))
-        body.rx = body.x
-        body.ry = body.y
-        if (!reduce) easeCruise(body, 1, 20)
+        body.px = body.x
+        body.py = body.y
+        if (!reduce) easeCruise(body, 1, cruiseSpeed, 20)
         applyNodeSize(index, sizePx)
       })
+      displayAlpha = 1
       paint()
     }
 
@@ -544,16 +653,18 @@ export function LabsHeroShapes({
 
     let raf = 0
     let last = performance.now()
+    let simAccum = 0
     let visible = true
     let scrollY = lenis?.scroll ?? window.scrollY
-    let scrollVel = 0
-    let lastScrollT = performance.now()
+    let pendingScrollPx = 0
     let pointerX = 0
     let pointerY = 0
     let pointerInField = false
     let lastPointerMoveAt = 0
     let lastAvoidT = 0
-    let obstacles: AvoidRect[] = collectAvoidRects(root)
+    let avoidFrom: AvoidRect[] = collectAvoidRects(root)
+    let avoidTo: AvoidRect[] = avoidFrom.map((box) => ({ ...box }))
+    let avoidBlend = 1
     let debugAccum = 0
     let frameCount = 0
 
@@ -561,15 +672,23 @@ export function LabsHeroShapes({
 
     const onScroll = () => {
       if (reduce) return
-      const now = performance.now()
       const y = readScrollY()
-      const dt = Math.max(0.001, (now - lastScrollT) / 1000)
       const dy = y - scrollY
       scrollY = y
-      lastScrollT = now
-      const instant = Math.max(-600, Math.min(600, dy / dt))
-      // Heavy EMA — prefer calm spin over reactive chatter.
-      scrollVel = scrollVel * 0.9 + instant * 0.1
+      if (dy !== 0) pendingScrollPx += dy
+    }
+
+    /** Apply queued scroll as immediate rotation + a bit of leftover spin. */
+    const applyScrollSpin = () => {
+      if (!pendingScrollPx || !bodies.length) return
+      const scrollDeg = pendingScrollPx * SCROLL_DEG_PER_PX
+      pendingScrollPx = 0
+      for (const body of bodies) {
+        body.angle += scrollDeg
+        body.pAngle += scrollDeg
+        body.omega += scrollDeg * SCROLL_OMEGA_GAIN
+        clampOmega(body)
+      }
     }
 
     const onPointerMove = (event: PointerEvent) => {
@@ -585,42 +704,25 @@ export function LabsHeroShapes({
       lastPointerMoveAt = performance.now()
     }
 
-    const step = (now: number) => {
-      raf = requestAnimationFrame(step)
-      frameCount += 1
-      if (!bodies.length) {
-        syncField(true)
-        last = now
-        return
-      }
-      if (reduce || !visible) {
-        paint()
-        last = now
-        return
-      }
-
-      const width = fieldW
-      const height = fieldH
-      if (width < 32 || height < 32) return
-
-      const dt = Math.min(0.033, (now - last) / 1000)
-      last = now
-
-      scrollVel *= Math.pow(0.01, dt)
-      if (Math.abs(scrollVel) < 0.25) scrollVel = 0
-      const scrollSpin = scrollVel * SCROLL_DEG_PER_PX * dt
-
+    const integrate = (dt: number, now: number, width: number, height: number) => {
       const pointerLive =
         pointerInField && now - lastPointerMoveAt < POINTER_ACTIVE_MS
 
       if (now - lastAvoidT >= AVOID_REFRESH_MS) {
         lastAvoidT = now
-        obstacles = collectAvoidRects(root)
+        avoidFrom = blendAvoidSets(avoidFrom, avoidTo, avoidBlend)
+        avoidTo = collectAvoidRects(root)
+        avoidBlend = 0
       }
 
-      const renderBlend = 1 - Math.exp(-RENDER_FOLLOW * dt)
+      avoidBlend = Math.min(1, avoidBlend + dt / AVOID_BLEND_S)
+      const obstacles = blendAvoidSets(avoidFrom, avoidTo, avoidBlend)
 
       for (const body of bodies) {
+        body.px = body.x
+        body.py = body.y
+        body.pAngle = body.angle
+
         // Slow organic heading wander — the main floaty path.
         body.wanderPhase += body.wanderFreq * dt
         body.heading += Math.sin(body.wanderPhase) * WANDER_RATE * dt
@@ -636,49 +738,88 @@ export function LabsHeroShapes({
             const delta = turnToward(
               body,
               target,
-              CURSOR_STEER * falloff * falloff * 3,
+              CURSOR_STEER * falloff * falloff * 2,
               dt,
             )
-            body.omega += delta * falloff * 2 * dt
+            body.omega += delta * falloff * 1.1 * dt
           }
         }
 
         steerFromAvoid(body, obstacles, dt)
 
-        // Soft leash — wander, but ease back toward the styled home.
+        // Soft leash — wander nearby, then spring back toward home.
         const toHomeX = body.homeX - body.x
         const toHomeY = body.homeY - body.y
         const homeDist = Math.hypot(toHomeX, toHomeY)
-        if (homeDist > HOME_LEASH) {
+        if (homeDist > homeLeash) {
           const target = Math.atan2(toHomeY, toHomeX)
-          const pull = Math.min(1, (homeDist - HOME_LEASH) / HOME_LEASH)
-          turnToward(body, target, HOME_STEER * pull * 2.5, dt)
+          const pull = Math.min(1, (homeDist - homeLeash) / homeLeash)
+          turnToward(body, target, HOME_STEER * pull * 2.4, dt)
+          const nx = toHomeX / homeDist
+          const ny = toHomeY / homeDist
+          const spring = (homeDist - homeLeash) * (2.8 + pull * 3.2)
+          body.vx += nx * spring * dt
+          body.vy += ny * spring * dt
         }
 
-        easeCruise(body, dt)
+        easeCruise(body, dt, cruiseSpeed)
         clampOmega(body)
 
         body.x += body.vx * dt
         body.y += body.vy * dt
-        body.angle += body.omega * dt + scrollSpin
-        body.omega *= Math.exp(-1.1 * dt)
+        body.angle += body.omega * dt
+        body.omega *= Math.exp(-0.85 * dt)
 
-        softContain(body, width, height, dt)
+        softContain(body, width, height, dt, edgeBleed, cruiseSpeed)
+      }
+    }
 
-        body.rx += (body.x - body.rx) * renderBlend
-        body.ry += (body.y - body.ry) * renderBlend
-        body.rAngle += (body.angle - body.rAngle) * renderBlend
+    const step = (now: number) => {
+      raf = requestAnimationFrame(step)
+      frameCount += 1
+      if (!bodies.length) {
+        syncField(true)
+        last = now
+        simAccum = 0
+        return
+      }
+      if (reduce || !visible) {
+        displayAlpha = 1
+        paint()
+        last = now
+        simAccum = 0
+        return
       }
 
+      const width = fieldW
+      const height = fieldH
+      if (width < 32 || height < 32) return
+
+      const frameDt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      simAccum += frameDt
+
+      // Scroll rotation is applied once per frame so Lenis deltas stay visible.
+      applyScrollSpin()
+
+      let steps = 0
+      while (simAccum >= FIXED_DT && steps < MAX_SIM_STEPS) {
+        integrate(FIXED_DT, now, width, height)
+        simAccum -= FIXED_DT
+        steps += 1
+      }
+      // Don’t spiral if a tab was backgrounded — drop leftover time.
+      if (steps === MAX_SIM_STEPS) simAccum = 0
+
+      // Grow from last pose → current between fixed steps (smooth on 120Hz too).
+      displayAlpha = Math.min(1, simAccum / FIXED_DT)
       paint()
 
       if (DEBUG_SHAPES) {
-        debugAccum += dt * 1000
+        debugAccum += frameDt * 1000
         if (debugAccum >= DEBUG_INTERVAL_MS) {
           debugAccum = 0
-          if (DEBUG_SHAPES) {
-            console.log(`[labs-shapes] fps≈${Math.round(frameCount / (DEBUG_INTERVAL_MS / 1000))}`)
-          }
+          console.log(`[labs-shapes] fps≈${Math.round(frameCount / (DEBUG_INTERVAL_MS / 1000))}`)
           frameCount = 0
         }
       }
@@ -714,7 +855,18 @@ export function LabsHeroShapes({
       ro.disconnect()
       io.disconnect()
     }
-  }, [lenis, className, excludeKey, onlyKey, homesKey, homes])
+  }, [
+    lenis,
+    className,
+    excludeKey,
+    onlyKey,
+    homesKey,
+    homes,
+    scale,
+    edgeBleed,
+    cruiseSpeed,
+    homeLeash,
+  ])
 
   return (
     <div aria-hidden="true" className={className} ref={rootRef}>

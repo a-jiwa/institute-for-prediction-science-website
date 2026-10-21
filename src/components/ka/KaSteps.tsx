@@ -16,7 +16,7 @@ type ArtLayer = {
 type Step = {
   kicker: string
   title: string
-  body: string
+  body: string | readonly string[]
   bullets: string[]
   imageFirst: boolean
   src?: string
@@ -115,7 +115,9 @@ export function KaSteps({
             <div className="ka-step__copy">
               <p className="ka-kicker">{step.kicker}</p>
               <h3>{step.title}</h3>
-              <p>{step.body}</p>
+              {(typeof step.body === 'string' ? [step.body] : step.body).map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
               {step.cta ? (
                 <SmartLink className="ka-btn" href={step.cta.href}>
                   {step.cta.label}
