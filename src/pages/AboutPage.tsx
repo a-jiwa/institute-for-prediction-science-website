@@ -123,7 +123,7 @@ export function AboutPage() {
           <div className="ka-story__contain">
             <div className="ka-story__grid ka-story__grid--media-start">
               <div className="ka-story__copy">
-                <h2>Building Better Judgment</h2>
+                <h2>Building better judgment</h2>
                 <div className="ka-story__body">
                   <p>
                     Just like any other skill, you can improve your forecasting ability through deliberate practice.
