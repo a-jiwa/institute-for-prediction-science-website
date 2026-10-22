@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { KaSteps, LabsHeroShapes, LabsShapeWash } from '../components/ka'
+import { AnxietyCalmScrollFrame, KaSteps, LabsHeroShapes, LabsShapeWash } from '../components/ka'
 import { useLabsFloatIn } from '../components/ka/useLabsFloatIn'
 import { CONTACT_EMAIL } from '../components/icons/Logo'
 import { assetUrl } from '../utils/assetUrl'
@@ -138,13 +138,10 @@ export function AboutPage() {
                 </div>
               </div>
               <div
-                className="ka-story__media ka-story__media--16x9"
+                className="ka-story__media ka-story__media--anxiety"
                 data-labs-avoid-to=""
               >
-                <img
-                  alt="Impact per dollar chart comparing charities with 1x, 10x, and 100x impact."
-                  src={assetUrl('/assets/placeholders/khan/about-impact-per-dollar.webp')}
-                />
+                <AnxietyCalmScrollFrame />
               </div>
             </div>
           </div>

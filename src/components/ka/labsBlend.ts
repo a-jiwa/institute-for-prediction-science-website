@@ -41,6 +41,34 @@ export function intersectFromFill(fill: string): string {
   return invertHex(fill)
 }
 
+/**
+ * Authored text colour T such that |T − backdrop| ≈ desired under
+ * `mix-blend-mode: difference` (prefer backdrop ± desired, clamped).
+ */
+export function authoredForDifference(backdrop: string, desired: string): string {
+  const parse = (hex: string) => {
+    const raw = hex.trim().replace('#', '')
+    const full =
+      raw.length === 3
+        ? raw
+            .split('')
+            .map((c) => c + c)
+            .join('')
+        : raw
+    if (!/^[0-9a-fA-F]{6}$/.test(full)) return null
+    const n = Number.parseInt(full, 16)
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255] as const
+  }
+  const b = parse(backdrop)
+  const d = parse(desired)
+  if (!b || !d) return desired
+  const out = b.map((ch, i) => {
+    const up = ch + d[i]
+    return up <= 255 ? up : ch - d[i]
+  })
+  return `#${out.map((c) => Math.max(0, Math.min(255, c)).toString(16).padStart(2, '0')).join('')}`
+}
+
 export function resolveLabsShapeFill(spec: LabsShapeColorSpec): string {
   return 'intersect' in spec && spec.intersect != null
     ? fillFromIntersect(spec.intersect)

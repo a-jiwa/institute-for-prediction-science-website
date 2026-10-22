@@ -495,13 +495,13 @@ header nav a.active {
 
   header nav > ul a {
     font-family: var(--font-sans);
-    font-size: 44px;
-    line-height: 1.12;
-    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.15;
+    font-weight: 500;
     letter-spacing: -0.01em;
     text-transform: none;
     text-align: center;
-    padding: 16px 0;
+    padding: 14px 0;
     color: color-mix(in srgb, var(--tone-ink) 42%, transparent);
   }
 
@@ -512,7 +512,7 @@ header nav a.active {
 
   header nav > ul a.active,
   header nav > ul a.active:hover {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--tone-ink);
     opacity: 1;
   }
@@ -6752,17 +6752,28 @@ html[data-tone] .about-statement p {
   isolation: isolate;
   background-color: var(--tone-fill);
   max-width: 100%;
-  overflow-x: clip;
+  /*
+    Do not set overflow-x: clip here — with overflow-y: visible, CSS forces
+    both axes to clip, which chops the yellow wash at the Services top.
+    Sideways floaters are already contained on html / #root / .wrapper.
+  */
+  overflow: visible;
 }
 
 /*
-  What we do → end only. Expanding circle is clipped to this box — never
-  paints into Who we are / earlier cream. Full when the band docks under the header.
+  What we do → end. Negative margin + matching padding pulls the region
+  box (and its yellow fill) above the Services content edge — no overflow
+  bleed, so ancestors can’t crop it.
 */
 .ka-wash-region {
   position: relative;
+  z-index: 1;
   max-width: 100%;
+  overflow: visible;
   --wash-color: #fcc934;
+  --wash-overhang: 120px;
+  margin-top: calc(var(--wash-overhang) * -1);
+  padding-top: var(--wash-overhang);
   /* Title + body on the yellow wash. */
   --wash-ink: #202020;
   --wash-ink-t: 0;
@@ -6777,7 +6788,11 @@ html[data-tone] .about-statement p {
 
 .ka-shape-wash {
   position: absolute;
-  inset: 0;
+  /* --wash-bleed-top grows with the circle so it isn’t cut at the region top. */
+  top: calc(var(--wash-bleed-top, 0px) * -1);
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 0;
   pointer-events: none;
   background: var(--wash-color);
@@ -6789,14 +6804,24 @@ html[data-tone] .about-statement p {
   /*
     Solid fill only after the circle already covers the region (see
     LabsShapeWash expand phase) — avoids a visible snap from a mid-size
-    circle to a full yellow field.
+    circle to a full yellow field. Bleed collapses via JS (--wash-bleed-top: 0).
   */
+  top: 0;
   clip-path: none;
 }
 
-.ka-wash-region > *:not(.ka-shape-wash) {
+.ka-wash-region > *:not(.ka-shape-wash):not(#services) {
   position: relative;
   z-index: 1;
+}
+
+/*
+  Services title must share the wash stacking group (no z-index trap) so
+  mix-blend difference can sample the yellow field + floating shapes.
+*/
+.ka-wash-region > #services.ka-about-hero {
+  position: relative;
+  z-index: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6931,8 +6956,17 @@ html[data-tone] .about-statement p {
   overflow: visible;
 }
 
+/*
+  Reach / story stay auto so the yellow wash can bleed above Services
+  over their bottom edge. Assess inside the wash stays above the fill.
+*/
 .ka-about-page > .ka-reach,
-.ka-about-page > .ka-story,
+.ka-about-page > .ka-story {
+  position: relative;
+  z-index: auto;
+  background-color: transparent;
+}
+
 .ka-about-page > .ka-steps,
 .ka-about-page > .ka-assess,
 .ka-wash-region > .ka-assess {
@@ -7343,12 +7377,16 @@ html[data-tone] .about-statement p {
   margin-top: var(--ka-space-5);
 }
 
-/* Services hero: solid near-black on the yellow wash (no difference tint). */
+/*
+  Services hero: difference blend like the mission title.
+  Authored fill is the preimage of #202020 under difference vs wash yellow
+  (#fcc934): |#dce954 − #fcc934| = #202020. Shapes behind still tint the letters.
+*/
 #services.ka-about-hero h1 {
-  color: #202020;
-  -webkit-text-fill-color: #202020;
-  -webkit-mix-blend-mode: normal;
-  mix-blend-mode: normal;
+  color: #dce954;
+  -webkit-text-fill-color: #dce954;
+  -webkit-mix-blend-mode: difference;
+  mix-blend-mode: difference;
 }
 
 /*
@@ -7545,15 +7583,19 @@ html[data-tone] .about-statement p {
 }
 
 @media (max-width: 767px) {
-  /* Same horizontal inset as `.ka-story__contain` below. */
+  /* Side inset matches the gap between tiles. */
+  .ka-about-page > .ka-reach {
+    --ka-reach-gap: 0.75rem;
+  }
+
   .ka-about-page > .ka-reach .ka-reach__contain {
-    width: calc(100% - clamp(2rem, 1.2rem + 4vw, 4rem) * 2);
-    max-width: 70rem;
+    width: calc(100% - var(--ka-reach-gap) * 2);
+    max-width: none;
   }
 
   .ka-about-page > .ka-reach .ka-reach__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: var(--ka-reach-gap);
     max-width: none;
   }
 
@@ -7625,11 +7667,16 @@ html[data-tone] .about-statement p {
   font-family: var(--ka-font);
 }
 
+/*
+  Same left/right rail as What we do (`.ka-contain` / KaSteps).
+  Stat tiles keep `.ka-reach__contain` — they do not share this rail.
+*/
 .ka-story__contain {
   box-sizing: border-box;
-  width: calc(100% - clamp(2rem, 1.2rem + 4vw, 4rem) * 2);
-  max-width: 70rem;
+  width: 100%;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
+  padding-inline: var(--layout-gutter);
 }
 
 .ka-story__grid {
@@ -7724,11 +7771,26 @@ html[data-tone] .about-statement p {
   aspect-ratio: 16 / 9;
 }
 
-.ka-story__media img {
+/* Anxiety→calm frame: taller plate so the floating square + ornaments breathe. */
+.ka-story__media--anxiety {
+  aspect-ratio: 5 / 4;
+  overflow: visible;
+}
+
+.ka-story__media img,
+.ka-story__media .anxiety-calm-frame,
+.ka-story__media .anxiety-calm-frame svg {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.ka-story__media img {
   object-fit: contain;
+}
+
+.ka-story__media--anxiety .anxiety-calm-frame svg {
+  overflow: visible;
 }
 
 @media (max-width: 800px) {

@@ -22,6 +22,7 @@ export { LabsFrameShapes } from './LabsFrameShapes'
 export { LabsBalanceScene } from './LabsBalanceScene'
 export { LabsHexScene } from './LabsHexScene'
 export { LabsShapeWash, LABS_SHAPE_WASH } from './LabsShapeWash'
+export { AnxietyCalmScrollFrame } from './AnxietyCalmScrollFrame'
 export type { LabsShapeWashInk } from './LabsShapeWash'
 export {
   LABS_SHAPE_COLORS,

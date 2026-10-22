@@ -15,6 +15,12 @@ export const LABS_SHAPE_WASH = {
   color: '#fcc934',
   /** Resting circle diameter (px). */
   restSizePx: 168,
+  /**
+   * How far the yellow region box extends above the Services content edge (px).
+   * Implemented as margin-top/padding-top on `.ka-wash-region` (not overflow),
+   * so ancestors can’t clip it. Keep in sync with `--wash-overhang` in CSS.
+   */
+  overhangPx: 120,
   /** Origin inside the title band (fractions of band width / height). */
   origin: { x: 0.78, y: 0.55 },
   /** Soft follow — keep low so dock timing stays honest. */
@@ -94,7 +100,7 @@ export function LabsShapeWash({
     if (!region) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const { restSizePx, origin, follow, expandFollow, expandFrom } = LABS_SHAPE_WASH
+    const { restSizePx, origin, follow, expandFollow, expandFrom, overhangPx } = LABS_SHAPE_WASH
     const inkColor = ink.color
     const restR = restSizePx / 2
 
@@ -108,6 +114,20 @@ export function LabsShapeWash({
     const inkAmount = (bloom: number) => {
       if (!ink.enabled) return 0
       return clamp01((bloom - ink.from) / Math.max(0.001, ink.to - ink.from))
+    }
+
+    /** Origin in wash-layer coords (region box includes overhang padding). */
+    const washOrigin = (regionBox: DOMRect, trackBox: DOMRect | undefined) => {
+      if (trackBox) {
+        return {
+          ox: trackBox.left - regionBox.left + trackBox.width * origin.x,
+          oy: trackBox.top - regionBox.top + trackBox.height * origin.y,
+        }
+      }
+      return {
+        ox: regionBox.width * origin.x,
+        oy: overhangPx + Math.min(regionBox.height * 0.12, 220),
+      }
     }
 
     const measureBloom = () => {
@@ -129,34 +149,37 @@ export function LabsShapeWash({
       const track = region.querySelector(trackSelector) as HTMLElement | null
       const regionBox = region.getBoundingClientRect()
       const trackBox = track?.getBoundingClientRect()
-
-      let ox: number
-      let oy: number
-      if (trackBox) {
-        ox = trackBox.left - regionBox.left + trackBox.width * origin.x
-        oy = trackBox.top - regionBox.top + trackBox.height * origin.y
-      } else {
-        ox = regionBox.width * origin.x
-        oy = Math.min(regionBox.height * 0.12, 220)
-      }
-
-      region.style.setProperty('--wash-color', color)
-      region.style.setProperty('--wash-ox', `${ox}px`)
-      region.style.setProperty('--wash-oy', `${oy}px`)
-      region.style.setProperty('--wash-r', `${radius}px`)
-      region.style.setProperty('--wash-ink', inkColor)
-      region.style.setProperty('--wash-ink-t', inkT.toFixed(4))
+      const { ox, oy } = washOrigin(regionBox, trackBox ?? undefined)
 
       // Only flip to solid fill once the circle already covers the region —
       // otherwise the old clip-path:none snap reads as a glitch.
       const filled = bloom > 0.995 && expand > 0.985
+
+      /*
+        A circle covering a tall region from a top-heavy origin sticks out
+        above the region box. Extend the wash layer by that amount so the
+        clip isn’t a hard cut at Building Better Judgment / Services top.
+        Collapse when full — region background owns the fill then.
+      */
+      const bleedTop = filled ? 0 : Math.ceil(Math.max(0, radius - oy))
+
+      region.style.setProperty('--wash-color', color)
+      region.style.setProperty('--wash-overhang', `${overhangPx}px`)
+      region.style.setProperty('--wash-bleed-top', `${bleedTop}px`)
+      region.style.setProperty('--wash-ox', `${ox}px`)
+      // Origin is relative to the wash layer; shift down when we bleed upward.
+      region.style.setProperty('--wash-oy', `${oy + bleedTop}px`)
+      region.style.setProperty('--wash-r', `${radius}px`)
+      region.style.setProperty('--wash-ink', inkColor)
+      region.style.setProperty('--wash-ink-t', inkT.toFixed(4))
+
       region.dataset.wash = filled ? 'full' : bloom > 0.02 || expand > 0.02 ? 'active' : 'idle'
       region.dataset.washInk = inkT > 0.02 ? 'on' : 'off'
 
-      // Header plate eases white → wash in the last beat of expand (per-frame,
-      // no CSS transition lag). Remap so it finishes with the yellow lock.
+      // Header plate tracks expand 1:1 so the bar matches the yellow field
+      // instead of staying white until a late remap. Lock fully when filled.
       const root = document.documentElement
-      const headerT = smoothstep(clamp01((expand - 0.78) / 0.22))
+      const headerT = filled ? 1 : clamp01(expand)
       root.style.setProperty('--wash-color', color)
       root.style.setProperty('--wash-progress', bloom.toFixed(4))
       root.style.setProperty('--wash-header-t', headerT.toFixed(4))
@@ -166,16 +189,7 @@ export function LabsShapeWash({
       const track = region.querySelector(trackSelector) as HTMLElement | null
       const regionBox = region.getBoundingClientRect()
       const trackBox = track?.getBoundingClientRect()
-
-      let ox: number
-      let oy: number
-      if (trackBox) {
-        ox = trackBox.left - regionBox.left + trackBox.width * origin.x
-        oy = trackBox.top - regionBox.top + trackBox.height * origin.y
-      } else {
-        ox = regionBox.width * origin.x
-        oy = Math.min(regionBox.height * 0.12, 220)
-      }
+      const { ox, oy } = washOrigin(regionBox, trackBox ?? undefined)
 
       let trackCover = restR
       if (trackBox) {

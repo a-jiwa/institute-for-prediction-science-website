@@ -65,9 +65,18 @@ const SETTLE_FOLLOW = 2.8
 const SETTLE_RISE_PER_SEC = 1.2
 /** Position/rotation follow toward the settle target. */
 const MOTION_FOLLOW = 3.1
+/** Mobile settle completes lower in the viewport (~25% earlier than mid). */
+const MOBILE_SETTLE_ANCHOR = 0.75
+const MOBILE_SETTLE_MQ = '(max-width: 767px)'
 
 function clamp01(n: number) {
   return Math.min(1, Math.max(0, n))
+}
+
+function measureStatSettle(root: HTMLElement) {
+  const early =
+    typeof window !== 'undefined' && window.matchMedia(MOBILE_SETTLE_MQ).matches
+  return measureCardArtSettle(root, early ? { anchor: MOBILE_SETTLE_ANCHOR } : undefined)
 }
 
 function smoothstep(t: number) {
@@ -230,7 +239,7 @@ export function useLabsFloatIn(
     let last = performance.now()
     const t0 = last
     let visible = true
-    let settleCurrent = measureCardArtSettle(root)
+    let settleCurrent = measureStatSettle(root)
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)
@@ -243,7 +252,7 @@ export function useLabsFloatIn(
       last = now
       const time = (now - t0) / 1000
 
-      const settleTarget = measureCardArtSettle(root)
+      const settleTarget = measureStatSettle(root)
       const settleK = 1 - Math.exp(-SETTLE_FOLLOW * dt)
       let nextSettle = settleCurrent + (settleTarget - settleCurrent) * settleK
       // Rate-limit rising settle so a fast scroll can’t teleport tiles into place.
