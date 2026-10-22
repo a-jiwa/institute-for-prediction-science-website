@@ -219,7 +219,7 @@ export const KA_STEPS = {
       title: 'Custom forecasting challenges',
       body: [
         'We design and run fully managed forecasting competitions for universities, corporate teams, and institutions.',
-        'Whether enriching a curriculum or improving forecasting skills, we turn subject matter into engaging, measurable prediction challenges with zero administrative hassle.',
+        'Whether complementing a curriculum or improving forecasting skills, we turn subject matter into engaging, measurable prediction challenges so you can focus on the learning, not the setup.',
       ],
       bullets: [
         'Score the same questions the same way, against real outcomes',
@@ -238,7 +238,7 @@ export const KA_STEPS = {
     {
       kicker: 'Training',
       title: 'Practical judgment programs',
-      body: 'We deliver practical training programs that build calibrated judgment and critical thinking. Through hands-on practice, we teach students, researchers, and professionals how to evaluate evidence, account for uncertainty, and improve predictive accuracy over time.',
+      body: 'We deliver practical training programs that improve judgment and critical thinking. Through hands-on practice, we teach students, researchers, and professionals how to evaluate evidence, account for uncertainty, and improve predictive accuracy over time.',
       bullets: [
         'Practice forecasts with a clear review loop',
         'Spot overconfidence and missed alternatives',
@@ -255,7 +255,7 @@ export const KA_STEPS = {
     {
       kicker: 'Labs',
       title: 'Forecasting innovation lab',
-      body: 'We conduct applied research, build software, and incubate new tools. Operating as an internal innovation studio, our lab develops practical applications and spins out real-world solutions for policymakers, industry, and the public.',
+      body: 'We conduct applied research, build software, and incubate new tools. Our lab develops practical applications and spins out solutions for policymakers, industry, and the public.',
       bullets: [
         'Study methods that hold up against real outcomes',
         'Turn prediction-market data into usable insight',

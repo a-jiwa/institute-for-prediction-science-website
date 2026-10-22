@@ -83,8 +83,8 @@ export function AboutPage() {
               </span>
             </h1>
             <p className="ka-about-hero__lead">
-              We make predictions every day, but we rarely check how accurate they were. We bridge the gap between
-              academic research and real-world application by turning forecasting into a practical, measurable skill.
+              We bridge the gap between academic research and real-world application by turning forecasting into a
+              practical, measurable skill.
             </p>
           </div>
         </section>
@@ -102,14 +102,11 @@ export function AboutPage() {
                 <h2>What is Prediction Science?</h2>
                 <div className="ka-story__body">
                   <p>
-                    Prediction science studies how our minds handle the unknown. It gives us a structured playbook for
-                    decision-making by breaking complex problems into smaller parts, weighing the available evidence,
-                    and using probabilities to measure likelihood.
+                    Prediction science gives us a structured way to think about the future by breaking problems into
+                    smaller parts, evaluating available evidence, and using probabilistic thinking to measure
+                    likelihood.
                   </p>
-                  <p>
-                    Research in decision science shows that forecasting is a trainable cognitive skill that sharpens
-                    with practice, tracking, and feedback.
-                  </p>
+                  <p>Research shows that forecasting is a trainable skill that improves with practice.</p>
                 </div>
               </div>
               <div className="ka-story__media ka-story__media--3x2">
@@ -129,13 +126,14 @@ export function AboutPage() {
                 <h2>Building Better Judgment</h2>
                 <div className="ka-story__body">
                   <p>
-                    Just like any skill you can improve your forecasting ability through deliberate practice. Most
-                    everyday predictions go unrecorded, which means we miss out on the chance to learn from them.
+                    Just like any other skill, you can improve your forecasting ability through deliberate practice.
+                    However, most predictions we make go unrecorded, which means we miss out on the chance to learn
+                    from them.
                   </p>
                   <p>
                     We make it easy to record your predictions and measure your accuracy over time. This creates a
-                    practical way to strengthen your critical thinking, highlight personal biases, and leads to smarter
-                    choices.
+                    practical way to strengthen your critical thinking, highlight your personal biases, and leads to a
+                    better understanding of the future.
                   </p>
                 </div>
               </div>
