@@ -2,7 +2,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const DIST = 'dist'
-const BASE = '/institute-for-prediction-science-website'
+// Custom domain is served at the root, so CSS asset URLs stay /assets/...
+const BASE = ''
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true })

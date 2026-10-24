@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://a-jiwa.github.io/institute-for-prediction-science-website/",
+  "homepage": "https://www.predictionscience.org/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/github-pages.mjs",

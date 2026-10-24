@@ -1,8 +1,8 @@
 # Institute for Prediction Science
 
-Website for [Institute for Prediction Science](https://a-jiwa.github.io/institute-for-prediction-science-website/), built with React, Vite, and Tailwind CSS.
+Website for [Institute for Prediction Science](https://www.predictionscience.org/), built with React, Vite, and Tailwind CSS.
 
-**Live site:** [https://a-jiwa.github.io/institute-for-prediction-science-website/](https://a-jiwa.github.io/institute-for-prediction-science-website/)
+**Live site:** [https://www.predictionscience.org/](https://www.predictionscience.org/)
 
 ## Stack
 
@@ -28,14 +28,14 @@ npm run build
 npm run preview
 ```
 
-`npm run preview` serves the production build at `/institute-for-prediction-science-website/`, matching GitHub Pages.
+`npm run preview` serves the production build at `/`, matching the custom domain.
 
 ## Deploy to GitHub Pages
 
 This repo is configured for a GitHub project site:
 
 - **Repository:** [github.com/a-jiwa/institute-for-prediction-science-website](https://github.com/a-jiwa/institute-for-prediction-science-website)
-- **URL:** `https://a-jiwa.github.io/institute-for-prediction-science-website/`
+- **URL:** `https://www.predictionscience.org/`
 
 ### One-time GitHub setup
 
