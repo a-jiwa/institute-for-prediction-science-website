@@ -1,6 +1,6 @@
 export type PageTone = 'blue' | 'green' | 'pink' | 'sand' | 'lilac'
 
-/** Header and hero colour for the pages that use the DeepMind pastels. */
+/** Header and hero colour for pages that use the pastel tones. */
 export function toneForPath(pathname: string): PageTone | null {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (

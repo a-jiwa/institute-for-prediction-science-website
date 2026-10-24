@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
 import { getService } from '../data/services'
-import { CompetitionsStandIn } from './CompetitionsStandIn'
-import { LabStandIn } from './LabStandIn'
+import { CompetitionsPage } from './CompetitionsPage'
+import { LabPage } from './LabPage'
 import { NotFoundPage } from './NotFoundPage'
-import { TrainingStandIn } from './TrainingStandIn'
+import { TrainingPage } from './TrainingPage'
 
 export function ServicePage() {
   const { slug } = useParams()
@@ -14,7 +14,7 @@ export function ServicePage() {
   if (service.id === 'competitions') {
     return (
       <div className="home-cover">
-        <CompetitionsStandIn />
+        <CompetitionsPage />
       </div>
     )
   }
@@ -22,7 +22,7 @@ export function ServicePage() {
   if (service.id === 'training') {
     return (
       <div className="home-cover">
-        <TrainingStandIn />
+        <TrainingPage />
       </div>
     )
   }
@@ -30,7 +30,7 @@ export function ServicePage() {
   if (service.id === 'lab') {
     return (
       <div className="home-cover">
-        <LabStandIn />
+        <LabPage />
       </div>
     )
   }

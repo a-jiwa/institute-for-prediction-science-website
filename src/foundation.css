@@ -1,5 +1,5 @@
 /*
-  Document foundation, structured like institute.deepmind.com:
+  Document foundation:
   tokens on :root, semantic theme on html.theme-ips, element reset in `base`.
 
   Page sections keep this site's colors, faces, and layout. They read these tokens.
@@ -146,7 +146,7 @@
   }
 
   /* Tailwind's preflight locks a 1.5 line-height and 100% text-size-adjust.
-     DeepMind leaves both at the browser default, which is what phones use. */
+     Both stay at the browser default, which is what phones use. */
   @media (max-width: 767px) {
     html.theme-ips {
       line-height: normal;

@@ -38,7 +38,7 @@ export type ArticleContent = {
 
 export const researchItems = researchAll as ResearchItem[]
 
-/** Short DeepMind-style feed shown on /research. Full catalogue stays in researchItems. */
+/** Short feed shown on /research. Full catalogue stays in researchItems. */
 const FEED: Array<{
   slug: string
   title: string
@@ -51,14 +51,14 @@ const FEED: Array<{
     title: 'Introducing the Institute for Prediction Science',
     excerpt:
       'We apply the science of forecasting to help people and organisations make better decisions under uncertainty.',
-    image: '/assets/img/research/dmi-01.webp',
+    image: '/assets/img/research/research-01.webp',
   },
   {
     slug: 'forecastbench-a-dynamic-benchmark-of-ai-forecasting-capabilities',
     title: 'ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities',
     excerpt:
       'A dynamic benchmark of LLM forecasting accuracy, free of contamination, with human comparison baselines.',
-    image: '/assets/img/research/dmi-02.webp',
+    image: '/assets/img/research/research-02.webp',
   },
   {
     slug: 'longitudinal-expert-ai-panel-leap-working-paper',
@@ -66,21 +66,21 @@ const FEED: Array<{
       'The Longitudinal Expert AI Panel: Understanding Expert Views on AI Capabilities, Adoption, and Impact',
     excerpt:
       'LEAP tracks leading experts over three years on AI capabilities, adoption, and impact, summarising findings from the first waves.',
-    image: '/assets/img/research/dmi-03.webp',
+    image: '/assets/img/research/research-03.webp',
   },
   {
     slug: 'economic-effects-of-ai',
     title: 'Forecasting the Economic Effects of AI',
     excerpt:
       'We surveyed academic economists, AI experts, and superforecasters to produce comparable forecasts of AI’s economic effects.',
-    image: '/assets/img/research/dmi-05.webp',
+    image: '/assets/img/research/research-05.webp',
   },
   {
     slug: 'theyearahead',
     title: 'TheYearAhead: Annual Forecasting Challenge',
     excerpt:
       'Each January, participants predict 100 events across politics, economics, and world affairs and are scored on accuracy.',
-    image: '/assets/img/research/dmi-08.webp',
+    image: '/assets/img/research/research-08.webp',
   },
 ]
 

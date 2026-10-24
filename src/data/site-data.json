@@ -6,7 +6,7 @@
     "title": "Forecasting the Economic Effects of AI",
     "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
     "date": "Mar 31, 2026",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-1-1200x904.jpg"
+    "image": "/assets/library/illustration-library-1-1200x904.jpg"
   },
   "featuredWork": [
     {
@@ -14,53 +14,53 @@
       "label": "Project",
       "title": "Inkling: News Powered by Prediction Markets",
       "date": "Ongoing",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg"
+      "image": "/assets/library/illustration-library-6-700x527.jpg"
     },
     {
       "href": "/research/theyearahead",
       "label": "Project",
       "title": "TheYearAhead: Annual Forecasting Challenge",
       "date": "Ongoing",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg"
+      "image": "/assets/library/illustration-library-15-700x440.jpg"
     },
     {
       "href": "/research/near-term-xpt-accuracy",
       "label": "Working paper",
       "title": "Assessing Near Term Accuracy in the Existential Risk Persuasion Tournament",
       "date": "Sep 2, 2025",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-13-700x440.jpg"
+      "image": "/assets/library/illustration-library-13-700x440.jpg"
     },
     {
       "href": "/research/llm-enabled-biorisk",
       "label": "Working paper",
       "title": "Forecasting LLM enabled Biorisk and the Efficacy of Safeguards",
       "date": "Jul 1, 2025",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-3-700x527.jpg"
+      "image": "/assets/library/illustration-library-3-700x527.jpg"
     }
   ],
   "logos": [
     {
-      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/NYT_V3.svg",
+      "src": "/assets/library/NYT_V3.svg",
       "href": "https://www.nytimes.com/2026/04/03/business/economists-once-dismissed-the-ai-job-threat-but-not-anymore.html"
     },
     {
-      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/eonomist_3.svg",
+      "src": "/assets/library/eonomist_3.svg",
       "href": "https://www.economist.com/science-and-technology/2025/11/10/a-new-project-aims-to-predict-how-quickly-ai-will-progress"
     },
     {
-      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/Bloomberg_V3.svg",
+      "src": "/assets/library/Bloomberg_V3.svg",
       "href": "https://www.bloomberg.com/news/articles/2025-12-12/ai-forecasts-don-t-have-to-be-pure-guesswork"
     },
     {
-      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/TIME_V2.svg",
+      "src": "/assets/library/TIME_V2.svg",
       "href": "https://time.com/7298645/ai-pandemic-5-times-more-likely/"
     },
     {
-      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/Vox_V3.svg",
+      "src": "/assets/library/Vox_V3.svg",
       "href": "https://www.vox.com/future-perfect/23785731/human-extinction-forecasting-superforecasters"
     },
     {
-      "src": "https://forecastingresearch.org/wp-content/uploads/2026/05/marginal_revolution_3.svg",
+      "src": "/assets/library/marginal_revolution_3.svg",
       "href": "https://marginalrevolution.com/marginalrevolution/2026/04/economists-on-ai-and-economic-growth-and-employment.html"
     }
   ],
@@ -73,37 +73,37 @@
           "href": "/team/philip-tetlock",
           "name": "Philip Tetlock",
           "position": "President, Chief Scientist",
-          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_a19655-e1775048823603.png"
+          "image": "/assets/library/jr_headshot_warm_cropped_1_a19655-e1775048823603.png"
         },
         {
           "href": "/team/josh-rosenberg",
           "name": "Josh Rosenberg",
           "position": "CEO",
-          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_b84899-e1775049423981.png"
+          "image": "/assets/library/jr_headshot_warm_cropped_1_b84899-e1775049423981.png"
         },
         {
           "href": "/team/ezra-karger",
           "name": "Ezra Karger",
           "position": "Director of Research",
-          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_e4fff9-e1775049185845.png"
+          "image": "/assets/library/jr_headshot_warm_cropped_1_e4fff9-e1775049185845.png"
         },
         {
           "href": "/team/matt-reynolds",
           "name": "Matt Reynolds",
           "position": "Director of Communications",
-          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_e2ade3-e1775049219110.png"
+          "image": "/assets/library/jr_headshot_warm_cropped_1_e2ade3-e1775049219110.png"
         },
         {
           "href": "/team/astrid-sorflaten",
           "name": "Astrid Sorflaten",
           "position": "Director of Operations",
-          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_ac1866-e1775049572111.png"
+          "image": "/assets/library/jr_headshot_warm_cropped_1_ac1866-e1775049572111.png"
         },
         {
           "href": "/team/bridget-williams",
           "name": "Bridget Williams",
           "position": "Associate Director of Research & Strategy",
-          "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/jr_headshot_warm_cropped_1_e12f80-e1775049067866.png"
+          "image": "/assets/library/jr_headshot_warm_cropped_1_e12f80-e1775049067866.png"
         }
       ]
     }
@@ -114,21 +114,21 @@
       "type": "Featured Project",
       "title": "Inkling: News Powered by Prediction Markets",
       "excerpt": "Inkling uses prediction markets to surface what is likely to happen next, before it becomes a headline. Traders assign probabilities to real world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding, validated across decades of forecasting research, that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg"
+      "image": "/assets/library/illustration-library-6-700x527.jpg"
     },
     {
       "href": "/research/theyearahead",
       "type": "Featured Project",
       "title": "TheYearAhead: Annual Forecasting Challenge",
       "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs, assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight, established by Philip Tetlock and colleagues, that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg"
+      "image": "/assets/library/illustration-library-15-700x440.jpg"
     },
     {
       "href": "/research/economic-effects-of-ai",
       "type": "Featured Working paper",
       "title": "Forecasting the Economic Effects of AI",
       "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-1-1200x904.jpg"
+      "image": "/assets/library/illustration-library-1-1200x904.jpg"
     }
   ],
   "careers": [

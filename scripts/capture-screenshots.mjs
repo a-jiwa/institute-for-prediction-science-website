@@ -19,7 +19,6 @@ const PAGES = [
 
 const SITES = [
   { name: 'clone', base: 'http://localhost:5173' },
-  { name: 'original', base: 'https://forecastingresearch.org' },
 ]
 
 await mkdir(OUT, { recursive: true })

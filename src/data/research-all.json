@@ -4,7 +4,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Measuring Judgment Quality in Natural Language Explanations: Evidence from Forecasting Tournaments",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/05/illustration_Midjourney_eqm-measuring-judgment-quality-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_eqm-measuring-judgment-quality-700x439.jpg",
     "excerpt": "We introduce EQMs, a scalable, interpretable method for extracting information relevant to judgment from written rationales.",
     "date": "Jun 1, 2026",
     "size": "Small"
@@ -14,7 +14,7 @@
     "external": false,
     "type": "Working paper",
     "title": "The Longitudinal Expert AI Panel: Understanding Expert Views on AI Capabilities, Adoption, and Impact",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/illustration_Midjourney_LEAP_paper_waves-1-2-3-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_LEAP_paper_waves-1-2-3-700x439.jpg",
     "excerpt": "The Longitudinal Expert AI Panel (LEAP) is a three year project tracking the views of leading computer scientists, industry professionals, policy researchers, and economists on the trajectory of artificial intelligence. In this paper, we introduce LEAP and summarize findings from the first three waves.",
     "date": "Nov 10, 2025",
     "size": "Small"
@@ -24,7 +24,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Assessing Near Term Accuracy in the Existential Risk Persuasion Tournament",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-13-700x440.jpg",
+    "image": "/assets/library/illustration-library-13-700x440.jpg",
     "excerpt": "This report assesses the accuracy of short term forecasts made during the Existential Risk Persuasion Tournament (XPT), a 2022 study that convened 169 superforecasters and domain experts to make predictions on long term risks including AI, climate change, nuclear war, and pandemics.",
     "date": "Sep 2, 2025",
     "size": "Small"
@@ -34,7 +34,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Forecasting LLM enabled Biorisk and the Efficacy of Safeguards",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-3-700x527.jpg",
+    "image": "/assets/library/illustration-library-3-700x527.jpg",
     "excerpt": "This forecasting study on biological risks from large language models (LLMs) examined expert views on biosecurity threats enabled by AI. The study saw 46 biosecurity and biology experts, along with 22 superforecasters, predict how advancing LLM capabilities might increase the risk of an epidemic caused by humans.",
     "date": "Jul 1, 2025",
     "size": "Small"
@@ -44,7 +44,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Can Humanity Achieve a Century of Nuclear Peace?",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-4-1200x904.jpg",
+    "image": "/assets/library/illustration-library-4-1200x904.jpg",
     "excerpt": "This study systematically assessed expert beliefs about the probability of a nuclear weapons catastrophe by 2045. Domain experts and superforecasters predicted the likelihood of nuclear conflict, explained the mechanisms underlying their predictions, and forecast the impact of specific tractable policies on the chance of nuclear catastrophe.",
     "date": "Oct 29, 2024",
     "size": "Large_Right"
@@ -54,7 +54,7 @@
     "external": false,
     "type": "Academic article",
     "title": "ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2024/09/illustration_Midjourney_ForecastBench-02-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_ForecastBench-02-700x439.jpg",
     "excerpt": "A dynamic benchmark of LLM forecasting accuracy, free of contamination, with human comparison groups, serving as a valuable proxy for general intelligence.",
     "date": "Sep 30, 2024",
     "size": "Small"
@@ -64,7 +64,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Belief updating in AI risk debates: Exploring the limits of adversarial collaboration",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg",
+    "image": "/assets/library/illustration-library-15-700x440.jpg",
     "excerpt": "In this scientific paper, we examined how subject matter experts and expert forecasters with opposing views on existential risk posed by AI updated their positions after taking part in exercises designed to encourage taking another perspective and exchanging arguments.",
     "date": "Apr 3, 2025",
     "size": "Small"
@@ -74,7 +74,7 @@
     "external": true,
     "type": "Editorial",
     "title": "AI Needs Fewer Prophets and More Predictions",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/illustration_Midjourney_Bloomberg-Editorial-2025-1-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_Bloomberg-Editorial-2025-1-700x439.jpg",
     "excerpt": "",
     "date": "Dec 12, 2025",
     "size": "Small"
@@ -84,7 +84,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Project Improbable: Improving Low Probability Judgments",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg",
+    "image": "/assets/library/illustration-library-6-700x527.jpg",
     "excerpt": "This article covers experimental manipulations that achieve improvements in accuracy for low probability judgments by shifting from the standard linear elicitation scale and Brier scoring rule to nonlinear (logarithmic) elicitation scales and logarithmic scoring rules.",
     "date": "Jan 10, 2025",
     "size": "Small"
@@ -94,7 +94,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Forecasting Existential Risks: Evidence from a Long Run Forecasting Tournament",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-14-1200x753.jpg",
+    "image": "/assets/library/illustration-library-14-1200x753.jpg",
     "excerpt": "What are the gravest risks facing humanity over the next century and beyond? In 2022, the Existential Risk Persuasion Tournament (XPT) brought together 80 experts and 89 superforecasters to predict the risks to humanity posed by artificial intelligence, nuclear war, pandemics, and other causes.",
     "date": "Jul 10, 2023",
     "size": "Large_Left"
@@ -104,7 +104,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Identifying good forecasters via adaptive cognitive tests",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-5-700x527.jpg",
+    "image": "/assets/library/illustration-library-5-700x527.jpg",
     "excerpt": "In this study, we develop adaptive cognitive tests that optimize the selection and efficiency of cognitive tests to assess forecasters of different skill levels.",
     "date": "Nov 17, 2024",
     "size": "Small"
@@ -114,7 +114,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Conditional Trees: A Method for Generating Informative Questions about Complex Topics",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/illustration_Midjourney_AI-Conditional-Trees-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_AI-Conditional-Trees-700x439.jpg",
     "excerpt": "In this study, we used structured interviews with domain experts and superforecasters to generate questions that provide high \"value of information\" regarding a far future outcome.",
     "date": "Aug 12, 2024",
     "size": "Small"
@@ -124,7 +124,7 @@
     "external": false,
     "type": "Academic article",
     "title": "The Psychometric Properties of Probability and Quantile Forecasts",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-12-700x440.jpg",
+    "image": "/assets/library/illustration-library-12-700x440.jpg",
     "excerpt": "In this study, we compared how different forecasting elicitation methods affect assessments of forecaster accuracy.",
     "date": "Nov 19, 2024",
     "size": "Small"
@@ -134,7 +134,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Subjective probability forecasts of existential risk: Initial results from a hybrid persuasion and forecasting tournament",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/01/illustration_Midjourney_subjective-probability-forecasts-existential-risk-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_subjective-probability-forecasts-existential-risk-700x439.jpg",
     "excerpt": "In this study, domain experts and superforecasters explained their probability judgments about existential threats facing humanity. We also examined whether sharing their best arguments materially shifted participants' views.",
     "date": "Jan 17, 2025",
     "size": "Small"
@@ -144,7 +144,7 @@
     "external": false,
     "type": "Academic article",
     "title": "The Forecasting Proficiency Test: A General Use Assessment of Forecasting Ability",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/illustration_Midjourney_FPT-1200x753.jpg",
+    "image": "/assets/library/illustration_Midjourney_FPT-1200x753.jpg",
     "excerpt": "We developed a one hour Forecasting Proficiency Test (FPT) that explains 75% of the variance in forecasters' accuracy about a wide variety of events.",
     "date": "Nov 18, 2024",
     "size": "Large_Right"
@@ -154,7 +154,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Roots of Disagreement on AI Risk",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/04/FRI-illustration-library-10-700x440.jpg",
+    "image": "/assets/library/illustration-library-10-700x440.jpg",
     "excerpt": "In this study, participants who had very different views on existential risk caused by AI worked together to try to identify the strongest near term cruxes that would lead to changes in their beliefs.",
     "date": "Mar 11, 2024",
     "size": "Small"
@@ -164,7 +164,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Long range subjective probability forecasts of slow motion variables in world politics: Exploring limits on expert judgment",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/illustration_Midjourney_forecasts-world-politics-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_forecasts-world-politics-700x439.jpg",
     "excerpt": "We propose adversarial collaborations in which clashing schools of thought negotiate Bayesian reputational bets on divisive issues and use Lakatosian scorecards to incentivize the honoring of bets.",
     "date": "Apr 26, 2023",
     "size": "Small"
@@ -174,7 +174,7 @@
     "external": false,
     "type": "Working paper",
     "title": "Forecasting the Economic Effects of AI",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-1-700x527.jpg",
+    "image": "/assets/library/illustration-library-1-700x527.jpg",
     "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
     "date": "Mar 31, 2026",
     "size": "Small"
@@ -184,7 +184,7 @@
       "external": false,
       "type": "Project",
       "title": "Inkling: News Powered by Prediction Markets",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-6-700x527.jpg",
+      "image": "/assets/library/illustration-library-6-700x527.jpg",
       "excerpt": "Inkling uses prediction markets to surface what is likely to happen next, before it becomes a headline. Traders assign probabilities to real world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding, validated across decades of forecasting research, that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
       "date": "Ongoing",
       "size": "Small"
@@ -194,7 +194,7 @@
       "external": false,
       "type": "Project",
       "title": "TheYearAhead: Annual Forecasting Challenge",
-      "image": "https://forecastingresearch.org/wp-content/uploads/2025/09/FRI-illustration-library-15-700x440.jpg",
+      "image": "/assets/library/illustration-library-15-700x440.jpg",
       "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs, assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight, established by Philip Tetlock and colleagues, that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
       "date": "Ongoing",
       "size": "Small"
@@ -204,7 +204,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Improving Judgments of Existential Risk: Better Forecasts, Questions, Explanations, Policies",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2022/01/illustration_Midjourney_improving-judgments-of-existential-risk-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_improving-judgments-of-existential-risk-700x439.jpg",
     "excerpt": "Improving alignment between forecasting tournaments and actionable forecasts of existential risk by measuring facets of human judgment that have long been dismissed as unmeasurable.",
     "date": "Jan 17, 2022",
     "size": "Small"
@@ -214,7 +214,7 @@
     "external": false,
     "type": "Academic article",
     "title": "Reciprocal Scoring: A Method for Forecasting Unanswerable Questions",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2021/11/illustration_Midjourney_reciprocal-scoring-700x439.jpg",
+    "image": "/assets/library/illustration_Midjourney_reciprocal-scoring-700x439.jpg",
     "excerpt": "Reciprocal scoring challenges forecasters to predict the forecasts of other forecasters, creating accountability for accuracy in policy debates.",
     "date": "Oct 31, 2021",
     "size": "Small"
@@ -224,7 +224,7 @@
     "external": true,
     "type": "Editorial",
     "title": "A Better Crystal Ball: The Right Way to Think About the Future",
-    "image": "https://forecastingresearch.org/wp-content/uploads/2026/01/4ab87ec40b5a2d1b201f9f6a92660d39cff3a8a7-700x527.jpg",
+    "image": "/assets/library/4ab87ec40b5a2d1b201f9f6a92660d39cff3a8a7-700x527.jpg",
     "excerpt": "",
     "date": "Oct 13, 2020",
     "size": "Small"

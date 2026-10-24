@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import { animate, stagger } from 'animejs'
-import { IHS_LOGO_MARK } from './ihs-logo-paths'
+import { LOGO_MARK } from './logo-mark'
 
 export const LOGO_HEIGHT = 48
 const GAP = 10
@@ -400,7 +400,7 @@ export function Logo({ className = '', variant = 'green', animateChars = false }
       overflow="visible"
     >
       <g transform={`translate(${iconLeft} ${iconTop}) scale(${scale})`}>
-        <path ref={markRef} d={IHS_LOGO_MARK} fill={fill} />
+        <path ref={markRef} d={LOGO_MARK} fill={fill} />
       </g>
       <LogoWordmark fill={fill} textX={TEXT_X} textRef={textRef} split={animateChars} kerns={kerns} />
     </svg>
@@ -418,7 +418,7 @@ export function LogoIcon({ className = '', fill = TEXT_GREEN }: { className?: st
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <path d={IHS_LOGO_MARK} />
+      <path d={LOGO_MARK} />
     </svg>
   )
 }
