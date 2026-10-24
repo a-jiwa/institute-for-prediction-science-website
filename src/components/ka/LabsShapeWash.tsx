@@ -145,7 +145,13 @@ export function LabsShapeWash({
       return clamp01((start - rect.top) / (start - end))
     }
 
-    const paint = (bloom: number, inkT: number, expand: number, radius: number) => {
+    const paint = (
+      bloom: number,
+      inkT: number,
+      expand: number,
+      radius: number,
+      titleCovered: boolean,
+    ) => {
       const track = region.querySelector(trackSelector) as HTMLElement | null
       const regionBox = region.getBoundingClientRect()
       const trackBox = track?.getBoundingClientRect()
@@ -173,8 +179,31 @@ export function LabsShapeWash({
       region.style.setProperty('--wash-ink', inkColor)
       region.style.setProperty('--wash-ink-t', inkT.toFixed(4))
 
+      /*
+        Service-card labels clip their “on wash” ink to this same circle.
+        Coords are local to each .ka-wash-type so the edge crosses the
+        letters the way difference does on the services hero title.
+      */
+      const originX = regionBox.left + ox
+      const originY = regionBox.top + oy
+      region.querySelectorAll('.ka-wash-type').forEach((node) => {
+        const el = node as HTMLElement
+        const box = el.getBoundingClientRect()
+        if (box.width <= 0 || box.height <= 0) return
+        el.style.setProperty('--wash-lx', `${originX - box.left}px`)
+        el.style.setProperty('--wash-ly', `${originY - box.top}px`)
+        el.style.setProperty('--wash-lr', `${radius}px`)
+      })
+
       region.dataset.wash = filled ? 'full' : bloom > 0.02 || expand > 0.02 ? 'active' : 'idle'
       region.dataset.washInk = inkT > 0.02 ? 'on' : 'off'
+      /*
+        The heading blends with whatever is behind it. The snap to a flat
+        rectangle tears down the circle layer; if the title band has no
+        yellow of its own, that frame blends against white and the type flashes.
+        Mark the band covered only once the circle already paints it.
+      */
+      region.dataset.washTitle = titleCovered ? 'on' : 'off'
 
       // Header plate tracks expand 1:1 so the bar matches the yellow field
       // instead of staying white until a late remap. Lock fully when filled.
@@ -246,10 +275,11 @@ export function LabsShapeWash({
         if (Math.abs(rTarget - radiusCurrent) < 0.25) radiusCurrent = rTarget
       }
 
-      paint(bloomCurrent, inkCurrent, expandCurrent, radiusCurrent)
+      const titleCovered = radiusCurrent >= trackCover - 0.5
+      paint(bloomCurrent, inkCurrent, expandCurrent, radiusCurrent, titleCovered)
     }
 
-    paint(0, 0, 0, restR)
+    paint(0, 0, 0, restR, false)
     raf = requestAnimationFrame(step)
 
     return () => {

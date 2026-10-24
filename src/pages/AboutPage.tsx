@@ -54,24 +54,26 @@ export function AboutPage() {
     <div className="home-cover">
       <div className="ka ka-about-page">
         <section className="ka-about-hero ka-about-hero--with-lead" id="about">
-          <LabsHeroShapes
-            className="ka-about-hero__shapes"
-            colors={{ square: { fill: '#00a4ff' } }}
-            homes={[{ x: 0.92, y: 0.18 }]}
-            only={['square']}
-            scale={0.62}
-            speed={0.55}
-          />
-          <LabsHeroShapes
-            className="ka-about-hero__shapes"
-            colors={{ circle: { fill: '#ff7e1d' } }}
-            edgeBleed={0.5}
-            homes={[{ x: -0.06, y: 0.78 }]}
-            leash={40}
-            only={['circle']}
-            scale={1.45}
-            speed={0.35}
-          />
+          <div className="ka-shape-stage">
+            <LabsHeroShapes
+              className="ka-about-hero__shapes"
+              colors={{ square: { fill: '#00a4ff' } }}
+              homes={[{ x: 0.92, y: 0.18 }]}
+              only={['square']}
+              scale={0.62}
+              speed={0.55}
+            />
+            <LabsHeroShapes
+              className="ka-about-hero__shapes"
+              colors={{ circle: { fill: '#ff7e1d' } }}
+              edgeBleed={0.5}
+              homes={[{ x: -0.06, y: 0.78 }]}
+              leash={40}
+              only={['circle']}
+              scale={1.45}
+              speed={0.35}
+            />
+          </div>
           <div className="ka-about-hero__copy">
             <p className="ka-kicker">Who we are</p>
             <h1>

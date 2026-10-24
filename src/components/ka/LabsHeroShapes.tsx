@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useId, useLayoutEffect, useRef } from 'react'
 import { useLenis } from '../layout/CookieBanner'
+import { assetUrl } from '../../utils/assetUrl'
 import {
   LABS_SHAPE_COLORS,
   resolveLabsShapeFills,
@@ -9,31 +10,39 @@ import {
 
 /**
  * A few Labs floaters placed at styled homes before motion starts.
- * They wander gently on a leash — never respawn or pop in while scrolling.
+ * Idle motion is the Labs sway: independent horizontal and vertical
+ * cycles (periods ×1 and ×1.83) so the path eases through the middle
+ * and rests at the ends. Spin follows distance traveled, so a shape
+ * turns faster through the middle of the drift and eases off when it
+ * slows. Pointer, obstacles, and scroll sit on top of that sway.
+ * Shapes never respawn while scrolling.
  */
 
 const DEBUG_SHAPES = false
 const DEBUG_INTERVAL_MS = 1000
 
-/** Slow drift (px/s) — floaty, not busy. */
-const CRUISE_SPEED = 8
-/** How quickly velocity eases toward the cruise heading (higher = snappier). */
-const CRUISE_FOLLOW = 1.8
-const MAX_OMEGA = 10
-/** Degrees of shape spin per pixel scrolled. */
-const SCROLL_DEG_PER_PX = 0.14
+const TAU = Math.PI * 2
+/** Labs background slots sit around 8–10.5s. speed 1 matches that. */
+const FLOAT_PERIOD = 9.2
+/** Same ratio as Labs `gl-float-y`. */
+const FLOAT_Y_RATIO = 1.83
+/**
+ * Share of a true roll (turn = distance / radius).
+ * Bigger travel turns further; a slow shape barely rotates.
+ */
+const ROLL = 0.85
+const MAX_SCROLL_OMEGA = 4
+/** Degrees of shape spin per pixel scrolled. Small, so the sway stays the motion. */
+const SCROLL_DEG_PER_PX = 0.04
 /** Extra angular velocity from a scroll burst (keeps spinning briefly after). */
-const SCROLL_OMEGA_GAIN = 0.45
-const CURSOR_STEER = 0.85
-const CURSOR_RADIUS = 200
-/** Pull back toward home when farther than this (px). */
+const SCROLL_OMEGA_GAIN = 0.12
+const CURSOR_RADIUS = 140
+/** How far a mouse eases a shape off its sway (px). Touch never pushes. */
+const CURSOR_PUSH = 36
+/** Orbit size around home (px). The sway stays inside this. */
 const HOME_LEASH = 160
-const HOME_STEER = 0.9
-const AVOID_STEER = 1.2
 const AVOID_PAD = 48
 const AVOID_SKIRT = 72
-/** Soft velocity shove away from obstacles (px/s² scale), not a hard teleport. */
-const AVOID_PUSH = 14
 const AVOID_ART_SELECTOR =
   '.ka-step__media--frame, .ka-step__media--balance, .ka-step__media--hex'
 const AVOID_COPY_SELECTOR = '.ka-step__copy'
@@ -46,19 +55,14 @@ const POINTER_ACTIVE_MS = 280
 const AVOID_REFRESH_MS = 180
 /** Seconds to ease toward a new obstacle set (avoids hard steer snaps). */
 const AVOID_BLEND_S = 0.28
+/** Ease rate for pointer / avoid offsets (1/s). Slow, so the sway stays smooth. */
+const PUSH_FOLLOW = 2.1
 /**
  * Fixed sim step — keeps motion identical on 60Hz monitors and ProMotion.
  * Display interpolates between steps so refresh rate doesn’t change the path.
  */
 const FIXED_DT = 1 / 60
 const MAX_SIM_STEPS = 3
-/** Soft wall band outside the hard pad (px factor of radius). */
-const WALL_SOFT = 1.35
-/** Low-frequency heading wander (rad/s peak). */
-const WANDER_RATE = 0.35
-const WANDER_FREQ = 0.4
-/** Max turn rate for steering (rad/s) — caps twitchy corrections. */
-const MAX_TURN_RATE = 0.95
 
 /** Styled resting spots as fractions of the field (x, y). */
 const DEFAULT_HOMES: readonly { x: number; y: number }[] = [
@@ -89,16 +93,114 @@ type Body = {
   pAngle: number
   homeX: number
   homeY: number
-  vx: number
-  vy: number
-  /** Desired travel heading (rad); wander + steers ease this, velocity follows. */
-  heading: number
-  wanderPhase: number
-  wanderFreq: number
+  /** Resting tilt (deg). Travel spin is added on top. */
+  baseAngle: number
+  /** Accumulated roll from distance traveled (deg). */
+  travelAngle: number
+  /** +1 or −1. Each shape keeps one tumble direction. */
+  spinSign: number
+  /** Scroll spin, separate from the sway so a scroll doesn’t reset the float. */
+  scrollAngle: number
+  scrollOmega: number
+  phaseX: number
+  phaseY: number
+  freqX: number
+  freqY: number
+  ampX: number
+  ampY: number
+  /** Signed fraction of the leash, kept so resize can refit the sway. */
+  swingX: number
+  swingY: number
+  /** Smoothed pointer + obstacle offset, added on top of the sway. */
+  pushX: number
+  pushY: number
   angle: number
-  omega: number
   radius: number
   sizePx: number
+}
+
+/** Centre sits outside the shape; a large radius so only a soft slice of the ramp shows. */
+const SHAPE_SHADE: Record<LabsShapeName, { cx: string; cy: string; r: string }> = {
+  hexagon: { cx: '-48%', cy: '-40%', r: '320%' },
+  circle: { cx: '148%', cy: '-32%', r: '310%' },
+  square: { cx: '-36%', cy: '150%', r: '330%' },
+  clover: { cx: '146%', cy: '140%', r: '320%' },
+}
+
+/** Hue travel for each shape, so the radial runs from one colour into another. */
+const HUE_SHIFT: Record<LabsShapeName, { from: number; to: number }> = {
+  hexagon: { from: 58, to: -50 },
+  circle: { from: -64, to: 46 },
+  square: { from: 60, to: -54 },
+  clover: { from: -56, to: 50 },
+}
+
+/** Shape SVG viewBox. Grain tiles are sized in these units, then mapped to pixels. */
+const SHAPE_VIEWBOX = 360
+/**
+ * One grain tile in CSS pixels, on every shape.
+ * Smaller = finer speck. 102 matched a medium shape; 64 is a finer trial.
+ */
+const GRAIN_TILE_PX = 64
+
+/** How far the gradient centre wanders from its home, in percent of the shape. */
+const SHADE_DRIFT = 12
+/** Extra hue swing on top of the two end colours, in degrees. */
+const SHADE_HUE_SWING = 32
+/** Seconds for one slow wander of the gradient. */
+const SHADE_DRIFT_PERIOD = 16
+
+function parseHex(hex: string): [number, number, number] | null {
+  const raw = hex.trim().replace('#', '')
+  const full = raw.length === 3 ? raw.split('').map((c) => c + c).join('') : raw
+  if (!/^[0-9a-fA-F]{6}$/.test(full)) return null
+  const n = Number.parseInt(full, 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
+  const rn = r / 255
+  const gn = g / 255
+  const bn = b / 255
+  const max = Math.max(rn, gn, bn)
+  const min = Math.min(rn, gn, bn)
+  const l = (max + min) / 2
+  if (max === min) return [0, 0, l]
+  const d = max - min
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+  let h = 0
+  if (max === rn) h = (gn - bn) / d + (gn < bn ? 6 : 0)
+  else if (max === gn) h = (bn - rn) / d + 2
+  else h = (rn - gn) / d + 4
+  return [h * 60, s, l]
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  const hue = ((h % 360) + 360) % 360
+  const c = (1 - Math.abs(2 * l - 1)) * s
+  const x = c * (1 - Math.abs(((hue / 60) % 2) - 1))
+  const m = l - c / 2
+  let rn = 0
+  let gn = 0
+  let bn = 0
+  if (hue < 60) [rn, gn, bn] = [c, x, 0]
+  else if (hue < 120) [rn, gn, bn] = [x, c, 0]
+  else if (hue < 180) [rn, gn, bn] = [0, c, x]
+  else if (hue < 240) [rn, gn, bn] = [0, x, c]
+  else if (hue < 300) [rn, gn, bn] = [x, 0, c]
+  else [rn, gn, bn] = [c, 0, x]
+  const channels = [rn, gn, bn].map((channel) => Math.round((channel + m) * 255))
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`
+}
+
+/** Same family, shifted hue, kept vivid so the end doesn’t wash out toward white. */
+function shiftHue(hex: string, degrees: number, lightnessDelta: number): string {
+  const rgb = parseHex(hex)
+  if (!rgb) return hex
+  const [h, s, l] = rgbToHsl(...rgb)
+  const lightness = Math.min(0.62, Math.max(0.42, l + lightnessDelta))
+  const saturation = Math.min(1, Math.max(0.78, s))
+  return hslToHex(h + degrees, saturation, lightness)
 }
 
 const SHAPES = [
@@ -130,13 +232,6 @@ const SHAPES = [
 
 function rand(min: number, max: number) {
   return min + Math.random() * (max - min)
-}
-
-function shortestDelta(from: number, to: number) {
-  let delta = to - from
-  while (delta > Math.PI) delta -= Math.PI * 2
-  while (delta < -Math.PI) delta += Math.PI * 2
-  return delta
 }
 
 function shortestAngleDeg(from: number, to: number) {
@@ -182,32 +277,24 @@ function blendAvoidSets(from: AvoidRect[], to: AvoidRect[], t: number): AvoidRec
   return out
 }
 
-/** Ease velocity toward cruise along the body’s smoothed heading. */
-function easeCruise(
-  body: Body,
-  dt: number,
-  cruiseSpeed = CRUISE_SPEED,
-  follow = CRUISE_FOLLOW,
-) {
-  const tx = Math.cos(body.heading) * cruiseSpeed
-  const ty = Math.sin(body.heading) * cruiseSpeed
-  const a = 1 - Math.exp(-follow * dt)
-  body.vx += (tx - body.vx) * a
-  body.vy += (ty - body.vy) * a
+/**
+ * Period at this speed. speed 1 ≈ 9s (Labs). Slower props stay in a
+ * visible band instead of crawling: 0.5 ≈ 13s, 0.35 ≈ 15s.
+ */
+function floatPeriod(speed: number) {
+  const s = Math.max(0.2, speed)
+  return FLOAT_PERIOD / Math.pow(s, 0.45)
 }
 
-/** Ease the desired heading toward a target (rad/s rate, hard-capped). */
-function turnToward(body: Body, targetHeading: number, rate: number, dt: number) {
-  const delta = shortestDelta(body.heading, targetHeading)
-  const maxTurn = Math.min(MAX_TURN_RATE, Math.max(0, rate)) * dt
-  const turn = Math.max(-maxTurn, Math.min(maxTurn, delta))
-  body.heading += turn
-  return delta
+function clampScrollOmega(omega: number) {
+  return Math.max(-MAX_SCROLL_OMEGA, Math.min(MAX_SCROLL_OMEGA, omega))
 }
 
-function clampOmega(body: Body) {
-  if (body.omega > MAX_OMEGA) body.omega = MAX_OMEGA
-  if (body.omega < -MAX_OMEGA) body.omega = -MAX_OMEGA
+function capVector(x: number, y: number, max: number) {
+  const len = Math.hypot(x, y)
+  if (len <= max || len < 0.0001) return { x, y }
+  const scale = max / len
+  return { x: x * scale, y: y * scale }
 }
 
 /** How far past the field edge a centre may sit (0 = fully inside, 0.5 = half off). */
@@ -217,59 +304,49 @@ function edgeInset(radius: number, edgeBleed: number) {
   return radius * (1 - 2 * bleed)
 }
 
-/** Soft walls: ease heading + velocity away before the hard pad. */
-function softContain(
-  body: Body,
-  width: number,
-  height: number,
-  dt: number,
-  edgeBleed = 0,
-  cruiseSpeed = CRUISE_SPEED,
-) {
-  const padX = edgeInset(body.radius, edgeBleed)
-  const padY = body.radius * 0.35
-  const band = Math.max(40, body.radius * WALL_SOFT)
-  const minX = padX
-  const maxX = width - padX
-  const minY = padY
-  const maxY = height - padY
-  const push = 10 + cruiseSpeed
-
-  if (body.x < minX + band) {
-    const t = Math.max(0, 1 - (body.x - minX) / band)
-    if (t > 0) {
-      if (body.vx < 0) body.vx *= 1 - Math.min(0.45, t * 0.55)
-      body.vx += push * t * t * dt
-      turnToward(body, 0, 1.2 * t, dt)
-    }
-  } else if (body.x > maxX - band) {
-    const t = Math.max(0, 1 - (maxX - body.x) / band)
-    if (t > 0) {
-      if (body.vx > 0) body.vx *= 1 - Math.min(0.45, t * 0.55)
-      body.vx -= push * t * t * dt
-      turnToward(body, Math.PI, 1.2 * t, dt)
-    }
-  }
-
-  if (body.y < minY + band) {
-    const t = Math.max(0, 1 - (body.y - minY) / band)
-    if (t > 0) {
-      if (body.vy < 0) body.vy *= 1 - Math.min(0.45, t * 0.55)
-      body.vy += push * t * t * dt
-      turnToward(body, Math.PI / 2, 1.2 * t, dt)
-    }
-  } else if (body.y > maxY - band) {
-    const t = Math.max(0, 1 - (maxY - body.y) / band)
-    if (t > 0) {
-      if (body.vy > 0) body.vy *= 1 - Math.min(0.45, t * 0.55)
-      body.vy -= push * t * t * dt
-      turnToward(body, -Math.PI / 2, 1.2 * t, dt)
-    }
-  }
-
-  body.x = Math.min(maxX, Math.max(minX, body.x))
-  body.y = Math.min(maxY, Math.max(minY, body.y))
+/**
+ * Labs-sized sway. It may cross the field edge — clipping there is what
+ * makes the drift look continuous, instead of sliding along a wall.
+ */
+function swayAmps(leash: number, swingX: number, swingY: number, width: number, height: number) {
+  const roomX = Math.min(leash, Math.max(48, width * 0.12))
+  const roomY = Math.min(leash, Math.max(48, height * 0.14))
+  return { ampX: roomX * swingX, ampY: roomY * swingY }
 }
+
+/** Same shape as Labs’ ease-in-out float keyframes: rest, peak, rest, opposite peak. */
+function labsWave(phase: number) {
+  const t = (((phase % TAU) + TAU) % TAU) / TAU
+  const ease = (u: number) => 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, u)))
+  if (t < 0.25) return ease(t / 0.25)
+  if (t < 0.75) return 1 - 2 * ease((t - 0.25) / 0.5)
+  return ease((t - 0.75) / 0.25) - 1
+}
+
+/** Degrees turned by traveling `dist` px. Scales with 1/radius, like a roll. */
+function rollDegrees(dist: number, radius: number, sign: number) {
+  const r = Math.max(28, radius)
+  return (dist / r) * (180 / Math.PI) * sign * ROLL
+}
+
+/** Pose = home + Labs sway + smoothed push. Spin is travel plus scroll. */
+function poseOf(body: Body) {
+  return {
+    x: body.homeX + labsWave(body.phaseX) * body.ampX + body.pushX,
+    y: body.homeY + labsWave(body.phaseY) * body.ampY + body.pushY,
+    angle: body.baseAngle + body.travelAngle + body.scrollAngle,
+  }
+}
+
+/** Keep a shape inside its leash so a corner placement can’t be walked inward. */
+function holdToLeash(body: Body, leash: number) {
+  const pose = poseOf(body)
+  const held = capVector(pose.x - body.homeX, pose.y - body.homeY, leash)
+  return { x: body.homeX + held.x, y: body.homeY + held.y, angle: pose.angle }
+}
+
+/** Global size boost on every Labs floater. */
+const SHAPE_SIZE_BOOST = 1.2
 
 function sizeForShape(
   shape: (typeof SHAPES)[number],
@@ -278,7 +355,8 @@ function sizeForShape(
   scale = 1,
 ) {
   const maxSize = Math.min(width, height)
-  const sizePx = Math.min(maxSize * shape.size * scale, width * 0.55 * scale, 288 * scale)
+  const sizePx =
+    Math.min(maxSize * shape.size * scale, width * 0.55 * scale, 288 * scale) * SHAPE_SIZE_BOOST
   const radius = sizePx * 0.46
   return { sizePx, radius }
 }
@@ -409,12 +487,11 @@ function overlapsAvoid(x: number, y: number, radius: number, obs: AvoidRect) {
   return Math.hypot(x - qx, y - qy) < radius
 }
 
-function steerFromAvoid(body: Body, obstacles: AvoidRect[], dt: number): boolean {
-  if (!obstacles.length) return false
-  let steered = false
-  let pushX = 0
-  let pushY = 0
-  let pushAmp = 0
+/** Desired offset that eases a shape off copy and card art. Zero when clear. */
+function avoidOffset(body: Body, obstacles: AvoidRect[]) {
+  let x = 0
+  let y = 0
+  if (!obstacles.length) return { x, y }
 
   for (const obs of obstacles) {
     const strength = obs.strength
@@ -426,48 +503,39 @@ function steerFromAvoid(body: Body, obstacles: AvoidRect[], dt: number): boolean
 
     let awayX: number
     let awayY: number
-    let dist: number
-    let reach: number
+    let mag: number
 
     if (inside) {
       awayX = body.x - obs.cx
       awayY = body.y - obs.cy
-      dist = Math.hypot(awayX, awayY) || 0.0001
+      let dist = Math.hypot(awayX, awayY)
+      if (dist < 1) {
+        awayX = body.homeX - body.x || 1
+        awayY = body.homeY - body.y
+        dist = Math.hypot(awayX, awayY) || 1
+      }
       awayX /= dist
       awayY /= dist
-      dist = 0.001
-      reach = 1
+      mag = (body.radius * 0.65 + 36) * strength
     } else {
       const qx = Math.min(obs.right, Math.max(obs.left, body.x))
       const qy = Math.min(obs.bottom, Math.max(obs.top, body.y))
       awayX = body.x - qx
       awayY = body.y - qy
-      dist = Math.hypot(awayX, awayY) || 0.0001
+      const dist = Math.hypot(awayX, awayY) || 0.0001
+      const reach = body.radius + obs.skirt
+      if (dist >= reach) continue
       awayX /= dist
       awayY /= dist
-      reach = body.radius + obs.skirt
-      if (dist >= reach) continue
+      mag = (1 - dist / reach) * Math.min(obs.skirt, body.radius * 0.85) * strength
     }
 
-    const falloff = (inside ? 1 : 1 - dist / reach) * strength
-    if (falloff < 0.02) continue
-    const target = Math.atan2(awayY, awayX)
-    const delta = turnToward(body, target, AVOID_STEER * falloff * falloff * 2, dt)
-    body.omega += delta * falloff * 1.2 * dt
-    pushX += awayX * falloff
-    pushY += awayY * falloff
-    pushAmp = Math.max(pushAmp, falloff)
-    steered = true
+    if (mag < 0.5) continue
+    x += awayX * mag
+    y += awayY * mag
   }
 
-  if (steered) {
-    const pushLen = Math.hypot(pushX, pushY) || 1
-    // Gentle accelerate away — don’t teleport the sim position.
-    body.vx += (pushX / pushLen) * AVOID_PUSH * pushAmp * dt
-    body.vy += (pushY / pushLen) * AVOID_PUSH * pushAmp * dt
-  }
-
-  return steered
+  return { x, y }
 }
 
 function pickShapes(
@@ -491,9 +559,9 @@ type LabsHeroShapesProps = {
   scale?: number
   /** How far shapes may hang past left/right edges (0.5 = half off-screen). */
   edgeBleed?: number
-  /** Drift speed multiplier (1 = default cruise, 0.4 ≈ slow float). */
+  /** Sway speed multiplier (1 ≈ a 9s Labs cycle, 0.4 ≈ slower). */
   speed?: number
-  /** Max wander distance from home before the leash pulls back (px). */
+  /** How far the sway travels from home (px). */
   leash?: number
 }
 
@@ -509,13 +577,16 @@ export function LabsHeroShapes({
   leash = HOME_LEASH,
 }: LabsHeroShapesProps = {}) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const uid = useId().replace(/:/g, '')
+  const grainUrl = assetUrl('/assets/img/shape-grain.svg?v=7')
   const lenis = useLenis()
   const fills = resolveLabsShapeFills(colors)
+  const fillsKey = (Object.keys(fills) as LabsShapeName[]).map((name) => `${name}:${fills[name]}`).join('|')
   const excludeKey = exclude?.length ? [...exclude].sort().join(',') : ''
   const onlyKey = only?.length ? [...only].sort().join(',') : ''
   const homesKey = homes?.map((h) => `${h.x},${h.y}`).join('|') ?? ''
   const shapes = pickShapes(exclude, only)
-  const cruiseSpeed = CRUISE_SPEED * Math.max(0, speed)
+  const period = floatPeriod(speed)
   const homeLeash = Math.max(24, leash)
 
   useLayoutEffect(() => {
@@ -529,6 +600,41 @@ export function LabsHeroShapes({
       excludeKey ? (excludeKey.split(',') as LabsShapeName[]) : undefined,
       onlyKey ? (onlyKey.split(',') as LabsShapeName[]) : undefined,
     )
+
+    const shadeMotions = nodes.flatMap((el, index) => {
+      const shape = activeShapes[index]
+      const grad = el.querySelector('radialGradient')
+      const stops = el.querySelectorAll('stop')
+      if (!shape || !grad || stops.length < 2) return []
+      const home = SHAPE_SHADE[shape.name]
+      return [
+        {
+          grad,
+          fromStop: stops[0],
+          toStop: stops[1],
+          fill: fills[shape.name],
+          fromDeg: HUE_SHIFT[shape.name].from,
+          toDeg: HUE_SHIFT[shape.name].to,
+          homeX: Number.parseFloat(home.cx),
+          homeY: Number.parseFloat(home.cy),
+          phase: index * 1.7,
+        },
+      ]
+    })
+
+    const driftShades = (now: number) => {
+      const t = now / 1000
+      for (const shade of shadeMotions) {
+        const drift = (t / SHADE_DRIFT_PERIOD) * TAU + shade.phase
+        const cx = shade.homeX + Math.sin(drift) * SHADE_DRIFT
+        const cy = shade.homeY + Math.cos(drift * 0.77) * (SHADE_DRIFT - 3)
+        shade.grad.setAttribute('cx', `${cx}%`)
+        shade.grad.setAttribute('cy', `${cy}%`)
+        const hue = Math.sin(drift * 0.63) * SHADE_HUE_SWING
+        shade.fromStop.setAttribute('stop-color', shiftHue(shade.fill, shade.fromDeg + hue, -0.04))
+        shade.toStop.setAttribute('stop-color', shiftHue(shade.fill, shade.toDeg - hue * 0.65, -0.08))
+      }
+    }
 
     const bodies: Body[] = []
     let fieldW = 0
@@ -557,6 +663,17 @@ export function LabsHeroShapes({
       el.style.width = `${sizePx}px`
       el.style.height = `${sizePx}px`
       el.style.opacity = '1'
+      // Pattern units follow the viewBox, so a fixed user-unit tile would grow
+      // with the shape. Scale the tile so it stays GRAIN_TILE_PX on screen.
+      const tile = (GRAIN_TILE_PX * SHAPE_VIEWBOX) / Math.max(sizePx, 1)
+      const pattern = el.querySelector('pattern')
+      const image = pattern?.querySelector('image')
+      if (!pattern) return
+      const value = tile.toFixed(2)
+      pattern.setAttribute('width', value)
+      pattern.setAttribute('height', value)
+      image?.setAttribute('width', value)
+      image?.setAttribute('height', value)
     }
 
     const resetBodies = (width: number, height: number) => {
@@ -566,35 +683,58 @@ export function LabsHeroShapes({
       activeShapes.forEach((shape, index) => {
         const { sizePx, radius } = sizeForShape(shape, width, height, scale)
         let home = homeForIndex(index, width, height, radius, homes, edgeBleed)
-        // Nudge home off avoid boxes so we never start hidden.
-        for (let attempt = 0; attempt < 10; attempt++) {
-          if (!obstacles.some((obs) => overlapsAvoid(home.x, home.y, radius, obs))) break
-          home = {
-            x: rand(radius, Math.max(radius, width - radius)),
-            y: rand(radius, Math.max(radius, height - radius)),
+        // An authored home (the orange circle on the left edge) stays put.
+        // Only default spots get nudged if they would start inside an obstacle.
+        if (!homes?.[index]) {
+          for (let attempt = 0; attempt < 10; attempt++) {
+            if (!obstacles.some((obs) => overlapsAvoid(home.x, home.y, radius, obs))) break
+            home = {
+              x: rand(radius, Math.max(radius, width - radius)),
+              y: rand(radius, Math.max(radius, height - radius)),
+            }
           }
         }
-        const angle = rand(0, 360)
-        const heading = rand(0, Math.PI * 2)
+        const sign = () => (Math.random() < 0.5 ? -1 : 1)
+        const cycle = period * rand(0.88, 1.12)
+        const baseAngle = rand(-24, 24)
+        const swingX = rand(0.72, 1) * sign()
+        const swingY = rand(0.82, 1) * sign()
+        const amps = swayAmps(homeLeash, swingX, swingY, width, height)
         const body: Body = {
           name: shape.name,
           x: home.x,
           y: home.y,
           px: home.x,
           py: home.y,
-          pAngle: angle,
+          pAngle: baseAngle,
           homeX: home.x,
           homeY: home.y,
-          vx: Math.cos(heading) * cruiseSpeed,
-          vy: Math.sin(heading) * cruiseSpeed,
-          heading,
-          wanderPhase: rand(0, Math.PI * 2),
-          wanderFreq: WANDER_FREQ * rand(0.75, 1.35),
-          angle,
-          omega: reduce ? 0 : rand(-2, 2),
+          baseAngle,
+          travelAngle: 0,
+          spinSign: sign(),
+          scrollAngle: 0,
+          scrollOmega: 0,
+          phaseX: rand(0, TAU),
+          phaseY: rand(0, TAU),
+          freqX: TAU / cycle,
+          freqY: TAU / (cycle * FLOAT_Y_RATIO),
+          ampX: amps.ampX,
+          ampY: amps.ampY,
+          swingX,
+          swingY,
+          pushX: 0,
+          pushY: 0,
+          angle: baseAngle,
           radius,
           sizePx,
         }
+        const pose = holdToLeash(body, homeLeash)
+        body.x = pose.x
+        body.y = pose.y
+        body.px = pose.x
+        body.py = pose.y
+        body.angle = pose.angle
+        body.pAngle = pose.angle
         bodies.push(body)
         applyNodeSize(index, sizePx)
       })
@@ -611,20 +751,22 @@ export function LabsHeroShapes({
         if (!body) return
         const { sizePx, radius } = sizeForShape(shape, width, height, scale)
         const home = homeForIndex(index, width, height, radius, homes, edgeBleed)
-        body.x *= scaleX
-        body.y *= scaleY
-        body.px = body.x
-        body.py = body.y
-        body.pAngle = body.angle
+        body.pushX *= scaleX
+        body.pushY *= scaleY
         body.homeX = home.x
         body.homeY = home.y
         body.radius = radius
         body.sizePx = sizePx
-        body.x = Math.min(width - radius, Math.max(radius, body.x))
-        body.y = Math.min(height - radius, Math.max(radius, body.y))
-        body.px = body.x
-        body.py = body.y
-        if (!reduce) easeCruise(body, 1, cruiseSpeed, 20)
+        const amps = swayAmps(homeLeash, body.swingX, body.swingY, width, height)
+        body.ampX = amps.ampX
+        body.ampY = amps.ampY
+        const pose = holdToLeash(body, homeLeash)
+        body.x = pose.x
+        body.y = pose.y
+        body.px = pose.x
+        body.py = pose.y
+        body.angle = pose.angle
+        body.pAngle = pose.angle
         applyNodeSize(index, sizePx)
       })
       displayAlpha = 1
@@ -654,13 +796,18 @@ export function LabsHeroShapes({
     let raf = 0
     let last = performance.now()
     let simAccum = 0
-    let visible = true
+    // Stay idle until the observer confirms the field is on screen, so a
+    // jump from further up the page doesn’t arrive as one huge spin.
+    let visible = false
     let scrollY = lenis?.scroll ?? window.scrollY
     let pendingScrollPx = 0
     let pointerX = 0
     let pointerY = 0
     let pointerInField = false
     let lastPointerMoveAt = 0
+    let touchActive = 0
+    // Phones: a finger is for scrolling. Google’s shapes don’t dodge or tumble.
+    const coarsePointer = window.matchMedia('(pointer: coarse), (hover: none)').matches
     let lastAvoidT = 0
     let avoidFrom: AvoidRect[] = collectAvoidRects(root)
     let avoidTo: AvoidRect[] = avoidFrom.map((box) => ({ ...box }))
@@ -671,11 +818,13 @@ export function LabsHeroShapes({
     const readScrollY = () => lenis?.scroll ?? window.scrollY
 
     const onScroll = () => {
-      if (reduce) return
       const y = readScrollY()
       const dy = y - scrollY
       scrollY = y
-      if (dy !== 0) pendingScrollPx += dy
+      // Only the scroll that happens while the field is on screen spins them.
+      // A backlog from further up the page would tumble them as they enter.
+      if (reduce || !visible || coarsePointer || touchActive > 0 || dy === 0) return
+      pendingScrollPx += dy
     }
 
     /** Apply queued scroll as immediate rotation + a bit of leftover spin. */
@@ -684,15 +833,31 @@ export function LabsHeroShapes({
       const scrollDeg = pendingScrollPx * SCROLL_DEG_PER_PX
       pendingScrollPx = 0
       for (const body of bodies) {
+        body.scrollAngle += scrollDeg
+        body.scrollOmega = clampScrollOmega(body.scrollOmega + scrollDeg * SCROLL_OMEGA_GAIN)
         body.angle += scrollDeg
         body.pAngle += scrollDeg
-        body.omega += scrollDeg * SCROLL_OMEGA_GAIN
-        clampOmega(body)
       }
     }
 
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse') return
+      touchActive += 1
+      pointerInField = false
+    }
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse') return
+      touchActive = Math.max(0, touchActive - 1)
+      pointerInField = false
+    }
+
     const onPointerMove = (event: PointerEvent) => {
-      if (reduce) return
+      // Touch drags are scrolls. Pushing shapes off the finger fights that.
+      if (reduce || coarsePointer || event.pointerType !== 'mouse') {
+        pointerInField = false
+        return
+      }
       const rect = root.getBoundingClientRect()
       pointerX = event.clientX - rect.left
       pointerY = event.clientY - rect.top
@@ -704,9 +869,12 @@ export function LabsHeroShapes({
       lastPointerMoveAt = performance.now()
     }
 
-    const integrate = (dt: number, now: number, width: number, height: number) => {
+    const integrate = (dt: number, now: number) => {
       const pointerLive =
-        pointerInField && now - lastPointerMoveAt < POINTER_ACTIVE_MS
+        !coarsePointer &&
+        touchActive === 0 &&
+        pointerInField &&
+        now - lastPointerMoveAt < POINTER_ACTIVE_MS
 
       if (now - lastAvoidT >= AVOID_REFRESH_MS) {
         lastAvoidT = now
@@ -723,54 +891,41 @@ export function LabsHeroShapes({
         body.py = body.y
         body.pAngle = body.angle
 
-        // Slow organic heading wander — the main floaty path.
-        body.wanderPhase += body.wanderFreq * dt
-        body.heading += Math.sin(body.wanderPhase) * WANDER_RATE * dt
+        body.phaseX += body.freqX * dt
+        body.phaseY += body.freqY * dt
 
+        let desiredX = 0
+        let desiredY = 0
         if (pointerLive) {
           const dx = body.x - pointerX
           const dy = body.y - pointerY
           const dist = Math.hypot(dx, dy) || 0.0001
-          const reach = CURSOR_RADIUS + body.radius
+          const reach = CURSOR_RADIUS + body.radius * 0.35
           if (dist < reach) {
             const falloff = 1 - dist / reach
-            const target = Math.atan2(dy / dist, dx / dist)
-            const delta = turnToward(
-              body,
-              target,
-              CURSOR_STEER * falloff * falloff * 2,
-              dt,
-            )
-            body.omega += delta * falloff * 1.1 * dt
+            const push = falloff * falloff * CURSOR_PUSH
+            desiredX += (dx / dist) * push
+            desiredY += (dy / dist) * push
           }
         }
 
-        steerFromAvoid(body, obstacles, dt)
+        const avoid = avoidOffset(body, obstacles)
+        desiredX += avoid.x
+        desiredY += avoid.y
+        const capped = capVector(desiredX, desiredY, Math.max(96, homeLeash))
+        const follow = 1 - Math.exp(-PUSH_FOLLOW * dt)
+        body.pushX += (capped.x - body.pushX) * follow
+        body.pushY += (capped.y - body.pushY) * follow
 
-        // Soft leash — wander nearby, then spring back toward home.
-        const toHomeX = body.homeX - body.x
-        const toHomeY = body.homeY - body.y
-        const homeDist = Math.hypot(toHomeX, toHomeY)
-        if (homeDist > homeLeash) {
-          const target = Math.atan2(toHomeY, toHomeX)
-          const pull = Math.min(1, (homeDist - homeLeash) / homeLeash)
-          turnToward(body, target, HOME_STEER * pull * 2.4, dt)
-          const nx = toHomeX / homeDist
-          const ny = toHomeY / homeDist
-          const spring = (homeDist - homeLeash) * (2.8 + pull * 3.2)
-          body.vx += nx * spring * dt
-          body.vy += ny * spring * dt
-        }
+        body.scrollOmega *= Math.exp(-0.85 * dt)
+        body.scrollAngle += body.scrollOmega * dt
 
-        easeCruise(body, dt, cruiseSpeed)
-        clampOmega(body)
-
-        body.x += body.vx * dt
-        body.y += body.vy * dt
-        body.angle += body.omega * dt
-        body.omega *= Math.exp(-0.85 * dt)
-
-        softContain(body, width, height, dt, edgeBleed, cruiseSpeed)
+        const pose = holdToLeash(body, homeLeash)
+        const traveled = Math.hypot(pose.x - body.px, pose.y - body.py)
+        if (!reduce) body.travelAngle += rollDegrees(traveled, body.radius, body.spinSign)
+        body.x = pose.x
+        body.y = pose.y
+        body.angle = body.baseAngle + body.travelAngle + body.scrollAngle
       }
     }
 
@@ -804,7 +959,7 @@ export function LabsHeroShapes({
 
       let steps = 0
       while (simAccum >= FIXED_DT && steps < MAX_SIM_STEPS) {
-        integrate(FIXED_DT, now, width, height)
+        integrate(FIXED_DT, now)
         simAccum -= FIXED_DT
         steps += 1
       }
@@ -813,6 +968,7 @@ export function LabsHeroShapes({
 
       // Grow from last pose → current between fixed steps (smooth on 120Hz too).
       displayAlpha = Math.min(1, simAccum / FIXED_DT)
+      driftShades(now)
       paint()
 
       if (DEBUG_SHAPES) {
@@ -829,6 +985,9 @@ export function LabsHeroShapes({
 
     const onResize = () => syncField(false)
     window.addEventListener('resize', onResize)
+    window.addEventListener('pointerdown', onPointerDown, { passive: true })
+    window.addEventListener('pointerup', onPointerUp, { passive: true })
+    window.addEventListener('pointercancel', onPointerUp, { passive: true })
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     // Prefer Lenis alone when present — dual listeners double-count scroll deltas.
     if (lenis) lenis.on('scroll', onScroll)
@@ -841,6 +1000,8 @@ export function LabsHeroShapes({
       ([entry]) => {
         visible = entry?.isIntersecting ?? true
         last = performance.now()
+        scrollY = readScrollY()
+        pendingScrollPx = 0
       },
       { threshold: 0 },
     )
@@ -849,6 +1010,9 @@ export function LabsHeroShapes({
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', onResize)
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
       window.removeEventListener('pointermove', onPointerMove)
       if (lenis) lenis.off('scroll', onScroll)
       else window.removeEventListener('scroll', onScroll)
@@ -861,26 +1025,55 @@ export function LabsHeroShapes({
     excludeKey,
     onlyKey,
     homesKey,
+    fillsKey,
     homes,
     scale,
     edgeBleed,
-    cruiseSpeed,
+    period,
     homeLeash,
   ])
 
   return (
     <div aria-hidden="true" className={className} ref={rootRef}>
-      {shapes.map((shape) => (
-        <svg
-          className={`ka-labs-shape ka-labs-shape--${shape.name}`}
-          fill="none"
-          key={shape.name}
-          style={{ color: fills[shape.name] }}
-          viewBox="0 0 360 360"
-        >
-          <path d={shape.d} fill="currentColor" transform={shape.transform} />
-        </svg>
-      ))}
+      {shapes.map((shape) => {
+        const shadeId = `${uid}-${shape.name}-shade`
+        const grainId = `${uid}-${shape.name}-grain`
+        const shade = SHAPE_SHADE[shape.name]
+        const fill = fills[shape.name]
+        const shift = HUE_SHIFT[shape.name]
+        const from = shiftHue(fill, shift.from, -0.04)
+        const to = shiftHue(fill, shift.to, -0.08)
+        return (
+          <svg
+            className={`ka-labs-shape ka-labs-shape--${shape.name}`}
+            fill="none"
+            key={shape.name}
+            style={{ color: fill }}
+            viewBox={`0 0 ${SHAPE_VIEWBOX} ${SHAPE_VIEWBOX}`}
+          >
+            <defs>
+              <radialGradient cx={shade.cx} cy={shade.cy} id={shadeId} r={shade.r}>
+                <stop offset="0%" stopColor={from} />
+                <stop offset="100%" stopColor={to} />
+              </radialGradient>
+              <pattern height="170" id={grainId} patternUnits="userSpaceOnUse" width="170">
+                <image height="170" href={grainUrl} preserveAspectRatio="none" width="170" />
+              </pattern>
+            </defs>
+            {/*
+              Gradient and grain are painted inside the shape. A CSS filter on the
+              svg itself would flatten mix-blend-mode: difference.
+            */}
+            <path d={shape.d} fill={`url(#${shadeId})`} transform={shape.transform} />
+            <path
+              className="ka-labs-shape__grain"
+              d={shape.d}
+              fill={`url(#${grainId})`}
+              transform={shape.transform}
+            />
+          </svg>
+        )
+      })}
     </div>
   )
 }

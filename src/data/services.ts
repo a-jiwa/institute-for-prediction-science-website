@@ -10,7 +10,6 @@ export type Service = {
   title: string
   lead: string
   paragraphs: readonly string[]
-  layers: readonly { src: string; role: string }[]
   sections: readonly ServiceSection[]
   contact: {
     title: string
@@ -27,11 +26,6 @@ export const services: readonly Service[] = [
     paragraphs: [
       'Participants forecast the same questions and are scored consistently, creating a clear record of forecasting ability and revealing which approaches work best.',
       'Each competition is tailored to the organisation’s needs, helping it evaluate predictive skill and learn from outcomes.',
-    ],
-    layers: [
-      { src: '/assets/img/services/layers/protection-back.png', role: 'art-group' },
-      { src: '/assets/img/services/layers/protection-mid.png', role: 'art-hand' },
-      { src: '/assets/img/services/layers/protection-front.png', role: 'art-spark' },
     ],
     sections: [
       {
@@ -79,12 +73,6 @@ export const services: readonly Service[] = [
     paragraphs: [
       'Participants make probabilistic forecasts, track their accuracy and learn from past predictions. By reviewing what went right and wrong, they can identify weaknesses, improve their judgement and become better forecasters.',
     ],
-    layers: [
-      { src: '/assets/img/services/layers/national-lie.png', role: 'art-ground' },
-      { src: '/assets/img/services/layers/national-stand.png', role: 'art-point' },
-      { src: '/assets/img/services/layers/national-mid.png', role: 'art-globe' },
-      { src: '/assets/img/services/layers/national-front.png', role: 'art-spark' },
-    ],
     sections: [
       {
         id: 'the-loop',
@@ -130,11 +118,6 @@ export const services: readonly Service[] = [
     lead: 'We research forecasting methods and build tools that turn forecasts and prediction-market data into practical insight for decisions.',
     paragraphs: [
       'Through experimentation and analysis, we investigate how people predict, evaluate new approaches and develop applications that turn predictive information into practical insights for decision-making.',
-    ],
-    layers: [
-      { src: '/assets/img/services/layers/missions-back.png', role: 'art-chair' },
-      { src: '/assets/img/services/layers/missions-mid.png', role: 'art-lean' },
-      { src: '/assets/img/services/layers/missions-front.png', role: 'art-diagram' },
     ],
     sections: [
       {

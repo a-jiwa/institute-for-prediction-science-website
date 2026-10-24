@@ -80,6 +80,26 @@ function StepMedia({ step }: { step: Step }) {
   return <Placeholder frame="shot" label="Image" src={step.src ?? ''} />
 }
 
+/** Dual label: base ink + wash ink clipped to the Labs yellow circle. */
+function WashType({
+  as: Tag,
+  className,
+  text,
+}: {
+  as: 'p' | 'h3'
+  className?: string
+  text: string
+}) {
+  return (
+    <Tag className={['ka-wash-type', className].filter(Boolean).join(' ')}>
+      <span className="ka-wash-type__base">{text}</span>
+      <span aria-hidden="true" className="ka-wash-type__wash">
+        {text}
+      </span>
+    </Tag>
+  )
+}
+
 export function KaSteps({
   kicker = KA_STEPS.kicker,
   title = KA_STEPS.title,
@@ -113,8 +133,8 @@ export function KaSteps({
           >
             {step.imageFirst ? <StepMedia step={step} /> : null}
             <div className="ka-step__copy">
-              <p className="ka-kicker">{step.kicker}</p>
-              <h3>{step.title}</h3>
+              <WashType as="p" className="ka-kicker" text={step.kicker} />
+              <WashType as="h3" text={step.title} />
               {(typeof step.body === 'string' ? [step.body] : step.body).map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}

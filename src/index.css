@@ -1,10 +1,8 @@
 @import 'tailwindcss';
 @import './foundation.css';
-@import '@splidejs/react-splide/css';
 @import './typography.css';
 @import './grid.css';
 @import './theme-sections.css';
-@import './logos.css';
 
 @theme {
   --color-green: #102b23;
@@ -182,10 +180,6 @@ body {
   animation-play-state: paused;
 }
 
-.splide__arrow {
-  display: none;
-}
-
 .text-right {
   text-align: right;
 }
@@ -352,7 +346,7 @@ header nav a {
   color: var(--tone-ink);
   font-family: var(--font-sans);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.2;
   /* Leaving the selected state. */
@@ -367,7 +361,7 @@ header nav a:hover {
 }
 
 header nav a.active {
-  font-weight: 700;
+  font-weight: 500;
   opacity: 1;
   /* Becoming selected. The duration is taken from the state you enter. */
   transition:
@@ -497,7 +491,7 @@ header nav a.active {
     font-family: var(--font-sans);
     font-size: 30px;
     line-height: 1.15;
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.01em;
     text-transform: none;
     text-align: center;
@@ -512,7 +506,7 @@ header nav a.active {
 
   header nav > ul a.active,
   header nav > ul a.active:hover {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--tone-ink);
     opacity: 1;
   }
@@ -5442,19 +5436,53 @@ html[data-tone] .about-statement p {
 */
 .ka-steps:not(.ka-steps--white) .ka-step p.ka-kicker {
   margin-bottom: 0.3em;
+  color: var(--color-orange);
   font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
   line-height: 1.2;
 }
 
-.ka-steps:not(.ka-steps--white) .ka-step h3 {
-  margin-bottom: 0.4em;
-  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
-  line-height: 1.15;
+.ka-steps:not(.ka-steps--white) .ka-step p.ka-kicker .ka-wash-type__base {
+  color: inherit;
 }
 
+/*
+  Service titles match the story headings: weight 500, #121317, optical sizing.
+  Tracking and leading step with size. The size clamp stays.
+*/
+.ka-steps:not(.ka-steps--white) .ka-step h3 {
+  margin-bottom: 0.4em;
+  color: #121317;
+  font-optical-sizing: auto;
+  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: -0.00867em;
+  line-height: 1.08;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 1280px) {
+  .ka-steps:not(.ka-steps--white) .ka-step h3 {
+    letter-spacing: -0.017em;
+    line-height: 1.06;
+  }
+}
+
+/* Service body matches story paragraphs: weight 400, open tracking, 1.45 leading. */
 .ka-steps:not(.ka-steps--white) .ka-step p:not(.ka-kicker):not(.ka-step__lead) {
   margin-bottom: var(--ka-space-2);
+  color: #45474d;
+  font-optical-sizing: auto;
   font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  font-weight: 400;
+  letter-spacing: 0.01188em;
+  line-height: 1.45;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .ka-steps:not(.ka-steps--white) .ka-step li {
@@ -6786,6 +6814,16 @@ html[data-tone] .about-statement p {
   background-color: var(--wash-color);
 }
 
+/*
+  The services title blends with its backdrop. Once the yellow circle
+  already covers this band, paint the same yellow on the band itself.
+  The later snap to a flat wash removes the circle layer; without this
+  fill the heading samples white for a frame and flashes.
+*/
+.ka-wash-region[data-wash-title='on'] > #services.ka-about-hero {
+  background-color: var(--wash-color);
+}
+
 .ka-shape-wash {
   position: absolute;
   /* --wash-bleed-top grows with the circle so it isn’t cut at the region top. */
@@ -6805,23 +6843,34 @@ html[data-tone] .about-statement p {
     Solid fill only after the circle already covers the region (see
     LabsShapeWash expand phase) — avoids a visible snap from a mid-size
     circle to a full yellow field. Bleed collapses via JS (--wash-bleed-top: 0).
+    Drop will-change in the same step so the retired clip layer is not
+    left composited under the difference-blended heading.
   */
   top: 0;
   clip-path: none;
+  will-change: auto;
 }
 
-.ka-wash-region > *:not(.ka-shape-wash):not(#services) {
+/*
+  Keep Contact above the wash. Do not lift #services or .ka-steps — their
+  difference-blended labels need to sample the yellow circle underneath.
+  (:not(#services) alone is an ID in specificity and would beat .ka-steps.)
+*/
+.ka-wash-region > *:not(.ka-shape-wash):not(#services):not(.ka-steps) {
   position: relative;
   z-index: 1;
 }
 
 /*
-  Services title must share the wash stacking group (no z-index trap) so
-  mix-blend difference can sample the yellow field + floating shapes.
+  Services title + service cards share the wash stacking group (no z-index
+  trap) so mix-blend difference can sample the yellow field + shapes.
 */
-.ka-wash-region > #services.ka-about-hero {
+.ka-wash-region > #services.ka-about-hero,
+.ka-wash-region > .ka-steps {
   position: relative;
   z-index: auto;
+  isolation: auto;
+  background-color: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6832,8 +6881,8 @@ html[data-tone] .about-statement p {
 
 /*
   Contact + “Guess less” stay solid dark — no wash-ink, no shape intersection.
-  Service card body can still ease toward wash-ink; per-service h3s stay dark.
-  Only #services.ka-about-hero h1 intersects with shapes.
+  Service card body stays solid. Kickers + titles use .ka-wash-type (below)
+  so their ink follows the expanding yellow circle edge.
 */
 .ka-wash-region[data-wash-ink='on'] .ka-steps {
   color: color-mix(
@@ -6843,19 +6892,74 @@ html[data-tone] .about-statement p {
   );
 }
 
-.ka-wash-region .ka-steps .ka-step__copy > h3,
-.ka-wash-region[data-wash-ink='on'] .ka-steps .ka-step__copy > h3,
 .ka-wash-region .ka-steps .ka-step__copy > p:not(.ka-kicker),
 .ka-wash-region[data-wash-ink='on'] .ka-steps .ka-step__copy > p:not(.ka-kicker) {
-  color: #202020;
+  color: #45474d;
   -webkit-mix-blend-mode: normal;
   mix-blend-mode: normal;
-  -webkit-text-fill-color: #202020;
+  -webkit-text-fill-color: #45474d;
 }
 
-.ka-wash-region[data-wash-ink='on'] #services .ka-kicker,
-.ka-wash-region[data-wash-ink='on'] .ka-steps .ka-kicker {
-  color: var(--wash-kicker, var(--color-orange));
+/*
+  Service-card labels: same intersection idea as the services hero title.
+  Card layout traps mix-blend, so the on-wash ink is a second copy clipped
+  to the yellow circle (--wash-lx/ly/lr from LabsShapeWash). Off the wash,
+  titles use the blue the hero shows on white; on the wash they go #121317.
+  Kickers go from the pink off-wash reading to brand orange.
+*/
+.ka-wash-type__wash {
+  display: none;
+}
+
+.ka-wash-region .ka-step .ka-wash-type {
+  position: relative;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+.ka-wash-region .ka-step .ka-wash-type__base,
+.ka-wash-region .ka-step .ka-wash-type__wash {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ka-wash-region .ka-step h3.ka-wash-type .ka-wash-type__base {
+  color: #1549e2;
+  -webkit-text-fill-color: #1549e2;
+}
+
+.ka-wash-region .ka-step p.ka-kicker.ka-wash-type .ka-wash-type__base {
+  color: #eca1a5;
+  -webkit-text-fill-color: #eca1a5;
+}
+
+.ka-wash-region .ka-step .ka-wash-type__wash {
+  display: block;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  clip-path: circle(var(--wash-lr, 0px) at var(--wash-lx, 0px) var(--wash-ly, 0px));
+}
+
+.ka-wash-region .ka-step h3.ka-wash-type .ka-wash-type__wash {
+  color: #121317;
+  -webkit-text-fill-color: #121317;
+}
+
+.ka-wash-region .ka-step p.ka-kicker.ka-wash-type .ka-wash-type__wash {
+  color: var(--color-orange);
+  -webkit-text-fill-color: var(--color-orange);
+}
+
+.ka-wash-region[data-wash='full'] .ka-step .ka-wash-type__wash {
+  clip-path: none;
+}
+
+.ka-wash-region[data-wash='full'] .ka-step .ka-wash-type__base {
+  visibility: hidden;
 }
 
 .ka-wash-region .ka-assess,
@@ -6922,6 +7026,16 @@ html[data-tone] .about-statement p {
 }
 
 /*
+  `.ka-contain` uses container-type: inline-size, which traps mix-blend so
+  card kickers/titles never sample the yellow circle (they snap later).
+  Drop containment inside the wash so difference can track the wash edge.
+*/
+.ka-wash-region > .ka-steps > .ka-contain {
+  container: none;
+  container-type: normal;
+}
+
+/*
   Shape field sits on each title band. Extend vertically so shapes can drift
   past the band edges — keep left/right flush so they don’t widen the page.
 */
@@ -6936,6 +7050,36 @@ html[data-tone] .about-statement p {
   z-index: 0;
   overflow: visible;
   pointer-events: none;
+  /* Shapes difference with each other inside this group, then the group
+     differences with the page. A crossing becomes a bright third colour.
+     Solo shapes still invert against the page, same as before. */
+  isolation: isolate;
+  -webkit-mix-blend-mode: difference;
+  mix-blend-mode: difference;
+}
+
+/* Home hero draws its two shapes from separate fields. One shared group
+   so their crossing uses the same bright formula. */
+.ka-shape-stage {
+  position: absolute;
+  top: -18%;
+  right: 0;
+  bottom: -18%;
+  left: 0;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+  isolation: isolate;
+  -webkit-mix-blend-mode: difference;
+  mix-blend-mode: difference;
+}
+
+.ka-shape-stage > .ka-about-hero__shapes {
+  top: 0;
+  bottom: 0;
+  isolation: auto;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
 }
 
 .ka-steps__shapes {
@@ -6957,13 +7101,14 @@ html[data-tone] .about-statement p {
 }
 
 /*
-  Reach / story stay auto so the yellow wash can bleed above Services
-  over their bottom edge. Assess inside the wash stays above the fill.
+  Reach / story sit above the yellow wash (z-index 1) so the expanding
+  circle can pass underneath without covering about copy or media.
+  These blocks keep solid ink — no wash colour intersection.
 */
 .ka-about-page > .ka-reach,
 .ka-about-page > .ka-story {
   position: relative;
-  z-index: auto;
+  z-index: 2;
   background-color: transparent;
 }
 
@@ -7190,14 +7335,15 @@ html[data-tone] .about-statement p {
   mix-blend-mode: normal;
 }
 
-/* Labs shapes — position/spin driven by zero-g physics in LabsHeroShapes.tsx.
-   Difference so overlaps invert into each other (and the page behind).
+/* Labs shapes — sway driven in LabsHeroShapes.tsx (independent x / y / spin).
+   Difference inside the shape field. The field then differences with the page,
+   so a crossing reads as a bright third colour and a lone shape still inverts.
    JS paints with 2D translate + rotate (device-pixel snapped); avoid translate3d. */
 .ka-labs-shape {
   position: absolute;
   top: 0;
   left: -9999px;
-  width: min(28vw, 13.5rem);
+  width: min(33.6vw, 16.2rem);
   height: auto;
   aspect-ratio: 1;
   transform-origin: center center;
@@ -7223,6 +7369,12 @@ html[data-tone] .about-statement p {
   color: var(--labs-shape-clover, #fcc934);
 }
 
+/* Strong enough to read, still softer than the heavy stipple. */
+.ka-labs-shape__grain {
+  mix-blend-mode: overlay;
+  opacity: 1;
+}
+
 /* No `.ka-contain` here — its container-type containment blocks mix-blend with shapes. */
 .ka-about-hero__copy {
   position: relative;
@@ -7243,6 +7395,36 @@ html[data-tone] .about-statement p {
   letter-spacing: 0.02em;
   line-height: 1.1;
   text-transform: uppercase;
+}
+
+/*
+  Services kicker: same type as Competitions / Training / Labs.
+  While the yellow circle crosses, it uses difference like the title —
+  fill is the preimage of step orange on wash yellow
+  (|#135e5a − #fcc934| = #e96b26). Once the band is covered, lock to the
+  solid step orange so the settled label matches those kickers exactly.
+*/
+#services.ka-about-hero p.ka-kicker {
+  color: #135e5a;
+  -webkit-text-fill-color: #135e5a;
+  font-family: var(--ka-font);
+  font-optical-sizing: auto;
+  font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-mix-blend-mode: difference;
+  mix-blend-mode: difference;
+}
+
+.ka-wash-region[data-wash-title='on'] #services.ka-about-hero p.ka-kicker {
+  color: var(--color-orange);
+  -webkit-text-fill-color: var(--color-orange);
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
 }
 
 /*
@@ -7286,30 +7468,42 @@ html[data-tone] .about-statement p {
 
 /*
   Home mission title: forced break after “today”, but each clause can wrap.
-  Keep a moderate measure + larger type so large screens get a solid
-  multi-line block instead of two stretched single lines.
+  Size, measure, and the two-line split stay on the existing fluid scale.
+  The rest follows the DeepMind display recipe: Google Sans Flex at weight
+  500, optical sizing, −0.0225em tracking, 1.04 leading, pretty wrap.
+  Difference blend is unchanged, so the source color is the preimage of
+  #121317 on white: |#edece8 − #fff| = #121317. Shapes still recolor the letters.
+  The em measure is 16em (was 15.5em) so the looser −0.0225em tracking
+  still fits the same first line. The 42rem cap is unchanged, so large
+  screens keep the same column.
 */
 #about.ka-about-hero h1 {
-  max-width: min(15.5em, 42rem);
+  max-width: min(16em, 42rem);
   padding-inline: 0.2em;
-  /* Soften non-em text (lighter weight + gray after difference). */
-  color: #cfcfcf;
+  color: #edece8;
+  -webkit-text-fill-color: #edece8;
+  font-family: var(--ka-font);
+  font-optical-sizing: auto;
   font-size: clamp(2rem, 1.15rem + 2.9vw, 3.75rem);
-  font-weight: var(--ka-weight-body);
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  text-wrap: balance;
+  font-weight: 500;
+  letter-spacing: -0.0225em;
+  line-height: 1.04;
+  text-align: center;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #about.ka-about-hero h1 .ka-about-hero__title-line {
   display: block;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
-/* Keep “today” / “tomorrow” at the normal title weight — not heavier. */
+/* One voice with the rest of the line — same ink and weight. */
 #about.ka-about-hero h1 .ka-about-hero__title-em {
-  color: #fff;
-  font-weight: var(--ka-weight-bold);
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  font-weight: inherit;
 }
 
 #about.ka-about-hero {
@@ -7318,17 +7512,33 @@ html[data-tone] .about-statement p {
 }
 
 /*
-  Home hero: same type + measure as the old .ka-reach__lead, with clear
-  air under the mission title (was a full section gap when lead lived below).
+  Home hero lead: DeepMind section subtitle (research “Breakthroughs” dek).
+  Google Sans Flex, weight 500, optical sizing, gray #45474d, pretty wrap.
+  Below 1280px that style is 26px-scale: −0.00867em / 1.08.
+  At 1280px and up it steps to 32px: −0.017em / 1.06.
+  Measure, centering, and the gap under the title stay put.
 */
 #about.ka-about-hero--with-lead .ka-about-hero__lead {
   max-width: 42rem;
   margin-top: clamp(3.5rem, 2.75rem + 3vw, 5.5rem);
-  color: #4a4a4a;
-  font-size: clamp(1.35rem, 1.15rem + 0.85vw, 1.75rem);
-  font-weight: var(--ka-weight-body);
-  letter-spacing: -0.015em;
-  line-height: 1.55;
+  color: #45474d;
+  font-family: var(--ka-font);
+  font-optical-sizing: auto;
+  font-size: clamp(1.625rem, 1.25rem + 0.85vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.00867em;
+  line-height: 1.08;
+  text-align: center;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 1280px) {
+  #about.ka-about-hero--with-lead .ka-about-hero__lead {
+    letter-spacing: -0.017em;
+    line-height: 1.06;
+  }
 }
 
 @media (max-width: 767px) {
@@ -7353,8 +7563,6 @@ html[data-tone] .about-statement p {
     margin-inline: 0;
     padding-inline: 0;
     font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
-    letter-spacing: -0.035em;
-    line-height: 1.12;
   }
 
   #about.ka-about-hero .ka-kicker {
@@ -7366,8 +7574,10 @@ html[data-tone] .about-statement p {
     margin-top: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
     margin-inline: 0;
     padding-inline: 0;
-    font-size: clamp(1.125rem, 1rem + 0.9vw, 1.3rem);
-    line-height: 1.5;
+    /* Same subtitle cut DeepMind uses under 1280px, kept a step under the title. */
+    font-size: clamp(1.25rem, 1.1rem + 1.1vw, 1.625rem);
+    letter-spacing: -0.00867em;
+    line-height: 1.08;
   }
 }
 
@@ -7381,10 +7591,20 @@ html[data-tone] .about-statement p {
   Services hero: difference blend like the mission title.
   Authored fill is the preimage of #202020 under difference vs wash yellow
   (#fcc934): |#dce954 − #fcc934| = #202020. Shapes behind still tint the letters.
+  Type matches the home mission title: weight 500, −0.0225em, 1.04 leading.
+  Balance keeps “Unlocking the power / of forecasting” on two even lines.
+  Size and the 11.5em measure stay on the shared hero rule.
 */
 #services.ka-about-hero h1 {
   color: #dce954;
   -webkit-text-fill-color: #dce954;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.0225em;
+  line-height: 1.04;
+  text-wrap: balance;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -webkit-mix-blend-mode: difference;
   mix-blend-mode: difference;
 }
@@ -7694,30 +7914,53 @@ html[data-tone] .about-statement p {
   min-width: 0;
 }
 
+/*
+  Story headings follow the DeepMind small section title: weight 500,
+  near-black #121317, optical sizing. Tracking and leading step with size
+  (−0.00867em / 1.08, then −0.017em / 1.06 from 1280px). The size clamp stays.
+*/
 .ka-story h2 {
   max-width: none;
   margin: 0 0 var(--ka-space-4);
-  color: #081c39;
+  color: #121317;
   font-family: var(--ka-font);
+  font-optical-sizing: auto;
   font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
-  font-weight: var(--ka-weight-bold);
-  letter-spacing: var(--ka-tracking-tight);
-  line-height: var(--ka-leading-large);
-  text-wrap: balance;
+  font-weight: 500;
+  letter-spacing: -0.00867em;
+  line-height: 1.08;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 1280px) {
+  .ka-story h2 {
+    letter-spacing: -0.017em;
+    line-height: 1.06;
+  }
 }
 
 .ka-story__body {
   max-width: 60ch;
 }
 
+/*
+  Story paragraphs follow DeepMind body text: weight 400, #45474d,
+  +0.01188em tracking, 1.45 leading. Size and the 60ch measure stay.
+*/
 .ka-story__body p {
   margin: 0 0 var(--ka-space-4);
-  color: #4a4a4a;
+  color: #45474d;
   font-family: var(--ka-font);
+  font-optical-sizing: auto;
   font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
-  font-weight: var(--ka-weight-body);
-  letter-spacing: var(--ka-tracking-normal);
-  line-height: var(--ka-leading-body);
+  font-weight: 400;
+  letter-spacing: 0.01188em;
+  line-height: 1.45;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .ka-story__body p:last-child {

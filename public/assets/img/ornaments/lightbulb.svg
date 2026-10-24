@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="100.8" viewBox="0 0 72 100.8" fill="none">
+  <!--
+    Lightbulb ornament extracted from photo-frame-white-3.
+    Yellow bulb + yellow neck square + orange base; edges of bulb/base touch;
+    square side = orange diameter, bottom through orange centre, drawn above orange.
+  -->
+  <g id="lightbulb">
+    <circle cx="36" cy="36" r="36" fill="#ffc833"/>
+    <circle cx="36" cy="86.4" r="14.4" fill="#ff8f2b"/>
+    <rect x="21.6" y="57.6" width="28.8" height="28.8" fill="#ffc833"/>
+  </g>
+</svg>
