@@ -1,8 +1,8 @@
 # Institute for Prediction Science
 
-Website for [Institute for Prediction Science](https://a-jiwa.github.io/forecasting-institute/), built with React, Vite, and Tailwind CSS.
+Website for [Institute for Prediction Science](https://a-jiwa.github.io/institute-for-prediction-science-website/), built with React, Vite, and Tailwind CSS.
 
-**Live site:** [https://a-jiwa.github.io/forecasting-institute/](https://a-jiwa.github.io/forecasting-institute/)
+**Live site:** [https://a-jiwa.github.io/institute-for-prediction-science-website/](https://a-jiwa.github.io/institute-for-prediction-science-website/)
 
 ## Stack
 
@@ -11,7 +11,6 @@ Website for [Institute for Prediction Science](https://a-jiwa.github.io/forecast
 - **Tailwind CSS v4** for styling
 - **React Router** for client-side routing
 - **Lenis** for smooth scrolling
-- **Splide** for the featured work carousel
 
 ## Getting started
 
@@ -29,18 +28,18 @@ npm run build
 npm run preview
 ```
 
-`npm run preview` serves the production build at `/forecasting-institute/`, matching GitHub Pages.
+`npm run preview` serves the production build at `/institute-for-prediction-science-website/`, matching GitHub Pages.
 
 ## Deploy to GitHub Pages
 
 This repo is configured for a GitHub project site:
 
-- **Repository:** [github.com/a-jiwa/forecasting-institute](https://github.com/a-jiwa/forecasting-institute)
-- **URL:** `https://a-jiwa.github.io/forecasting-institute/`
+- **Repository:** [github.com/a-jiwa/institute-for-prediction-science-website](https://github.com/a-jiwa/institute-for-prediction-science-website)
+- **URL:** `https://a-jiwa.github.io/institute-for-prediction-science-website/`
 
 ### One-time GitHub setup
 
-1. Create a public repository named `forecasting-institute` under [@a-jiwa](https://github.com/a-jiwa).
+1. Create a public repository named `institute-for-prediction-science-website` under [@a-jiwa](https://github.com/a-jiwa).
 2. Push this project to the `main` branch.
 3. In the repo, go to **Settings → Pages**.
 4. Under **Build and deployment**, set **Source** to **GitHub Actions**.

@@ -1,9 +1,9 @@
 {
-  "name": "forecasting-institute",
+  "name": "institute-for-prediction-science-website",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://a-jiwa.github.io/forecasting-institute/",
+  "homepage": "https://a-jiwa.github.io/institute-for-prediction-science-website/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/github-pages.mjs",

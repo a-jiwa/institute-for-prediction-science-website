@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const DIST = 'dist'
-const BASE = '/forecasting-institute'
+const BASE = '/institute-for-prediction-science-website'
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
