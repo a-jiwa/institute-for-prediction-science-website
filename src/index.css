@@ -5447,6 +5447,11 @@ html[data-tone] .about-statement p {
   .ps-steps .ps-step:has(> .ps-step__copy:last-child) {
     grid-template-columns: 3fr 7fr;
   }
+
+  /* Lotties sit in a wide grid track — center the 9rem box, not stretch/right. */
+  .ps-steps .ps-step__media--lottie {
+    justify-self: center;
+  }
 }
 
 .ps-step h3 {
@@ -7336,6 +7341,9 @@ html[data-tone] .about-statement p {
 }
 
 .ps-step__media--lottie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   aspect-ratio: 1;
   width: min(100%, 9rem);
   max-width: 9rem;
@@ -7553,12 +7561,12 @@ html[data-tone] .about-statement p {
   still fits the same first line. The 42rem cap is unchanged, so large
   screens keep the same column.
 */
-#about.ps-about-hero {
+#about.ps-about-hero, #labs.ps-about-hero {
   min-height: clamp(28rem, 22rem + 14vw, 36rem);
   background-color: transparent;
 }
 
-#about .ps-about-hero__layout {
+#about .ps-about-hero__layout, #labs .ps-about-hero__layout {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7570,27 +7578,27 @@ html[data-tone] .about-statement p {
   padding-inline: var(--layout-gutter);
 }
 
-#about .ps-about-hero__copy {
+#about .ps-about-hero__copy, #labs .ps-about-hero__copy {
   width: 100%;
   max-width: none;
   margin-inline: 0;
   padding-inline: 0;
 }
 
-#about .ps-about-hero__media {
+#about .ps-about-hero__media, #labs .ps-about-hero__media {
   order: -1;
   flex: 0 0 auto;
   width: min(100%, 20rem);
   aspect-ratio: 1;
 }
 
-#about .ps-about-hero__lottie {
+#about .ps-about-hero__lottie, #labs .ps-about-hero__lottie {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-#about.ps-about-hero h1 {
+#about.ps-about-hero h1, #labs.ps-about-hero h1 {
   max-width: min(16em, 42rem);
   padding-inline: 0.2em;
   color: #2a3140;
@@ -7611,11 +7619,30 @@ html[data-tone] .about-statement p {
   mix-blend-mode: normal;
 }
 
-#about.ps-about-hero h1 .ps-about-hero__title-line {
+#about.ps-about-hero h1 .ps-about-hero__title-line, #labs.ps-about-hero h1 .ps-about-hero__title-line {
   display: block;
 }
 
-#about.ps-about-hero--with-lead .ps-about-hero__lead {
+/* Research hero: short first line on small screens, longer first line from tablet up. */
+#labs.ps-about-hero .ps-lab-hero__break--sm {
+  display: block;
+}
+
+#labs.ps-about-hero .ps-lab-hero__break--lg {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #labs.ps-about-hero .ps-lab-hero__break--sm {
+    display: none;
+  }
+
+  #labs.ps-about-hero .ps-lab-hero__break--lg {
+    display: block;
+  }
+}
+
+#about.ps-about-hero--with-lead .ps-about-hero__lead, #labs.ps-about-hero--with-lead .ps-about-hero__lead {
   max-width: 34rem;
   margin-top: clamp(0.55rem, 0.4rem + 0.4vw, 0.85rem);
   color: #5a5c63;
@@ -7634,58 +7661,58 @@ html[data-tone] .about-statement p {
 }
 
 @media (min-width: 768px) {
-  #about.ps-about-hero {
+  #about.ps-about-hero, #labs.ps-about-hero {
     align-items: stretch;
     text-align: left;
   }
 
-  #about .ps-about-hero__layout {
+  #about .ps-about-hero__layout, #labs .ps-about-hero__layout {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: clamp(2rem, 1.5rem + 3vw, 4.5rem);
   }
 
-  #about .ps-about-hero__copy {
+  #about .ps-about-hero__copy, #labs .ps-about-hero__copy {
     flex: 1 1 auto;
     min-width: 0;
   }
 
-  #about .ps-about-hero__media {
+  #about .ps-about-hero__media, #labs .ps-about-hero__media {
     order: 0;
     width: min(42%, 26rem);
   }
 
-  #about.ps-about-hero h1 {
+  #about.ps-about-hero h1, #labs.ps-about-hero h1 {
     margin-inline: 0;
     padding-inline: 0;
     text-align: left;
   }
 
-  #about.ps-about-hero--with-lead .ps-about-hero__lead {
+  #about.ps-about-hero--with-lead .ps-about-hero__lead, #labs.ps-about-hero--with-lead .ps-about-hero__lead {
     margin-inline: 0;
     text-align: left;
   }
 }
 
 @media (max-width: 767px) {
-  #about.ps-about-hero {
+  #about.ps-about-hero, #labs.ps-about-hero {
     min-height: 80svh;
     padding-top: clamp(3.75rem, 3rem + 4vw, 5rem);
     padding-bottom: clamp(3.25rem, 2.5rem + 4vw, 4.5rem);
   }
 
-  #about .ps-about-hero__layout {
+  #about .ps-about-hero__layout, #labs .ps-about-hero__layout {
     padding-inline: 1.25rem;
   }
 
-  #about.ps-about-hero h1 {
+  #about.ps-about-hero h1, #labs.ps-about-hero h1 {
     max-width: none;
     margin-inline: 0;
     padding-inline: 0;
   }
 
-  #about.ps-about-hero--with-lead .ps-about-hero__lead {
+  #about.ps-about-hero--with-lead .ps-about-hero__lead, #labs.ps-about-hero--with-lead .ps-about-hero__lead {
     max-width: 28rem;
     margin-top: clamp(0.45rem, 0.35rem + 0.3vw, 0.7rem);
     margin-inline: auto;
@@ -8023,8 +8050,9 @@ html[data-tone] .about-statement p {
   padding-top: 2.25rem;
 }
 
-/* Last story before What we do — full band below (not :last-of-type: contact is also a section). */
-.home-cover .ps-about-page > .ps-story:has(+ .ps-services-band) {
+/* Last story before What we do or the close — full band below (not :last-of-type: contact is also a section). */
+.home-cover .ps-about-page > .ps-story:has(+ .ps-services-band),
+.home-cover .ps-about-page > .ps-story:has(+ .ps-close) {
   padding-bottom: var(--ps-section);
 }
 
@@ -8045,10 +8073,25 @@ html[data-tone] .about-statement p {
 .home-cover .ps-about-page > .ps-story .ps-story__grid {
   box-sizing: border-box;
   width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
   padding: 1.5rem;
   border-radius: 20px;
   background-color: var(--ps-band-surface);
   overflow: hidden;
+  /* Coloured layout rails for the story split. */
+  outline: 1px solid #fb7185;
+  outline-offset: -1px;
+}
+
+.home-cover .ps-about-page > .ps-story .ps-story__copy {
+  outline: 1px solid #38bdf8;
+  outline-offset: -1px;
+}
+
+.home-cover .ps-about-page > .ps-story .ps-story__media {
+  outline: 1px solid #a3e635;
+  outline-offset: -1px;
 }
 
 @media (min-width: 768px) {
@@ -8099,7 +8142,9 @@ html[data-tone] .about-statement p {
 .home-cover .ps-about-page .ps-story h2,
 .home-cover .ps-about-page .ps-steps .ps-step h3,
 .home-cover .ps-about-page .ps-close h2,
-.home-cover .ps-about-page #services.ps-about-hero h1 {
+.home-cover .ps-about-page #services.ps-about-hero h1,
+.home-cover .ps-lab-page .ps-lab-work h2,
+.home-cover .ps-lab-page .ps-lab-index__head h2 {
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-weight: 350;
   font-variation-settings: 'opsz' 28;
@@ -8152,7 +8197,7 @@ html[data-tone] .about-statement p {
 }
 
 .ps-story__body {
-  max-width: 34rem;
+  max-width: none;
 }
 
 /*
@@ -8244,6 +8289,11 @@ html[data-tone] .about-statement p {
   /* Media-first rows still keep text at 70% (copy is second in DOM). */
   .ps-story__grid--media-start:has(.ps-story__media--square) {
     grid-template-columns: 3fr 7fr;
+  }
+
+  /* Keep the square icon centered in its grid track (not start-aligned). */
+  .ps-story__grid:has(.ps-story__media--square) .ps-story__media--square {
+    justify-self: center;
   }
 }
 
@@ -8414,6 +8464,10 @@ html[data-tone] .about-statement p {
   color: var(--color-orange);
 }
 
+.ps-about-page.ps-lab-page p.ps-kicker {
+  color: var(--color-orange);
+}
+
 .ps-about-page.ps-training-page .ps-train-close__alt {
   margin-top: var(--ps-space-4);
 }
@@ -8441,146 +8495,417 @@ html[data-tone] .about-statement p {
   text-align: inherit;
 }
 
-/* Lab: content band white; type matches landing (Anthropic Serif). */
-.ps-about-page.ps-lab-page .ps-steps.ps-lab {
-  background: #fff;
-}
-
-.ps-about-page.ps-lab-page > .ps-about-hero + .ps-steps {
-  position: relative;
-  z-index: 1;
-  padding-top: calc(var(--ps-section) * 0.55);
-}
-
-.ps-about-page.ps-lab-page > .ps-about-hero {
-  text-align: center;
-}
-
-.ps-about-page.ps-lab-page > .ps-about-hero .ps-about-hero__copy {
-  text-align: center;
-}
-
-.ps-about-page.ps-lab-page > .ps-about-hero h1 {
-  max-width: min(16em, 42rem);
-  margin-inline: auto;
-  padding-inline: 0;
-  color: #2a3140;
-  -webkit-text-fill-color: #2a3140;
-  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
-  font-optical-sizing: auto;
-  font-size: clamp(2rem, 1.15rem + 2.9vw, 3.75rem);
-  font-weight: 350;
-  font-variation-settings: 'opsz' 48;
-  letter-spacing: -0.0225em;
-  line-height: 1.04;
-  text-align: center;
-  text-wrap: pretty;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-mix-blend-mode: normal;
-  mix-blend-mode: normal;
-}
-
-.ps-about-page.ps-lab-page > .ps-about-hero .ps-about-hero__lead {
-  max-width: 34rem;
-  margin-top: clamp(0.55rem, 0.4rem + 0.4vw, 0.85rem);
-  margin-inline: auto;
+/*
+  Research page. Hero and close match the homepage.
+  Section labels (Publications, External research) are orange kickers;
+  the readable section title is the h2 beneath (as on Training).
+*/
+.ps-lab-page .ps-lab-works__follow p,
+.ps-lab-page .ps-lab-works li p,
+.ps-lab-page .ps-lab-index__head > p:not(.ps-kicker),
+.ps-lab-page .ps-lab-index li p,
+.ps-lab-page .ps-lab-research__cols p,
+.ps-lab-page .ps-lab-work__copy > p:not(.ps-kicker),
+.ps-lab-page .ps-close__copy > p:not(.ps-kicker) {
+  margin: 0;
   color: #5a5c63;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
   letter-spacing: -0.005em;
   line-height: 1.45;
-  text-align: center;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ps-about-page.ps-lab-page h2 {
-  max-width: none;
-  margin: 0 0 var(--ps-space-4);
+/*
+  Section flavour titles match homepage Competitions → Custom forecasting challenges.
+  Hero and close keep the larger display face.
+*/
+.ps-lab-page .ps-lab-index__head h2,
+.ps-lab-page .ps-lab-work h2,
+.ps-lab-page .ps-lab-works li h3,
+.ps-lab-page .ps-lab-index ol h3 {
+  margin: 0;
   color: #121317;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-size: 1.375rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 28;
   letter-spacing: -0.00867em;
   line-height: 1.08;
-  text-align: center;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ps-about-page.ps-lab-page .ps-lab .ps-steps__head {
-  max-width: 48rem;
+.ps-lab-page .ps-lab-index__head h2,
+.ps-lab-page .ps-lab-work h2 {
+  margin-bottom: 0.4em;
+}
+
+/*
+  One orange eyebrow across the page, matching What we do / Competitions.
+  Section kickers use the tight 0.3em gap into the flavour title.
+*/
+.ps-lab-page p.ps-kicker {
+  margin: 0 0 0.3em;
+  color: var(--color-orange);
+  -webkit-text-fill-color: var(--color-orange);
+  font-family: var(--ps-font);
+  font-optical-sizing: auto;
+  font-size: clamp(1.125rem, 1.08rem + 0.35vw, 1.3125rem);
+  font-weight: 500;
+  font-variation-settings: normal;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Close keeps a little more air under the orange label. */
+.ps-lab-page .ps-close p.ps-kicker {
+  margin-bottom: 0.85rem;
+}
+
+/* Centred Research label + standfirst under the hero. */
+.ps-lab-intro {
+  padding: clamp(1.25rem, 0.9rem + 1vw, 2rem) 0 clamp(6rem, 4.5rem + 4vw, 9rem);
+}
+
+.ps-lab-intro .ps-contain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.ps-lab-page .ps-lab-intro p.ps-kicker {
+  margin: 0;
+  text-align: center;
+}
+
+.ps-lab-page .ps-lab-intro p:not(.ps-kicker) {
+  max-width: 46rem;
+  margin: 0;
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(1.1875rem, 1.12rem + 0.35vw, 1.3125rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Three field cards. Icon left of title, then body. */
+.ps-lab-works {
+  padding-top: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  padding-bottom: var(--ps-section);
+  overflow-x: clip;
+}
+
+.ps-lab-page .ps-lab-index__head > h2 + p,
+.ps-lab-page .ps-lab-work__copy > h2 + p {
+  margin-top: 0;
+  text-wrap: pretty;
+}
+
+.ps-lab-page .ps-lab-works__follow {
+  max-width: 40rem;
+  margin-top: clamp(2.75rem, 2rem + 2.5vw, 4.5rem);
   margin-inline: auto;
   text-align: center;
 }
 
-.ps-about-page.ps-lab-page .ps-lab .ps-steps__head h2 {
-  text-align: center;
+.ps-lab-page .ps-lab-works__follow p + p {
+  margin-top: 0.85rem;
 }
 
-.ps-about-page.ps-lab-page .ps-lab .ps-steps__head p:not(.ps-kicker),
-.ps-about-page.ps-lab-page .ps-close p:not(.ps-kicker) {
+.ps-lab-works ul {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ps-lab-works li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem 1rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.9rem;
+  border-radius: 20px;
+  background: var(--ps-band-surface);
+}
+
+.ps-lab-works__thumb {
+  position: relative;
+  overflow: hidden;
+  width: 4.25rem;
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  border-radius: 12px;
+}
+
+.ps-lab-works__thumb .ps-ph,
+.ps-lab-works__thumb .ps-lab-works__lottie,
+.ps-lab-research__frame .ps-ph,
+.ps-lab-work__frame .ps-ph {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.ps-lab-works__thumb .ps-ph {
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.ps-lab-works__thumb .ps-lab-works__lottie,
+.ps-lab-works__thumb .ps-asset-lottie__player,
+.ps-lab-works__thumb .ps-lab-works__lottie svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ps-lab-works__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.ps-lab-page .ps-lab-works li h3 {
+  min-width: 0;
+  font-size: 1.125rem;
+  letter-spacing: -0.006em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.ps-lab-page .ps-lab-works li p {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .ps-lab-works ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+    align-items: stretch;
+    /* Wider than the text rail, but capped well short of the page edges. */
+    box-sizing: border-box;
+    width: min(
+      calc(var(--layout-max-width) + clamp(2rem, 4vw, 4rem)),
+      calc(100vw - (2 * var(--layout-gutter)))
+    );
+    max-width: calc(100vw - (2 * var(--layout-gutter)));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .ps-lab-works li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.25rem 1.15rem 1.35rem;
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .ps-lab-works__thumb {
+    width: min(7.5rem, 55%);
+    border-radius: 16px;
+  }
+
+  .ps-lab-works__text {
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+/* Disciplines: research undertaken, in a full-width contents list. */
+.ps-lab-index {
+  padding-top: var(--ps-section);
+  padding-bottom: var(--ps-section);
+}
+
+.ps-lab-index__head {
+  margin-bottom: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+}
+
+.ps-lab-index ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid #e4e4e6;
+}
+
+.ps-lab-index li {
+  display: grid;
+  gap: 0.4rem 0;
+  align-items: baseline;
+  padding: 1.35rem 0;
+  border-top: 1px solid #e4e4e6;
+}
+
+.ps-lab-index li p {
+  margin-top: 0.35rem;
+}
+
+.ps-lab-index li h3 {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .ps-lab-index li {
+    grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+    gap: 0 clamp(1.75rem, 1.4rem + 1.5vw, 3rem);
+    align-items: start;
+    padding: 1.5rem 0;
+  }
+
+  .ps-lab-index li h3 {
+    grid-column: 1;
+  }
+
+  .ps-lab-index li p {
+    grid-column: 2;
+    margin-top: 0;
+  }
+}
+
+.home-cover .ps-lab-page .ps-close h2 {
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-weight: 350;
+  font-variation-settings: 'opsz' 28;
+}
+
+.home-cover .ps-lab-page .ps-close__copy > p:not(.ps-kicker) {
   max-width: 34rem;
   margin-inline: auto;
   color: #5a5c63;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
-  font-optical-sizing: auto;
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
-  font-weight: 350;
-  font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
-  line-height: 1.45;
-  text-align: center;
+  font-size: 1.0625rem;
   text-wrap: pretty;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-.ps-about-page.ps-lab-page .ps-close__copy {
-  margin-inline: auto;
-  text-align: center;
+/* Cream band: two columns of body copy, then one plate. */
+.ps-lab-research {
+  padding: var(--ps-section) 0;
+  background: var(--ps-band-surface);
 }
 
-.ps-about-page.ps-lab-page .ps-close .ps-btn {
-  border-color: rgb(20, 20, 20);
-  background: rgb(20, 20, 20);
-  color: #fff;
+.ps-lab-research h2 {
+  max-width: 18em;
 }
 
-.ps-about-page.ps-lab-page .ps-close .ps-btn:hover {
-  border-color: rgb(20, 20, 20);
-  background: rgb(40, 40, 40);
-  color: #fff;
+.ps-lab-research__cols {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
 }
 
-.ps-about-page.ps-lab-page p.ps-kicker {
-  color: var(--color-orange);
+.ps-lab-page .ps-lab-research__cols p + p {
+  margin-top: 0.85rem;
 }
 
-@media (max-width: 767px) {
-  .ps-about-page.ps-lab-page > .ps-about-hero h1 {
-    font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
+.ps-lab-research__frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: clamp(2rem, 1.4rem + 2vw, 3rem);
+  border-radius: 20px;
+}
+
+@media (min-width: 768px) {
+  .ps-lab-research__cols {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--layout-column-gap);
+    align-items: start;
   }
 
-  .ps-about-page.ps-lab-page > .ps-about-hero .ps-about-hero__lead {
-    max-width: 28rem;
-    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  .ps-lab-research__frame {
+    aspect-ratio: 2 / 1;
+    border-radius: 24px;
   }
 }
 
-/* Override the older lab steps h2 weight so Anthropic styles win. */
-.ps.ps-lab-page .ps-steps h2 {
-  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
-  font-weight: 350;
-  letter-spacing: -0.00867em;
-  line-height: 1.08;
+/* External research. */
+.ps-lab-work {
+  padding: var(--ps-section) 0;
+  background: var(--ps-band-surface);
+}
+
+.ps-lab-split {
+  display: grid;
+  gap: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  align-items: center;
+}
+
+.ps-lab-work__copy {
+  min-width: 0;
+}
+
+.ps-lab-split__frame {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.ps-lab-split__frame .ps-ph,
+.ps-lab-split__frame .ps-lab-split__lottie,
+.ps-lab-split__frame .ps-lab-segmented__player,
+.ps-lab-split__frame .ps-asset-lottie__player,
+.ps-lab-split__frame .ps-lab-split__lottie svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ps-lab-split__frame .ps-lab-split__lottie {
+  position: absolute;
+  inset: 0;
+}
+
+@media (min-width: 768px) {
+  .ps-lab-split {
+    grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr);
+    gap: clamp(2rem, 1.5rem + 2vw, 4rem);
+  }
+
+  .ps-lab-split__frame {
+    border-radius: 24px;
+  }
+}
+
+.ps-lab-page .ps-lab-work__copy > h2 ~ p + p {
+  margin-top: 0.85rem;
+}
+
+.ps-lab-page .ps-lab-work__copy > p.ps-kicker + h2,
+.ps-lab-page .ps-lab-index__head > p.ps-kicker + h2,
+.ps-lab-page .ps-close p.ps-kicker + h2 {
+  margin-top: 0;
 }
 
