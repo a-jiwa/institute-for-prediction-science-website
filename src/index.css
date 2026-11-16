@@ -8037,7 +8037,7 @@ html[data-tone] .about-statement p {
 
 /*
   Home story bands: full-width rounded cards (same surface as What we do),
-  edge to edge inside the layout column (rose debug rails).
+  edge to edge inside the layout column.
 */
 .home-cover .ps-about-page > .ps-story {
   background: transparent;
@@ -8079,19 +8079,6 @@ html[data-tone] .about-statement p {
   border-radius: 20px;
   background-color: var(--ps-band-surface);
   overflow: hidden;
-  /* Coloured layout rails for the story split. */
-  outline: 1px solid #fb7185;
-  outline-offset: -1px;
-}
-
-.home-cover .ps-about-page > .ps-story .ps-story__copy {
-  outline: 1px solid #38bdf8;
-  outline-offset: -1px;
-}
-
-.home-cover .ps-about-page > .ps-story .ps-story__media {
-  outline: 1px solid #a3e635;
-  outline-offset: -1px;
 }
 
 @media (min-width: 768px) {
