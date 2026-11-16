@@ -1,5 +1,4 @@
 import { CONTACT_EMAIL } from '../components/icons/Logo'
-import { LabsHeroShapes } from '../components/blocks/LabsHeroShapes'
 import { SmartLink } from '../components/ui/SmartLink'
 import { assetUrl } from '../utils/assetUrl'
 
@@ -76,7 +75,6 @@ export function TrainingPage() {
   return (
     <div className="ps ps-about-page ps-training-page">
       <section className="ps-about-hero ps-about-hero--with-lead">
-        <LabsHeroShapes className="ps-about-hero__shapes" />
         <div className="ps-about-hero__copy">
           <p className="ps-kicker">Forecasting training</p>
           <h1>Learn to make better predictions</h1>
@@ -185,7 +183,6 @@ export function TrainingPage() {
       </section>
 
       <section className="ps-close" id="ps-close">
-        <LabsHeroShapes className="ps-close__shapes" />
         <div className="ps-close__copy">
           <p className="ps-kicker">Get started</p>
           <h2>Start improving your forecasts</h2>

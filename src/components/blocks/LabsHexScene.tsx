@@ -287,16 +287,16 @@ export function LabsHexScene({ className = 'ps-labs-hex' }: LabsHexSceneProps) {
     }
 
     const pos = {
-      hex: { x: HOME.hex.x, y: HOME.hex.y },
-      triangle: { x: HOME.triangle.x, y: HOME.triangle.y },
+      hex: { x: 0, y: 0 },
+      triangle: { x: 0, y: 0 },
       back: {
-        x: BACK_SETTLED.x + HOME.back.x,
-        y: BACK_SETTLED.y + HOME.back.y,
+        x: BACK_SETTLED.x,
+        y: BACK_SETTLED.y,
       },
-      circles: HOME.circles.map((home) => ({ x: home.x, y: home.y })),
+      circles: HOME.circles.map(() => ({ x: 0, y: 0 })),
     }
 
-    let settleCurrent = measureSettle()
+    let settleCurrent = 1
     let choreoTime = 0
     let raf = 0
     let last = performance.now()
@@ -307,6 +307,7 @@ export function LabsHexScene({ className = 'ps-labs-hex' }: LabsHexSceneProps) {
     placeHex(pos.hex.x, pos.hex.y)
     placeTri(pos.triangle.x, pos.triangle.y)
     placeTriSpin(0)
+    root.style.setProperty('--hex-settle', '1')
     for (let i = 0; i < CIRCLES.length; i++) {
       placeCircleWrap(i, pos.circles[i].x, pos.circles[i].y)
       placeCircleGlyph(i, startCorners[i].x, startCorners[i].y)

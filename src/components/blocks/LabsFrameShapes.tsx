@@ -413,20 +413,21 @@ export function LabsFrameShapes({
     const measureSettle = () => measureCardArtSettle(root)
 
     const pos = {
-      top: { x: SETTLED.top.x + HOME.top.x, y: SETTLED.top.y + HOME.top.y },
-      bottom: { x: SETTLED.bottom.x + HOME.bottom.x, y: SETTLED.bottom.y + HOME.bottom.y },
-      centre: { x: SETTLED.centre.x + HOME.centre.x, y: SETTLED.centre.y + HOME.centre.y },
+      top: { x: SETTLED.top.x, y: SETTLED.top.y },
+      bottom: { x: SETTLED.bottom.x, y: SETTLED.bottom.y },
+      centre: { x: SETTLED.centre.x, y: SETTLED.centre.y },
       eyeBack: {
-        x: SETTLED.centre.x + HOME.eyeBack.x,
-        y: SETTLED.centre.y + HOME.eyeBack.y,
+        x: SETTLED.centre.x,
+        y: SETTLED.centre.y,
       },
       ornaments: ORNAMENTS.map((orn) => ({
-        x: SETTLED.bottom.x + orn.offsetX + orn.home.x,
-        y: SETTLED.bottom.y + orn.offsetY + orn.home.y,
+        x: SETTLED.bottom.x + orn.offsetX,
+        y: SETTLED.bottom.y + orn.offsetY,
       })),
     }
 
-    let settleCurrent = measureSettle()
+    let settleCurrent = 1
+    placeSettled()
     let raf = 0
     let last = performance.now()
     let visible = true

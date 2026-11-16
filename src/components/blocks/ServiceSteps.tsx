@@ -1,11 +1,10 @@
 import { SmartLink } from '../ui/SmartLink'
 import { assetUrl } from '../../utils/assetUrl'
 import { SERVICE_STEPS } from './defaults'
+import { AssetLottie } from './AssetLottie'
 import { LabsBalanceScene } from './LabsBalanceScene'
 import { LabsFrameShapes } from './LabsFrameShapes'
 import { LabsHexScene } from './LabsHexScene'
-import { LABS_SHAPE_COLORS_WARM } from './labsBlend'
-import { LabsHeroShapes } from './LabsHeroShapes'
 import { Placeholder } from './Placeholder'
 
 type ArtLayer = {
@@ -23,7 +22,8 @@ type Step = {
   scheme?: 'blue' | 'green' | 'red'
   tone?: string
   /** Labs media art instead of PNG layers. */
-  art?: 'labs-frame' | 'balance' | 'hex'
+  art?: 'labs-frame' | 'balance' | 'hex' | 'lottie'
+  lottieSrc?: string
   layers?: ArtLayer[]
   cta?: { label: string; href: string }
 }
@@ -32,8 +32,6 @@ type ServiceStepsProps = {
   kicker?: string
   title?: string
   items?: Step[]
-  /** Floating Labs shapes behind the step copy (intersection blend). */
-  shapes?: boolean
 }
 
 function StepMedia({ step }: { step: Step }) {
@@ -61,6 +59,14 @@ function StepMedia({ step }: { step: Step }) {
     )
   }
 
+  if (step.art === 'lottie' && step.lottieSrc) {
+    return (
+      <div aria-hidden="true" className="ps-step__media ps-step__media--lottie" data-scheme={step.scheme}>
+        <AssetLottie className="ps-step__lottie" src={assetUrl(step.lottieSrc)} />
+      </div>
+    )
+  }
+
   if (step.layers?.length && step.scheme) {
     return (
       <div
@@ -80,43 +86,15 @@ function StepMedia({ step }: { step: Step }) {
   return <Placeholder frame="shot" label="Image" src={step.src ?? ''} />
 }
 
-/** Dual label: base ink + wash ink clipped to the Labs yellow circle. */
-function WashType({
-  as: Tag,
-  className,
-  text,
-}: {
-  as: 'p' | 'h3'
-  className?: string
-  text: string
-}) {
-  return (
-    <Tag className={['ps-wash-type', className].filter(Boolean).join(' ')}>
-      <span className="ps-wash-type__base">{text}</span>
-      <span aria-hidden="true" className="ps-wash-type__wash">
-        {text}
-      </span>
-    </Tag>
-  )
-}
-
 export function ServiceSteps({
   kicker = SERVICE_STEPS.kicker,
   title = SERVICE_STEPS.title,
   items = SERVICE_STEPS.items,
-  shapes = false,
 }: ServiceStepsProps) {
   const showHead = Boolean(kicker || title)
 
   return (
-    <section className={`ps-steps${shapes ? ' ps-steps--shapes' : ''}`}>
-      {shapes ? (
-        <LabsHeroShapes
-          className="ps-steps__shapes"
-          colors={LABS_SHAPE_COLORS_WARM}
-          only={['hexagon', 'square']}
-        />
-      ) : null}
+    <section className="ps-steps">
       <div className="ps-contain">
         {showHead ? (
           <div className="ps-steps__head">
@@ -133,8 +111,8 @@ export function ServiceSteps({
           >
             {step.imageFirst ? <StepMedia step={step} /> : null}
             <div className="ps-step__copy">
-              <WashType as="p" className="ps-kicker" text={step.kicker} />
-              <WashType as="h3" text={step.title} />
+              <p className="ps-kicker">{step.kicker}</p>
+              <h3>{step.title}</h3>
               {(typeof step.body === 'string' ? [step.body] : step.body).map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}

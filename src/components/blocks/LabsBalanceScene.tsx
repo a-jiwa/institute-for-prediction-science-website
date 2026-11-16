@@ -308,19 +308,20 @@ export function LabsBalanceScene({ className = 'ps-labs-balance' }: LabsBalanceS
     }
 
     const pos = {
-      semi: { x: HOME.semi.x, y: HOME.semi.y },
-      ball: { x: HOME.ball.x, y: HOME.ball.y },
-      triangle: { x: HOME.triangle.x, y: HOME.triangle.y },
+      semi: { x: 0, y: 0 },
+      ball: { x: 0, y: 0 },
+      triangle: { x: 0, y: 0 },
       back: {
-        x: BACK_SETTLED.x + HOME.back.x,
-        y: BACK_SETTLED.y + HOME.back.y,
+        x: BACK_SETTLED.x,
+        y: BACK_SETTLED.y,
       },
     }
 
-    let settleCurrent = measureSettle()
+    let settleCurrent = 1
     paintRest()
     placeBack(pos.back.x, pos.back.y)
     placeWraps(pos.semi, pos.ball, pos.triangle)
+    root.style.setProperty('--balance-settle', '1')
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)

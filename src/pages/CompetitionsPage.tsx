@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { CONTACT_EMAIL } from '../components/icons/Logo'
 import { DemoStage, type DemoStageVariant } from '../components/blocks/DemoStage'
-import { LabsHeroShapes } from '../components/blocks/LabsHeroShapes'
+import { DotsDayTimeline } from '../components/blocks/DotsDayTimeline'
 import { assetUrl } from '../utils/assetUrl'
 
 const CTA_LABEL = 'Request a free demo'
@@ -104,11 +104,6 @@ export function CompetitionsPage() {
     <div className="ps ps-about-page ps-competitions-page">
       {/* 1. Hero — About-style title band; lead + CTA sit under the title */}
       <section className="ps-about-hero ps-about-hero--with-lead">
-        <LabsHeroShapes
-          className="ps-about-hero__shapes"
-          homes={[{ x: 0.88, y: 0.3 }]}
-          only={['circle']}
-        />
         <div className="ps-about-hero__copy">
           <p className="ps-kicker">Custom competitions</p>
           <h1>Bring the real world into your teaching</h1>
@@ -167,6 +162,9 @@ export function CompetitionsPage() {
           </ul>
         </div>
       </section>
+
+      {/* Day timeline — ChatGPT DotsDay replica */}
+      <DotsDayTimeline />
 
       {/* 3. How it works — make the activity easy to understand */}
       <section className="ps-steps">
@@ -360,7 +358,6 @@ export function CompetitionsPage() {
 
       {/* 7. Final CTA — same contact band as home */}
       <section className="ps-close" id="ps-close">
-        <LabsHeroShapes className="ps-close__shapes" />
         <div className="ps-close__copy">
           <p className="ps-kicker">Get started</p>
           <h2>What could your students explore?</h2>

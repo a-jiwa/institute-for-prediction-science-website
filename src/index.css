@@ -22,6 +22,20 @@
 /* Layout queries stay on the grid edges: ≤767 mobile, ≤1023 stacked, ≥1024 columns.
    min-width: 1024px is hover only. Spacing, type, and header height live on html.theme-ips. */
 
+/*
+  Narrower body content rail (more side margin). Header/footer keep the
+  root gutter/max-width via .container outside <main>.
+*/
+main {
+  --layout-max-width: max(56rem, min(72vw, 72rem));
+}
+
+@media (min-width: 1280px) {
+  main {
+    --layout-max-width: max(56rem, min(68vw, 70rem));
+  }
+}
+
 /* Shared content column: centered max-width + fluid gutters. */
 .layout-rail,
 .container {
@@ -5358,7 +5372,7 @@ html[data-tone] .about-statement p {
   .ps-lab .ps-steps__head {
     margin-right: 0;
     margin-left: 0;
-    text-align: left;
+    text-align: center;
   }
 }
 
@@ -5471,14 +5485,16 @@ html[data-tone] .about-statement p {
   }
 }
 
-/* Service body matches story paragraphs: weight 400, open tracking, 1.45 leading. */
+/* Service body matches the landing hero lead. */
 .ps-steps:not(.ps-steps--white) .ps-step p:not(.ps-kicker):not(.ps-step__lead) {
   margin-bottom: var(--ps-space-2);
-  color: #45474d;
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
-  font-weight: 400;
-  letter-spacing: 0.01188em;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
   line-height: 1.45;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
@@ -5574,6 +5590,15 @@ html[data-tone] .about-statement p {
 .ps-step .ps-btn {
   /* Clear of the copy stack without floating the CTA too far away. */
   margin-top: var(--ps-space-4);
+  border-color: rgb(20, 20, 20);
+  background: rgb(20, 20, 20);
+  color: #fff;
+}
+
+.ps-step .ps-btn:hover {
+  border-color: rgb(20, 20, 20);
+  background: rgb(40, 40, 40);
+  color: #fff;
 }
 
 /* Step bullets: disc, outside */
@@ -5825,8 +5850,9 @@ html[data-tone] .about-statement p {
     align-items: stretch;
     justify-items: stretch;
     padding: 1.5rem;
-    border: 2px solid var(--ps-step-tone, #e4e4e6);
+    border: 1px solid var(--ps-step-tone, #e4e4e6);
     border-radius: 16px;
+    background: #fff;
     text-align: left;
   }
 
@@ -5836,19 +5862,49 @@ html[data-tone] .about-statement p {
     border-radius: 0;
   }
 
-  .ps-steps .ps-step__media,
+  .ps-steps .ps-step__media:not(.ps-step__media--lottie),
   .ps-steps .ps-step > .ps-ph,
   .ps-steps .ps-step > .ps-app-stage {
     display: none;
+  }
+
+  .ps-steps .ps-step__media--lottie {
+    order: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.25rem;
+    max-width: 3.25rem;
+    aspect-ratio: 1;
+    margin: 0 auto 0.65rem;
+    padding: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .ps-steps .ps-step__media--lottie .ps-step__lottie {
+    width: 100%;
+    height: 100%;
   }
 
   .ps-steps .ps-step__copy {
     min-width: 0;
   }
 
+  .ps-steps .ps-step p.ps-kicker {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
   .ps-steps .ps-step h3,
   .ps-steps .ps-step p {
     max-width: none;
+  }
+
+  .ps-steps .ps-step .ps-btn {
+    display: flex;
+    width: fit-content;
+    margin-inline: auto;
   }
 
   .ps-steps .ps-step + .ps-step {
@@ -5863,8 +5919,9 @@ html[data-tone] .about-statement p {
     align-items: stretch;
     justify-items: stretch;
     padding: 1.5rem;
-    border: 2px solid var(--ps-step-tone, #e4e4e6);
+    border: 1px solid var(--ps-step-tone, #e4e4e6);
     border-radius: 16px;
+    background: #fff;
     text-align: left;
   }
 
@@ -5874,19 +5931,49 @@ html[data-tone] .about-statement p {
     border-radius: 0;
   }
 
-  .ps-steps .ps-step__media,
+  .ps-steps .ps-step__media:not(.ps-step__media--lottie),
   .ps-steps .ps-step > .ps-ph,
   .ps-steps .ps-step > .ps-app-stage {
     display: none;
+  }
+
+  .ps-steps .ps-step__media--lottie {
+    order: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.25rem;
+    max-width: 3.25rem;
+    aspect-ratio: 1;
+    margin: 0 auto 0.65rem;
+    padding: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .ps-steps .ps-step__media--lottie .ps-step__lottie {
+    width: 100%;
+    height: 100%;
   }
 
   .ps-steps .ps-step__copy {
     min-width: 0;
   }
 
+  .ps-steps .ps-step p.ps-kicker {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
   .ps-steps .ps-step h3,
   .ps-steps .ps-step p {
     max-width: none;
+  }
+
+  .ps-steps .ps-step .ps-btn {
+    display: flex;
+    width: fit-content;
+    margin-inline: auto;
   }
 
   .ps-steps .ps-step + .ps-step {
@@ -7172,6 +7259,19 @@ html[data-tone] .about-statement p {
   scroll-margin-top: calc(var(--layout-header-height) + env(safe-area-inset-top, 0px));
 }
 
+/* What we do → service steps band */
+.ps-services-band {
+  background-color: rgb(249, 248, 244);
+}
+
+.ps-services-band .ps-steps {
+  background: transparent;
+}
+
+.ps-services-band > #services.ps-about-hero {
+  background-color: transparent;
+}
+
 /* Kept for any remaining plain heroes. */
 .ps-about-hero--plain {
   background: #fff;
@@ -7268,6 +7368,28 @@ html[data-tone] .about-statement p {
   background: transparent;
   border-radius: 0;
   overflow: visible;
+}
+
+.ps-step__media--lottie {
+  aspect-ratio: 1;
+  width: min(100%, 12rem);
+  max-width: 12rem;
+  margin-inline: auto;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.ps-step__lottie {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ps-asset-lottie__player {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .ps-step__hex,
@@ -7398,15 +7520,11 @@ html[data-tone] .about-statement p {
 }
 
 /*
-  Services kicker: same type as Competitions / Training / Labs.
-  While the yellow circle crosses, it uses difference like the title —
-  fill is the preimage of step orange on wash yellow
-  (|#135e5a − #fcc934| = #e96b26). Once the band is covered, lock to the
-  solid step orange so the settled label matches those kickers exactly.
+  Services kicker: same orange as Competitions / Training / Labs step kickers.
 */
 #services.ps-about-hero p.ps-kicker {
-  color: #135e5a;
-  -webkit-text-fill-color: #135e5a;
+  color: var(--color-orange);
+  -webkit-text-fill-color: var(--color-orange);
   font-family: var(--ps-font);
   font-optical-sizing: auto;
   font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
@@ -7416,13 +7534,6 @@ html[data-tone] .about-statement p {
   text-transform: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-mix-blend-mode: difference;
-  mix-blend-mode: difference;
-}
-
-.ps-wash-region[data-wash-title='on'] #services.ps-about-hero p.ps-kicker {
-  color: var(--color-orange);
-  -webkit-text-fill-color: var(--color-orange);
   -webkit-mix-blend-mode: normal;
   mix-blend-mode: normal;
 }
@@ -7477,84 +7588,127 @@ html[data-tone] .about-statement p {
   still fits the same first line. The 42rem cap is unchanged, so large
   screens keep the same column.
 */
+#about.ps-about-hero {
+  min-height: clamp(28rem, 22rem + 14vw, 36rem);
+  background-color: transparent;
+}
+
+#about .ps-about-hero__layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+#about .ps-about-hero__copy {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+#about .ps-about-hero__media {
+  order: -1;
+  flex: 0 0 auto;
+  width: min(100%, 20rem);
+  aspect-ratio: 1;
+}
+
+#about .ps-about-hero__lottie {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 #about.ps-about-hero h1 {
   max-width: min(16em, 42rem);
   padding-inline: 0.2em;
-  color: #edece8;
-  -webkit-text-fill-color: #edece8;
-  font-family: var(--ps-font);
+  color: #2a3140;
+  -webkit-text-fill-color: #2a3140;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
   font-size: clamp(2rem, 1.15rem + 2.9vw, 3.75rem);
-  font-weight: 500;
+  font-weight: 350;
+  font-variation-settings: 'opsz' 48;
   letter-spacing: -0.0225em;
   line-height: 1.04;
   text-align: center;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
 }
 
 #about.ps-about-hero h1 .ps-about-hero__title-line {
   display: block;
-  text-wrap: pretty;
 }
 
-/* One voice with the rest of the line — same ink and weight. */
-#about.ps-about-hero h1 .ps-about-hero__title-em {
-  color: inherit;
-  -webkit-text-fill-color: inherit;
-  font-weight: inherit;
-}
-
-#about.ps-about-hero {
-  /* Longer title needs a taller band than the shared hero floor. */
-  min-height: clamp(28rem, 22rem + 14vw, 36rem);
-}
-
-/*
-  Home hero lead.
-  Google Sans Flex, weight 500, optical sizing, gray #45474d, pretty wrap.
-  Below 1280px that style is 26px-scale: −0.00867em / 1.08.
-  At 1280px and up it steps to 32px: −0.017em / 1.06.
-  Measure, centering, and the gap under the title stay put.
-*/
 #about.ps-about-hero--with-lead .ps-about-hero__lead {
-  max-width: 42rem;
-  margin-top: clamp(3.5rem, 2.75rem + 3vw, 5.5rem);
-  color: #45474d;
-  font-family: var(--ps-font);
+  max-width: 34rem;
+  margin-top: clamp(0.55rem, 0.4rem + 0.4vw, 0.85rem);
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.625rem, 1.25rem + 0.85vw, 2rem);
-  font-weight: 500;
-  letter-spacing: -0.00867em;
-  line-height: 1.08;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
   text-align: center;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
+  #about.ps-about-hero {
+    align-items: stretch;
+    text-align: left;
+  }
+
+  #about .ps-about-hero__layout {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(2rem, 1.5rem + 3vw, 4.5rem);
+  }
+
+  #about .ps-about-hero__copy {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #about .ps-about-hero__media {
+    order: 0;
+    width: min(42%, 26rem);
+  }
+
+  #about.ps-about-hero h1 {
+    margin-inline: 0;
+    padding-inline: 0;
+    text-align: left;
+  }
+
   #about.ps-about-hero--with-lead .ps-about-hero__lead {
-    letter-spacing: -0.017em;
-    line-height: 1.06;
+    margin-inline: 0;
+    text-align: left;
   }
 }
 
 @media (max-width: 767px) {
-  /*
-    Mobile home hero: one shared measure for kicker / title / lead.
-    Drop the extra per-line side margins so text isn’t pinched inward;
-    keep a modest copy gutter for breathing room without a narrow column.
-  */
   #about.ps-about-hero {
-    /* Fill most of the first screen on mobile; content stays centered in the band. */
     min-height: 80svh;
     padding-top: clamp(3.75rem, 3rem + 4vw, 5rem);
     padding-bottom: clamp(3.25rem, 2.5rem + 4vw, 4.5rem);
   }
 
-  #about.ps-about-hero .ps-about-hero__copy {
+  #about .ps-about-hero__layout {
     padding-inline: 1.25rem;
   }
 
@@ -7565,19 +7719,14 @@ html[data-tone] .about-statement p {
     font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
   }
 
-  #about.ps-about-hero .ps-kicker {
-    margin-bottom: 1rem;
-  }
-
   #about.ps-about-hero--with-lead .ps-about-hero__lead {
-    max-width: none;
-    margin-top: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
-    margin-inline: 0;
+    max-width: 28rem;
+    margin-top: clamp(0.45rem, 0.35rem + 0.3vw, 0.7rem);
+    margin-inline: auto;
     padding-inline: 0;
-    /* Subtitle size under 1280px, kept a step under the title. */
-    font-size: clamp(1.25rem, 1.1rem + 1.1vw, 1.625rem);
-    letter-spacing: -0.00867em;
-    line-height: 1.08;
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    letter-spacing: -0.005em;
+    line-height: 1.45;
   }
 }
 
@@ -7588,16 +7737,13 @@ html[data-tone] .about-statement p {
 }
 
 /*
-  Services hero: difference blend like the mission title.
-  Authored fill is the preimage of #202020 under difference vs wash yellow
-  (#fcc934): |#dce954 − #fcc934| = #202020. Shapes behind still tint the letters.
-  Type matches the home mission title: weight 500, −0.0225em, 1.04 leading.
+  Services hero: same ink as the home mission title on white.
+  Type matches weight 500, −0.0225em, 1.04 leading.
   Balance keeps “Unlocking the power / of forecasting” on two even lines.
-  Size and the 11.5em measure stay on the shared hero rule.
 */
 #services.ps-about-hero h1 {
-  color: #dce954;
-  -webkit-text-fill-color: #dce954;
+  color: #121317;
+  -webkit-text-fill-color: #121317;
   font-optical-sizing: auto;
   font-weight: 500;
   letter-spacing: -0.0225em;
@@ -7605,8 +7751,8 @@ html[data-tone] .about-statement p {
   text-wrap: balance;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-mix-blend-mode: difference;
-  mix-blend-mode: difference;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
 }
 
 /*
@@ -7934,6 +8080,19 @@ html[data-tone] .about-statement p {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/*
+  Landing page section titles share the hero display face (Anthropic Serif),
+  keeping the existing size / weight / colour / tracking.
+*/
+.home-cover .ps-about-page .ps-story h2,
+.home-cover .ps-about-page .ps-steps .ps-step h3,
+.home-cover .ps-about-page .ps-close h2,
+.home-cover .ps-about-page #services.ps-about-hero h1 {
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-weight: 350;
+  font-variation-settings: 'opsz' 28;
+}
+
 @media (min-width: 1280px) {
   .ps-story h2 {
     letter-spacing: -0.017em;
@@ -7942,21 +8101,21 @@ html[data-tone] .about-statement p {
 }
 
 .ps-story__body {
-  max-width: 60ch;
+  max-width: 34rem;
 }
 
 /*
-  Story paragraphs: weight 400, #45474d,
-  +0.01188em tracking, 1.45 leading. Size and the 60ch measure stay.
+  Story body matches the landing hero lead.
 */
 .ps-story__body p {
   margin: 0 0 var(--ps-space-4);
-  color: #45474d;
-  font-family: var(--ps-font);
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
-  font-weight: 400;
-  letter-spacing: 0.01188em;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
   line-height: 1.45;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
@@ -8010,6 +8169,28 @@ html[data-tone] .about-statement p {
   aspect-ratio: 3 / 2;
 }
 
+.ps-story__media--square {
+  aspect-ratio: 1;
+  width: min(100%, 12rem);
+  max-width: 12rem;
+  min-height: 0;
+  margin-inline: auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Stack by default — avoid a cramped mid-width two-column. */
+.ps-story__grid:has(.ps-story__media--square) {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .ps-story__grid:has(.ps-story__media--square) {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 1.357143rem + 0.714286vw, 2rem);
+  }
+}
+
 .ps-story__media--16x9 {
   aspect-ratio: 16 / 9;
 }
@@ -8021,11 +8202,19 @@ html[data-tone] .about-statement p {
 }
 
 .ps-story__media img,
+.ps-story__media .ps-story__lottie,
 .ps-story__media .story-scroll-frame,
 .ps-story__media .story-scroll-frame svg {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.ps-story__media--square .ps-story__lottie {
+  width: 100%;
+  height: 100%;
+  margin-inline: auto;
+  aspect-ratio: 1;
 }
 
 .ps-story__media img {
@@ -8036,15 +8225,45 @@ html[data-tone] .about-statement p {
   overflow: visible;
 }
 
-@media (max-width: 800px) {
-  .ps-story__grid--media-start .ps-story__media {
+@media (max-width: 1023px) {
+  .ps-story__grid--media-start .ps-story__media:not(.ps-story__media--square) {
     order: 0;
+  }
+
+  .ps-story__grid:has(.ps-story__media--square) {
+    gap: 0.85rem;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .ps-story__grid:has(.ps-story__media--square) .ps-story__copy {
+    text-align: center;
+  }
+
+  .ps-story__grid:has(.ps-story__media--square) .ps-story__body {
+    margin-inline: auto;
+  }
+
+  .ps-story__media--square {
+    order: -1;
+    width: 5.5rem;
+    max-width: 5.5rem;
+    min-height: 0;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .ps-story__media--square .ps-story__lottie {
+    width: 100%;
+    height: 100%;
+    margin-inline: auto;
   }
 }
 
 /* Competitions: content bands white; hero keeps tone fill for Labs blend. */
 .ps-about-page.ps-competitions-page .ps-intro,
 .ps-about-page.ps-competitions-page .ps-services,
+.ps-about-page.ps-competitions-page .ps-dots-day,
 .ps-about-page.ps-competitions-page .ps-steps,
 .ps-about-page.ps-competitions-page .ps-subjects,
 .ps-about-page.ps-competitions-page .ps-band,
@@ -8166,7 +8385,7 @@ html[data-tone] .about-statement p {
   text-align: inherit;
 }
 
-/* Lab: same Labs hero/close pattern as competitions/training; content band white. */
+/* Lab: content band white; type matches landing (Anthropic Serif). */
 .ps-about-page.ps-lab-page .ps-steps.ps-lab {
   background: #fff;
 }
@@ -8177,15 +8396,135 @@ html[data-tone] .about-statement p {
   padding-top: calc(var(--ps-section) * 0.55);
 }
 
-.ps-about-page.ps-lab-page h2 {
-  color: #191918;
+.ps-about-page.ps-lab-page > .ps-about-hero {
+  text-align: center;
 }
 
-.ps-about-page.ps-lab-page .ps-lab .ps-steps__head p:not(.ps-kicker) {
-  color: #3d3429;
+.ps-about-page.ps-lab-page > .ps-about-hero .ps-about-hero__copy {
+  text-align: center;
+}
+
+.ps-about-page.ps-lab-page > .ps-about-hero h1 {
+  max-width: min(16em, 42rem);
+  margin-inline: auto;
+  padding-inline: 0;
+  color: #2a3140;
+  -webkit-text-fill-color: #2a3140;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(2rem, 1.15rem + 2.9vw, 3.75rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 48;
+  letter-spacing: -0.0225em;
+  line-height: 1.04;
+  text-align: center;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-mix-blend-mode: normal;
+  mix-blend-mode: normal;
+}
+
+.ps-about-page.ps-lab-page > .ps-about-hero .ps-about-hero__lead {
+  max-width: 34rem;
+  margin-top: clamp(0.55rem, 0.4rem + 0.4vw, 0.85rem);
+  margin-inline: auto;
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ps-about-page.ps-lab-page h2 {
+  max-width: none;
+  margin: 0 0 var(--ps-space-4);
+  color: #121317;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 28;
+  letter-spacing: -0.00867em;
+  line-height: 1.08;
+  text-align: center;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ps-about-page.ps-lab-page .ps-lab .ps-steps__head {
+  max-width: 48rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.ps-about-page.ps-lab-page .ps-lab .ps-steps__head h2 {
+  text-align: center;
+}
+
+.ps-about-page.ps-lab-page .ps-lab .ps-steps__head p:not(.ps-kicker),
+.ps-about-page.ps-lab-page .ps-close p:not(.ps-kicker) {
+  max-width: 34rem;
+  margin-inline: auto;
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ps-about-page.ps-lab-page .ps-close__copy {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.ps-about-page.ps-lab-page .ps-close .ps-btn {
+  border-color: rgb(20, 20, 20);
+  background: rgb(20, 20, 20);
+  color: #fff;
+}
+
+.ps-about-page.ps-lab-page .ps-close .ps-btn:hover {
+  border-color: rgb(20, 20, 20);
+  background: rgb(40, 40, 40);
+  color: #fff;
 }
 
 .ps-about-page.ps-lab-page p.ps-kicker {
   color: var(--color-orange);
+}
+
+@media (max-width: 767px) {
+  .ps-about-page.ps-lab-page > .ps-about-hero h1 {
+    font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
+  }
+
+  .ps-about-page.ps-lab-page > .ps-about-hero .ps-about-hero__lead {
+    max-width: 28rem;
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  }
+}
+
+/* Override the older lab steps h2 weight so Anthropic styles win. */
+.ps.ps-lab-page .ps-steps h2 {
+  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-weight: 350;
+  letter-spacing: -0.00867em;
+  line-height: 1.08;
 }
 

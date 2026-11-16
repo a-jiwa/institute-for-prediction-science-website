@@ -134,10 +134,11 @@ export function useLabsFloatIn(
     }
 
     const pieces = cards.map((_, i) => STAT_FLOAT[i % STAT_FLOAT.length])
-    const pos = pieces.map((piece) => ({
-      x: piece.home.x,
-      y: piece.home.y,
-      angle: piece.home.angle,
+    // Start settled — no scroll float-in into the final layout slot.
+    const pos = pieces.map(() => ({
+      x: 0,
+      y: 0,
+      angle: 0,
     }))
     const bodies = cards.map(
       (el) => el.querySelector<HTMLElement>('.ps-reach__card-body') ?? el,
@@ -186,7 +187,7 @@ export function useLabsFloatIn(
       return smoothstep(clamp01((settle - delay) / Math.max(0.001, 1 - delay)))
     }
 
-    const atHome = pieces.map(() => false)
+    const atHome = pieces.map(() => true)
     const textT = pieces.map(() => 0)
     const countT = pieces.map(() => 0)
     const countStarted = pieces.map(() => false)
@@ -233,13 +234,13 @@ export function useLabsFloatIn(
       })
     }
 
-    paint(textT, countT, false)
+    paint(textT, countT, true)
 
     let raf = 0
     let last = performance.now()
     const t0 = last
     let visible = true
-    let settleCurrent = measureStatSettle(root)
+    let settleCurrent = 1
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)

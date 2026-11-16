@@ -20,6 +20,15 @@
   font-display: block;
 }
 
+/* Display serif for home hero headline (Anthropic Serif Variable). */
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('/assets/fonts/AnthropicSerifVariable.woff2') format('woff2');
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: block;
+}
+
 /* Serif is Martina Plantijn (Klim). */
 @font-face {
   font-family: 'Serif';

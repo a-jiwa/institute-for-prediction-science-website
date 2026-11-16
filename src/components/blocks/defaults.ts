@@ -16,8 +16,8 @@ export const SERVICE_STEPS = {
       ],
       imageFirst: false,
       scheme: 'blue' as const,
-      /** Floating Labs frame circles (no coloured media plate). */
-      art: 'labs-frame' as const,
+      art: 'lottie' as const,
+      lottieSrc: '/assets/lottie/competitions.json',
       cta: {
         label: 'Learn more',
         href: '/services/competitions',
@@ -34,7 +34,8 @@ export const SERVICE_STEPS = {
       ],
       imageFirst: true,
       scheme: 'green' as const,
-      art: 'balance' as const,
+      art: 'lottie' as const,
+      lottieSrc: '/assets/lottie/training.json',
       cta: {
         label: 'Learn more',
         href: '/services/training',
@@ -51,8 +52,8 @@ export const SERVICE_STEPS = {
       ],
       imageFirst: false,
       scheme: 'red' as const,
-      /** Hex + triangle composition from frame-hex.svg. */
-      art: 'hex' as const,
+      art: 'lottie' as const,
+      lottieSrc: '/assets/lottie/labs.json',
       cta: {
         label: 'Learn more',
         href: '/services/lab',
