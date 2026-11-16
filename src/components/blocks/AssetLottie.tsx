@@ -4,6 +4,7 @@ import { Lottie, LottieSubscription, type LottieHandle } from 'lottie-react'
 type AssetLottieProps = {
   src: string
   className?: string
+  /** When false, plays once through when the middle viewport band is met. */
   loop?: boolean
 }
 
@@ -28,19 +29,22 @@ function overlapsMiddleBand(el: HTMLElement) {
 }
 
 /**
- * Looping Lottie that plays only in the middle of the viewport.
- * Speed ramps smoothly in/out so loops ease rather than hard cut.
+ * Viewport Lottie: loops in the middle band, or plays once start→end per visit.
  * Hero constellation stays on its own always-on player.
  */
-export function AssetLottie({ src, className = '', loop = true }: AssetLottieProps) {
+export function AssetLottie({ src, className = '', loop = false }: AssetLottieProps) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const lottieRef = useRef<LottieHandle>(null)
   const speedRef = useRef(0)
   const rafRef = useRef(0)
   const wantPlayRef = useRef(false)
   const readyRef = useRef(false)
+  const inMiddleRef = useRef(false)
+  const playedInMiddleRef = useRef(false)
   const startPlayRef = useRef<() => void>(() => {})
   const stopPlayRef = useRef<() => void>(() => {})
+  const startOnceRef = useRef<() => void>(() => {})
+  const resetOnceRef = useRef<() => void>(() => {})
 
   useEffect(() => {
     const rampTo = (target: number, onDone?: () => void) => {
@@ -92,6 +96,43 @@ export function AssetLottie({ src, className = '', loop = true }: AssetLottiePro
       })
     }
 
+    startOnceRef.current = () => {
+      const player = lottieRef.current
+      if (!player || prefersReducedMotion() || playedInMiddleRef.current) return
+      wantPlayRef.current = true
+      player.setLoop(false)
+      player.stop()
+      speedRef.current = 1
+      player.setSpeed(1)
+      player.play()
+    }
+
+    resetOnceRef.current = () => {
+      wantPlayRef.current = false
+      playedInMiddleRef.current = false
+      cancelAnimationFrame(rafRef.current)
+      const player = lottieRef.current
+      if (!player) return
+      speedRef.current = 0
+      player.setSpeed(1)
+      player.stop()
+      player.pause()
+    }
+
+    const onEnterMiddle = () => {
+      inMiddleRef.current = true
+      if (!readyRef.current) return
+      if (loop) startPlayRef.current()
+      else startOnceRef.current()
+    }
+
+    const onLeaveMiddle = () => {
+      inMiddleRef.current = false
+      if (!readyRef.current) return
+      if (loop) stopPlayRef.current()
+      else resetOnceRef.current()
+    }
+
     const el = wrapRef.current
     if (!el) return
 
@@ -103,8 +144,8 @@ export function AssetLottie({ src, className = '', loop = true }: AssetLottiePro
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!readyRef.current) return
-        if (entry.isIntersecting) startPlayRef.current()
-        else stopPlayRef.current()
+        if (entry.isIntersecting) onEnterMiddle()
+        else onLeaveMiddle()
       },
       { root: null, rootMargin: MIDDLE_ROOT_MARGIN, threshold: 0 },
     )
@@ -114,6 +155,8 @@ export function AssetLottie({ src, className = '', loop = true }: AssetLottiePro
     const onMotion = () => {
       if (!mq.matches) return
       wantPlayRef.current = false
+      inMiddleRef.current = false
+      playedInMiddleRef.current = false
       cancelAnimationFrame(rafRef.current)
       speedRef.current = 0
       lottieRef.current?.setSpeed(1)
@@ -126,7 +169,7 @@ export function AssetLottie({ src, className = '', loop = true }: AssetLottiePro
       mq.removeEventListener('change', onMotion)
       cancelAnimationFrame(rafRef.current)
     }
-  }, [])
+  }, [loop])
 
   return (
     <div ref={wrapRef} className={className}>
@@ -142,11 +185,22 @@ export function AssetLottie({ src, className = '', loop = true }: AssetLottiePro
             const player = lottieRef.current
             const el = wrapRef.current
             if (!player) return
+            player.setLoop(loop)
             player.setSpeed(0.001)
             speedRef.current = 0
             player.pause()
             if (!el || prefersReducedMotion()) return
-            if (overlapsMiddleBand(el)) startPlayRef.current()
+            if (overlapsMiddleBand(el)) {
+              if (loop) startPlayRef.current()
+              else startOnceRef.current()
+            }
+          },
+          [LottieSubscription.complete]: () => {
+            if (loop) return
+            playedInMiddleRef.current = true
+            wantPlayRef.current = false
+            speedRef.current = 0
+            lottieRef.current?.pause()
           },
         }}
       />

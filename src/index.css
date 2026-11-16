@@ -5437,6 +5437,18 @@ html[data-tone] .about-statement p {
   align-items: center;
 }
 
+/* 70/30 text/media on larger screens only — keep mobile stack at 1fr. */
+@media (min-width: 768px) {
+  .ps-steps .ps-split {
+    grid-template-columns: 7fr 3fr;
+  }
+
+  /* Media-first rows: keep text at 70%. */
+  .ps-steps .ps-step:has(> .ps-step__copy:last-child) {
+    grid-template-columns: 3fr 7fr;
+  }
+}
+
 .ps-step h3 {
   max-width: 32rem;
   margin-bottom: var(--ps-space-1);
@@ -5451,7 +5463,7 @@ html[data-tone] .about-statement p {
 .ps-steps:not(.ps-steps--white) .ps-step p.ps-kicker {
   margin-bottom: 0.3em;
   color: var(--color-orange);
-  font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  font-size: clamp(1.125rem, 1.08rem + 0.35vw, 1.3125rem);
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
@@ -5462,14 +5474,13 @@ html[data-tone] .about-statement p {
 }
 
 /*
-  Service titles match the story headings: weight 500, #121317, optical sizing.
-  Tracking and leading step with size. The size clamp stays.
+  Service titles match story headings: fixed mobile size on all breakpoints.
 */
 .ps-steps:not(.ps-steps--white) .ps-step h3 {
   margin-bottom: 0.4em;
   color: #121317;
   font-optical-sizing: auto;
-  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-size: 1.375rem;
   font-weight: 500;
   letter-spacing: -0.00867em;
   line-height: 1.08;
@@ -5478,20 +5489,13 @@ html[data-tone] .about-statement p {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (min-width: 1280px) {
-  .ps-steps:not(.ps-steps--white) .ps-step h3 {
-    letter-spacing: -0.017em;
-    line-height: 1.06;
-  }
-}
-
-/* Service body matches the landing hero lead. */
+/* Service body matches story body: fixed mobile size on all breakpoints. */
 .ps-steps:not(.ps-steps--white) .ps-step p:not(.ps-kicker):not(.ps-step__lead) {
   margin-bottom: var(--ps-space-2);
   color: #5a5c63;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
   letter-spacing: -0.005em;
@@ -5823,92 +5827,24 @@ html[data-tone] .about-statement p {
     grid-template-columns: 1fr;
   }
 
+  /*
+    Collapse generic splits on narrow rails, but not What we do steps —
+    those keep side-by-side until the true mobile viewport breakpoint.
+  */
   .ps-services__lead,
-  .ps-split {
+  .ps-split:not(.ps-step) {
     grid-template-columns: 1fr;
     text-align: center;
   }
 
   .ps-services__lead .ps-actions,
-  .ps-split .ps-actions {
+  .ps-split:not(.ps-step) .ps-actions {
     justify-content: center;
   }
 
-  .ps-split ul,
-  .ps-split li {
+  .ps-split:not(.ps-step) ul,
+  .ps-split:not(.ps-step) li {
     text-align: left;
-  }
-
-  /*
-    Services How it works on narrow rails: hide image panels and wrap each
-    step in a rounded bordered card instead of stacking text + media.
-    Yellow wash band: no card chrome — copy sits on the wash.
-  */
-  .ps-steps .ps-step {
-    grid-template-columns: 1fr;
-    gap: 0;
-    align-items: stretch;
-    justify-items: stretch;
-    padding: 1.5rem;
-    border: 1px solid var(--ps-step-tone, #e4e4e6);
-    border-radius: 16px;
-    background: #fff;
-    text-align: left;
-  }
-
-  .ps-wash-region .ps-steps .ps-step {
-    padding: 0;
-    border: none;
-    border-radius: 0;
-  }
-
-  .ps-steps .ps-step__media:not(.ps-step__media--lottie),
-  .ps-steps .ps-step > .ps-ph,
-  .ps-steps .ps-step > .ps-app-stage {
-    display: none;
-  }
-
-  .ps-steps .ps-step__media--lottie {
-    order: -1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 3.25rem;
-    max-width: 3.25rem;
-    aspect-ratio: 1;
-    margin: 0 auto 0.65rem;
-    padding: 0;
-    border-radius: 0;
-    overflow: visible;
-  }
-
-  .ps-steps .ps-step__media--lottie .ps-step__lottie {
-    width: 100%;
-    height: 100%;
-  }
-
-  .ps-steps .ps-step__copy {
-    min-width: 0;
-  }
-
-  .ps-steps .ps-step p.ps-kicker {
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-
-  .ps-steps .ps-step h3,
-  .ps-steps .ps-step p {
-    max-width: none;
-  }
-
-  .ps-steps .ps-step .ps-btn {
-    display: flex;
-    width: fit-content;
-    margin-inline: auto;
-  }
-
-  .ps-steps .ps-step + .ps-step {
-    margin-top: 1.5rem;
   }
 }
 
@@ -5978,6 +5914,26 @@ html[data-tone] .about-statement p {
 
   .ps-steps .ps-step + .ps-step {
     margin-top: 1.5rem;
+  }
+}
+
+/*
+  What we do (home): mobile card stack — kicker→title gap only on cards;
+  split layout at ≥768px keeps the tight 0.3em rule above.
+*/
+@media (max-width: 767px) {
+  .home-cover .ps-services-band .ps-steps:not(.ps-steps--white) .ps-step p.ps-kicker {
+    margin-bottom: 2.25rem;
+    text-align: center;
+  }
+
+  .home-cover .ps-services-band .ps-steps:not(.ps-steps--white) .ps-step p.ps-kicker::after {
+    content: '';
+    display: block;
+    width: 88%;
+    height: 1px;
+    margin: 0.75rem auto 0;
+    background-color: var(--ps-band-surface);
   }
 }
 
@@ -6866,6 +6822,7 @@ html[data-tone] .about-statement p {
   position: relative;
   isolation: isolate;
   background-color: var(--tone-fill);
+  --ps-band-surface: rgb(249, 248, 244);
   max-width: 100%;
   /*
     Do not set overflow-x: clip here — with overflow-y: visible, CSS forces
@@ -7261,7 +7218,7 @@ html[data-tone] .about-statement p {
 
 /* What we do → service steps band */
 .ps-services-band {
-  background-color: rgb(249, 248, 244);
+  background-color: var(--ps-band-surface);
 }
 
 .ps-services-band .ps-steps {
@@ -7270,6 +7227,14 @@ html[data-tone] .about-statement p {
 
 .ps-services-band > #services.ps-about-hero {
   background-color: transparent;
+}
+
+/* What we do title band: content height, less air below the heading. */
+.home-cover .ps-services-band > #services.ps-about-hero {
+  min-height: auto;
+  justify-content: flex-start;
+  padding-top: clamp(2.75rem, 2.25rem + 2vw, 4rem);
+  padding-bottom: clamp(1rem, 0.85rem + 0.5vw, 1.5rem);
 }
 
 /* Kept for any remaining plain heroes. */
@@ -7372,8 +7337,8 @@ html[data-tone] .about-statement p {
 
 .ps-step__media--lottie {
   aspect-ratio: 1;
-  width: min(100%, 12rem);
-  max-width: 12rem;
+  width: min(100%, 9rem);
+  max-width: 9rem;
   margin-inline: auto;
   background: transparent;
   border-radius: 0;
@@ -7527,7 +7492,7 @@ html[data-tone] .about-statement p {
   -webkit-text-fill-color: var(--color-orange);
   font-family: var(--ps-font);
   font-optical-sizing: auto;
-  font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  font-size: clamp(1.125rem, 1.08rem + 0.35vw, 1.3125rem);
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
@@ -7632,7 +7597,8 @@ html[data-tone] .about-statement p {
   -webkit-text-fill-color: #2a3140;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(2rem, 1.15rem + 2.9vw, 3.75rem);
+  /* Same size on all breakpoints as the previous mobile size. */
+  font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
   font-weight: 350;
   font-variation-settings: 'opsz' 48;
   letter-spacing: -0.0225em;
@@ -7655,7 +7621,8 @@ html[data-tone] .about-statement p {
   color: #5a5c63;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  /* Same size on all breakpoints as the previous mobile size. */
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
   letter-spacing: -0.005em;
@@ -7716,7 +7683,6 @@ html[data-tone] .about-statement p {
     max-width: none;
     margin-inline: 0;
     padding-inline: 0;
-    font-size: clamp(1.9rem, 1.35rem + 2.8vw, 2.35rem);
   }
 
   #about.ps-about-hero--with-lead .ps-about-hero__lead {
@@ -7724,9 +7690,6 @@ html[data-tone] .about-statement p {
     margin-top: clamp(0.45rem, 0.35rem + 0.3vw, 0.7rem);
     margin-inline: auto;
     padding-inline: 0;
-    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-    letter-spacing: -0.005em;
-    line-height: 1.45;
   }
 }
 
@@ -8045,6 +8008,56 @@ html[data-tone] .about-statement p {
   padding-inline: var(--layout-gutter);
 }
 
+/*
+  Home story bands: full-width rounded cards (same surface as What we do),
+  edge to edge inside the layout column (rose debug rails).
+*/
+.home-cover .ps-about-page > .ps-story {
+  background: transparent;
+  padding-block: 0;
+  padding-top: var(--ps-section);
+  padding-bottom: 0;
+}
+
+.home-cover .ps-about-page > .ps-story + .ps-story {
+  padding-top: 2.25rem;
+}
+
+/* Last story before What we do — full band below (not :last-of-type: contact is also a section). */
+.home-cover .ps-about-page > .ps-story:has(+ .ps-services-band) {
+  padding-bottom: var(--ps-section);
+}
+
+.home-cover .ps-about-page > .ps-about-hero + .ps-story {
+  padding-top: var(--ps-section);
+}
+
+.home-cover .ps-about-page > .ps-story .ps-story__contain {
+  padding-inline: 0;
+}
+
+@media (max-width: 767px) {
+  .home-cover .ps-about-page > .ps-story .ps-story__contain {
+    padding-inline: var(--layout-gutter);
+  }
+}
+
+.home-cover .ps-about-page > .ps-story .ps-story__grid {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background-color: var(--ps-band-surface);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .home-cover .ps-about-page > .ps-story .ps-story__grid {
+    padding: clamp(1.5rem, 1.25rem + 1vw, 1.75rem);
+    border-radius: 24px;
+  }
+}
+
 .ps-story__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
@@ -8061,17 +8074,16 @@ html[data-tone] .about-statement p {
 }
 
 /*
-  Story headings: weight 500,
-  near-black #121317, optical sizing. Tracking and leading step with size
-  (−0.00867em / 1.08, then −0.017em / 1.06 from 1280px). The size clamp stays.
+  Story headings: weight 500, near-black #121317, optical sizing.
+  Size stays at the mobile size on all breakpoints.
 */
 .ps-story h2 {
   max-width: none;
-  margin: 0 0 var(--ps-space-4);
+  margin: 0 0 var(--ps-space-2);
   color: #121317;
   font-family: var(--ps-font);
   font-optical-sizing: auto;
-  font-size: clamp(1.375rem, 1.05rem + 1.6vw, 2.25rem);
+  font-size: 1.375rem;
   font-weight: 500;
   letter-spacing: -0.00867em;
   line-height: 1.08;
@@ -8093,11 +8105,50 @@ html[data-tone] .about-statement p {
   font-variation-settings: 'opsz' 28;
 }
 
-@media (min-width: 1280px) {
-  .ps-story h2 {
-    letter-spacing: -0.017em;
-    line-height: 1.06;
-  }
+/* What we do title: same size on all breakpoints as the mobile clamp floor. */
+.home-cover .ps-about-page #services.ps-about-hero h1 {
+  font-size: 2.35rem;
+  letter-spacing: -0.0225em;
+  line-height: 1.04;
+}
+
+.home-cover .ps-about-page .ps-close__copy > p:not(.ps-kicker) {
+  max-width: 34rem;
+  margin-inline: auto;
+  color: #5a5c63;
+  font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: 1.0625rem;
+  font-weight: 350;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.home-cover .ps-about-page .ps-close .ps-btn {
+  border-color: var(--color-orange);
+  background: var(--color-orange);
+  color: #fff;
+}
+
+.home-cover .ps-about-page .ps-close .ps-btn:hover {
+  border-color: #d45f1f;
+  background: #d45f1f;
+  color: #fff;
+}
+
+/* Learn more + Get in touch: match orange kicker type, slightly smaller control. */
+.home-cover .ps-about-page .ps-services-band .ps-step .ps-btn,
+.home-cover .ps-about-page .ps-close .ps-btn {
+  height: 36px;
+  padding: 0 14px;
+  font-size: clamp(1.125rem, 1.08rem + 0.35vw, 1.3125rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 
 .ps-story__body {
@@ -8108,11 +8159,11 @@ html[data-tone] .about-statement p {
   Story body matches the landing hero lead.
 */
 .ps-story__body p {
-  margin: 0 0 var(--ps-space-4);
+  margin: 0 0 var(--ps-space-2);
   color: #5a5c63;
   font-family: 'Anthropic Serif', 'Serif', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
   letter-spacing: -0.005em;
@@ -8186,8 +8237,13 @@ html[data-tone] .about-statement p {
 
 @media (min-width: 1024px) {
   .ps-story__grid:has(.ps-story__media--square) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 7fr 3fr;
     gap: clamp(1.5rem, 1.357143rem + 0.714286vw, 2rem);
+  }
+
+  /* Media-first rows still keep text at 70% (copy is second in DOM). */
+  .ps-story__grid--media-start:has(.ps-story__media--square) {
+    grid-template-columns: 3fr 7fr;
   }
 }
 

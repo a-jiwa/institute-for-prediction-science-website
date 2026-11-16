@@ -57,14 +57,12 @@ export function AboutPage() {
                 <h2>Building better judgment</h2>
                 <div className="ps-story__body">
                   <p>
-                    Just like any other skill, you can improve your forecasting ability through deliberate practice.
-                    However, most predictions we make go unrecorded, which means we miss out on the chance to learn
-                    from them.
+                    Just like any other skill, you can improve your forecasting ability through deliberate practice. Most
+                    of our predictions go unrecorded and unanalysed, which means we miss the chance to learn from them.
                   </p>
                   <p>
-                    We make it easy to record your predictions and measure your accuracy over time. This creates a
-                    practical way to strengthen your critical thinking, highlight your personal biases, and leads to a
-                    better understanding of the future.
+                    We create practical ways to strengthen your critical thinking, highlight your personal biases, and
+                    build a better understanding of the future.
                   </p>
                 </div>
               </div>
