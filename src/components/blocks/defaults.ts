@@ -7,7 +7,7 @@ export const SERVICE_STEPS = {
       title: 'Custom forecasting challenges',
       body: [
         'We design and run fully managed forecasting competitions for universities, corporate teams, and institutions.',
-        'Whether complementing a curriculum or improving forecasting skills, we turn subject matter into engaging, measurable prediction challenges so you can focus on the learning, not the setup.',
+        'We turn subject matter into engaging, measurable prediction challenges so you can focus on the learning, not the setup.',
       ],
       bullets: [
         'Score the same questions the same way, against real outcomes',
@@ -18,10 +18,6 @@ export const SERVICE_STEPS = {
       scheme: 'blue' as const,
       art: 'lottie' as const,
       lottieSrc: '/assets/lottie/competitions.json',
-      cta: {
-        label: 'Learn more',
-        href: '/services/competitions',
-      },
     },
     {
       kicker: 'Training',
@@ -36,10 +32,6 @@ export const SERVICE_STEPS = {
       scheme: 'green' as const,
       art: 'lottie' as const,
       lottieSrc: '/assets/lottie/training.json',
-      cta: {
-        label: 'Learn more',
-        href: '/services/training',
-      },
     },
     {
       kicker: 'Labs',
@@ -54,10 +46,6 @@ export const SERVICE_STEPS = {
       scheme: 'red' as const,
       art: 'lottie' as const,
       lottieSrc: '/assets/lottie/labs.json',
-      cta: {
-        label: 'Learn more',
-        href: '/services/lab',
-      },
     },
   ],
 }

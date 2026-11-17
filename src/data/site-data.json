@@ -1,12 +1,12 @@
 {
   "featured": {
     "color": "#1F19CC",
-    "href": "/research/economic-effects-of-ai",
+    "href": "/research/building-a-system-to-measure-prediction",
     "type": "Featured Working paper",
-    "title": "Forecasting the Economic Effects of AI",
-    "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
-    "date": "Mar 31, 2026",
-    "image": "/assets/library/illustration-library-1-1200x904.jpg"
+    "title": "Infrastructure for measuring prediction",
+    "excerpt": "To systematically study human judgment, we introduce a research platform that collects, tracks, and evaluates probabilistic forecasts over time.",
+    "date": "Sep 12, 2026",
+    "image": "/assets/img/research/research-08.webp"
   },
   "featuredWork": [
     {
@@ -124,11 +124,11 @@
       "image": "/assets/library/illustration-library-15-700x440.jpg"
     },
     {
-      "href": "/research/economic-effects-of-ai",
+      "href": "/research/building-a-system-to-measure-prediction",
       "type": "Featured Working paper",
-      "title": "Forecasting the Economic Effects of AI",
-      "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
-      "image": "/assets/library/illustration-library-1-1200x904.jpg"
+      "title": "Infrastructure for measuring prediction",
+      "excerpt": "To systematically study human judgment, we introduce a research platform that collects, tracks, and evaluates probabilistic forecasts over time.",
+      "image": "/assets/img/research/research-08.webp"
     }
   ],
   "careers": [

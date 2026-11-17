@@ -11,6 +11,7 @@ export const navLinks: NavLink[] = [
   // { label: 'Research', href: '/research' },
   // { label: 'Competitions', href: '/services/competitions' },
   // { label: 'Training', href: '/services/training' },
+  { label: 'About', href: '/about' },
   { label: 'Research', href: '/services/lab' },
   // { label: 'Careers', href: '/careers' },
   { label: 'Blog', href: BLOG_URL, external: true },
@@ -18,15 +19,15 @@ export const navLinks: NavLink[] = [
 
 /** First column of footer links. */
 export const footerPageLinks: NavLink[] = [
-  { label: 'About', href: '/#about' },
-  { label: 'Services', href: '/#services' },
+  { label: 'About', href: '/about' },
+  { label: 'Research', href: '/services/lab' },
   { label: 'Blog', href: BLOG_URL, external: true },
 ]
 
 /** Second column of footer links. */
 export const footerReachLinks: NavLink[] = [
   { label: 'Privacy Policy', href: '/privacy-policy' },
-  { label: 'Cookie Policy', href: '/privacy-policy#cookies' },
+  { label: 'Cookie Policy', href: '/cookie-policy' },
 ]
 
 export const footerNavLinks: NavLink[] = [...footerPageLinks, ...footerReachLinks]

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { Lottie, LottieSubscription, type LottieHandle } from 'lottie-react'
 import { AssetLottie } from '../components/blocks/AssetLottie'
+import { SmartLink } from '../components/ui/SmartLink'
+import { researchFeed } from '../data/research'
 import { assetUrl } from '../utils/assetUrl'
 
 const LAB_HERO_SRC = assetUrl('/assets/lottie/lab-hero.json')
@@ -175,6 +177,8 @@ function LabHeroLottie({ className }: { className?: string }) {
 
 /** Research page. Homepage hero and close; disciplines, external support, publications. */
 export function LabPage() {
+  const publications = researchFeed()
+
   return (
     <div className="ps ps-about-page ps-lab-page">
       <section className="ps-about-hero ps-about-hero--with-lead" id="labs">
@@ -249,12 +253,11 @@ export function LabPage() {
               <p className="ps-kicker">Support</p>
               <h2 id="lab-support-title">Independent backing</h2>
               <p>
-                We support a select number of external researchers and independent projects each year. Recognising that
-                important questions often extend beyond short funding cycles and established disciplinary boundaries, our
-                multi-year support gives researchers the independence and resources to pursue difficult problems without
-                pressure for premature conclusions. Projects are considered on their individual merits rather than their
-                fit within a predefined programme. Researchers working in related areas are welcome to contact the
-                Institute directly to discuss their work.
+                Each year, we fund a select group of external researchers and independent projects. We offer multi-year
+                support that gives you the freedom and resources to tackle complex problems without the pressure for
+                premature results. We evaluate every project on its own merits rather than how well it fits a predefined
+                programme, and we actively welcome ideas from a wide range of backgrounds and perspectives. If you are
+                working in a related area, reach out to the Institute directly to discuss your work.
               </p>
             </div>
             <div aria-hidden="true" className="ps-lab-split__frame">
@@ -269,7 +272,33 @@ export function LabPage() {
         </div>
       </section>
 
-      {/* Publications section hidden for now */}
+      <section className="ps-lab-index" aria-labelledby="lab-publications-title">
+        <div className="ps-contain">
+          <div className="ps-lab-index__head">
+            <p className="ps-kicker" id="lab-publications-title">
+              Publications
+            </p>
+          </div>
+          <ol>
+            {publications.map((item) => (
+              <li key={item.href}>
+                <SmartLink className="ps-lab-index__link" href={item.href}>
+                  <time
+                    className="ps-lab-index__date"
+                    dateTime={item.date === 'Ongoing' ? undefined : item.date}
+                  >
+                    {item.date}
+                  </time>
+                  <span className="ps-lab-index__copy">
+                    <h3>{item.title}</h3>
+                    {item.excerpt ? <p>{item.excerpt}</p> : null}
+                  </span>
+                </SmartLink>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
       <section className="ps-close" id="contact-us">
         <div className="ps-close__copy">

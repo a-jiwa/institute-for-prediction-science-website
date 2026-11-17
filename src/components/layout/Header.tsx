@@ -149,7 +149,9 @@ function NavItem({
         ? location.pathname === path && location.hash === `#${linkHash}`
         : path === '/'
           ? location.pathname === '/' && !location.hash
-          : location.pathname.startsWith(path))
+          : path === '/services/lab'
+            ? location.pathname.startsWith('/services/lab') || location.pathname.startsWith('/research')
+            : location.pathname.startsWith(path))
 
   if (link.external) {
     return (

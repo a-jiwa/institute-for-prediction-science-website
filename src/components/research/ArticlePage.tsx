@@ -1,33 +1,18 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  articleContent,
-  authorInitials,
-  findResearch,
-  type ArticleBlock,
-  type ResearchAuthor,
-} from '../../data/research'
-import { assetUrl } from '../../utils/assetUrl'
+import { articleContent, findResearch, type ArticleBlock } from '../../data/research'
 
-function AuthorCard({
-  author,
-  compact = false,
-}: {
-  author: ResearchAuthor
-  compact?: boolean
-}) {
+function EssayCrumb({ title }: { title: string }) {
   return (
-    <div className={`essay-author${compact ? ' is-compact' : ''}`}>
-      <div className="essay-author-avatar" aria-hidden="true">
-        {authorInitials(author.name)}
-      </div>
-      <div className="essay-author-meta">
-        <a className="essay-author-name" href="#contributing-authors">
-          {author.name}
-        </a>
-        <div className="essay-author-byline">{author.role}</div>
-      </div>
-    </div>
+    <nav className="essay-crumb" aria-label="Breadcrumb">
+      <Link className="essay-crumb__parent" to="/services/lab">
+        Research
+      </Link>
+      <span className="essay-crumb__sep" aria-hidden="true">
+        /
+      </span>
+      <span className="essay-crumb__current">{title}</span>
+    </nav>
   )
 }
 
@@ -37,6 +22,52 @@ function Blocks({ blocks }: { blocks: ArticleBlock[] }) {
       {blocks.map((block, index) => {
         if (block.type === 'p') {
           return <p key={`p-${index}`}>{block.text}</p>
+        }
+        if (block.type === 'h3') {
+          return <h3 key={`h3-${index}`}>{block.text}</h3>
+        }
+        if (block.type === 'note') {
+          return (
+            <aside key={`note-${index}`} className="essay-note">
+              {block.text}
+            </aside>
+          )
+        }
+        if (block.type === 'formula') {
+          return (
+            <p key={`formula-${index}`} className="essay-formula">
+              {block.text}
+            </p>
+          )
+        }
+        if (block.type === 'table') {
+          return (
+            <figure key={`table-${index}`} className="essay-table">
+              {block.caption ? <figcaption>{block.caption}</figcaption> : null}
+              <div className="essay-table__scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      {block.headers.map((header) => (
+                        <th key={header} scope="col">
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.rows.map((row) => (
+                      <tr key={row.join('|')}>
+                        {row.map((cell, cellIndex) => (
+                          <td key={`${cell}-${cellIndex}`}>{cell}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </figure>
+          )
         }
         if (block.type === 'ul') {
           return (
@@ -63,11 +94,11 @@ export function ArticlePage({ slug }: { slug: string }) {
   const item = findResearch(slug)
   const content = useMemo(() => (item ? articleContent(item) : null), [item])
   const [activeId, setActiveId] = useState(content?.sections[0]?.id ?? '')
-  const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({})
+  const contentsRef = useRef<HTMLDetailsElement>(null)
 
   useEffect(() => {
     if (!content) return
-    const ids = [...content.sections.map((section) => section.id), 'contributing-authors']
+    const ids = content.sections.map((section) => section.id)
     const nodes = ids
       .map((id) => document.getElementById(id))
       .filter((node): node is HTMLElement => Boolean(node))
@@ -90,9 +121,14 @@ export function ArticlePage({ slug }: { slug: string }) {
   if (!item || !content) {
     return (
       <section className="essay essay-missing">
+        <div className="essay-toolbar">
+          <div className="container">
+            <EssayCrumb title="Page not found" />
+          </div>
+        </div>
         <div className="container">
-          <h1 className="editorial-title">Page not found</h1>
-          <Link to="/research">All research</Link>
+          <h1>Page not found</h1>
+          <p>This piece isn’t on the site.</p>
         </div>
       </section>
     )
@@ -100,17 +136,15 @@ export function ArticlePage({ slug }: { slug: string }) {
 
   return (
     <article className="essay">
+      <div className="essay-toolbar">
+        <div className="container">
+          <EssayCrumb title={item.title} />
+        </div>
+      </div>
+
       <div className="container">
         <div className="essay-layout">
           <aside className="essay-rail">
-            <div className="essay-rail-block essay-rail-authors">
-              <h3>Authors</h3>
-              <div className="essay-authors">
-                {content.authors.map((author) => (
-                  <AuthorCard key={author.name} author={author} />
-                ))}
-              </div>
-            </div>
             <div className="essay-rail-block essay-rail-contents">
               <h3>Contents</h3>
               <ol>
@@ -119,9 +153,6 @@ export function ArticlePage({ slug }: { slug: string }) {
                     <a href={`#${section.id}`}>{section.heading}</a>
                   </li>
                 ))}
-                <li className={activeId === 'contributing-authors' ? 'is-active' : ''}>
-                  <a href="#contributing-authors">Contributing authors</a>
-                </li>
               </ol>
             </div>
           </aside>
@@ -130,16 +161,39 @@ export function ArticlePage({ slug }: { slug: string }) {
             <time dateTime={item.date === 'Ongoing' ? undefined : item.date}>{item.date}</time>
             <h1>{item.title}</h1>
             <p className="essay-dek">{content.lead}</p>
-            <div className="essay-header-authors">
-              {content.authors.map((author) => (
-                <AuthorCard key={author.name} author={author} compact />
-              ))}
-            </div>
-            {item.image && (
-              <figure className="essay-media">
-                <img src={assetUrl(item.image)} alt="" />
-              </figure>
-            )}
+            <details className="essay-contents" ref={contentsRef}>
+              <summary>
+                <span className="essay-contents__current">
+                  {content.sections.find((section) => section.id === activeId)?.heading ??
+                    content.sections[0]?.heading ??
+                    'Contents'}
+                </span>
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                  <path
+                    d="M6 9l6 6 6-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </summary>
+              <ol>
+                {content.sections.map((section) => (
+                  <li key={section.id} className={section.id === activeId ? 'is-active' : ''}>
+                    <a
+                      href={`#${section.id}`}
+                      onClick={() => {
+                        if (contentsRef.current) contentsRef.current.open = false
+                      }}
+                    >
+                      {section.heading}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </details>
           </div>
 
           <div className="essay-body">
@@ -153,47 +207,6 @@ export function ArticlePage({ slug }: { slug: string }) {
                 <Blocks blocks={section.blocks} />
               </section>
             ))}
-
-            <section className="essay-contributors" id="contributing-authors">
-              <h2>Contributing authors</h2>
-              <div className="essay-contributor-list">
-                {content.authors.map((author) => {
-                  const expanded = expandedBios[author.name]
-                  const bio = author.bio ?? ''
-                  const short = bio.length > 180 && !expanded ? `${bio.slice(0, 180).trim()}…` : bio
-                  return (
-                    <div className="essay-contributor" key={author.name}>
-                      <div className="essay-author-avatar" aria-hidden="true">
-                        {authorInitials(author.name)}
-                      </div>
-                      <div>
-                        <h3>{author.name}</h3>
-                        <div className="essay-contributor-role">{author.role}</div>
-                        {bio && <p>{short}</p>}
-                        {bio.length > 180 && (
-                          <button
-                            type="button"
-                            className="essay-read-more"
-                            onClick={() =>
-                              setExpandedBios((current) => ({
-                                ...current,
-                                [author.name]: !expanded,
-                              }))
-                            }
-                          >
-                            {expanded ? '− Show less' : '+ Read more'}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </section>
-
-            <p className="essay-back">
-              <Link to="/research">All research</Link>
-            </p>
           </div>
         </div>
       </div>

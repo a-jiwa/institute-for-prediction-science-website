@@ -1,9 +1,10 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { toneForPath, type PageTone } from '../../data/pageTones'
 import { toRouterPath } from '../../utils/assetUrl'
+import { useLenis } from './CookieBanner'
 
 function applyTone(tone: PageTone | null) {
   if (tone) document.documentElement.dataset.tone = tone
@@ -13,17 +14,11 @@ function applyTone(tone: PageTone | null) {
 export function Layout() {
   const { pathname, hash } = useLocation()
   const navigate = useNavigate()
+  const lenis = useLenis()
+  const previousPath = useRef(pathname)
 
   useLayoutEffect(() => {
     applyTone(toneForPath(pathname))
-  }, [pathname])
-
-  useEffect(() => {
-    const isHeaderWhite = pathname.startsWith('/privacy-policy')
-    document.body.classList.toggle('header-white', isHeaderWhite)
-    return () => {
-      document.body.classList.remove('header-white')
-    }
   }, [pathname])
 
   useEffect(() => {
@@ -51,21 +46,27 @@ export function Layout() {
   }, [navigate, pathname])
 
   useEffect(() => {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+  }, [])
+
+  useLayoutEffect(() => {
+    const pathChanged = previousPath.current !== pathname
+    previousPath.current = pathname
+    // Same-page hash links, such as the article contents, keep the browser jump.
+    if (!pathChanged) return
+
     if (hash) {
-      const scrollToHash = () => {
-        const el = document.querySelector(hash)
-        if (!el) return false
-        el.scrollIntoView({ behavior: 'smooth' })
-        return true
+      const el = document.querySelector(hash)
+      if (el instanceof HTMLElement) {
+        if (lenis) lenis.scrollTo(el, { immediate: true, force: true, offset: -24 })
+        else el.scrollIntoView({ behavior: 'auto', block: 'start' })
+        return
       }
-      if (scrollToHash()) return
-      const frame = requestAnimationFrame(() => {
-        if (!scrollToHash()) window.scrollTo(0, 0)
-      })
-      return () => cancelAnimationFrame(frame)
     }
+
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true })
     window.scrollTo(0, 0)
-  }, [pathname, hash])
+  }, [pathname, hash, lenis])
 
   return (
     <div className="wrapper min-h-[100lvh] w-full">

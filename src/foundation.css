@@ -99,7 +99,7 @@
     --theme-border-width-subtle: var(--token-border-width-subtle);
     --theme-focus-width: 2px;
     --theme-focus-offset: 2px;
-    --layout-header-height: 72px;
+    --layout-header-height: 56px;
     --layout-depth-header: 100;
     --theme-motion-ease-decelerate: var(--token-ease-out-expo);
     --theme-motion-duration-fast: 150ms;
@@ -123,7 +123,7 @@
   }
 
   /* Layout changes only at 768px, 1024px, and 1200px.
-     Portrait phones use the smaller spacing step. The header stays 72px at every width. */
+     Portrait phones use the smaller spacing step. The header stays 56px at every width. */
   @media (max-width: 767px) and (orientation: portrait) {
     html.theme-ips {
       --theme-layout-spacing-base: max(16px, min(1.1vw, 34px));

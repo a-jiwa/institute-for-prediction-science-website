@@ -10,16 +10,6 @@
     "size": "Small"
   },
   {
-    "href": "/research/longitudinal-expert-ai-panel-leap-working-paper",
-    "external": false,
-    "type": "Working paper",
-    "title": "The Longitudinal Expert AI Panel: Understanding Expert Views on AI Capabilities, Adoption, and Impact",
-    "image": "/assets/library/illustration_Midjourney_LEAP_paper_waves-1-2-3-700x439.jpg",
-    "excerpt": "The Longitudinal Expert AI Panel (LEAP) is a three year project tracking the views of leading computer scientists, industry professionals, policy researchers, and economists on the trajectory of artificial intelligence. In this paper, we introduce LEAP and summarize findings from the first three waves.",
-    "date": "Nov 10, 2025",
-    "size": "Small"
-  },
-  {
     "href": "/research/near-term-xpt-accuracy",
     "external": false,
     "type": "Working paper",
@@ -48,16 +38,6 @@
     "excerpt": "This study systematically assessed expert beliefs about the probability of a nuclear weapons catastrophe by 2045. Domain experts and superforecasters predicted the likelihood of nuclear conflict, explained the mechanisms underlying their predictions, and forecast the impact of specific tractable policies on the chance of nuclear catastrophe.",
     "date": "Oct 29, 2024",
     "size": "Large_Right"
-  },
-  {
-    "href": "/research/forecastbench-a-dynamic-benchmark-of-ai-forecasting-capabilities",
-    "external": false,
-    "type": "Academic article",
-    "title": "ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities",
-    "image": "/assets/library/illustration_Midjourney_ForecastBench-02-700x439.jpg",
-    "excerpt": "A dynamic benchmark of LLM forecasting accuracy, free of contamination, with human comparison groups, serving as a valuable proxy for general intelligence.",
-    "date": "Sep 30, 2024",
-    "size": "Small"
   },
   {
     "href": "/research/belief-updating-in-ai-risk-debates-exploring-the-limits-of-adversarial-collaboration",
@@ -170,35 +150,55 @@
     "size": "Small"
   },
   {
-    "href": "/research/economic-effects-of-ai",
+    "href": "/research/advancing-the-science-of-prediction",
     "external": false,
-    "type": "Working paper",
-    "title": "Forecasting the Economic Effects of AI",
-    "image": "/assets/library/illustration-library-1-700x527.jpg",
-    "excerpt": "We surveyed academic economists, AI experts, and superforecasters to produce the most comprehensive picture yet of how AI could reshape the U.S. economy. Respondents also evaluated the impact of six different policies intended to address the impact of rapid AI progress.",
-    "date": "Mar 31, 2026",
+    "type": "Editorial",
+    "title": "Introducing the Institute of Prediction Science",
+    "image": "/assets/img/research/research-01.webp",
+    "excerpt": "To improve how society anticipates uncertain outcomes, we establish a research institute focused on empirical forecasting and decision science.",
+    "date": "Aug 8, 2026",
     "size": "Small"
   },
-    {
-      "href": "/research/inkling",
-      "external": false,
-      "type": "Project",
-      "title": "Inkling: News Powered by Prediction Markets",
-      "image": "/assets/library/illustration-library-6-700x527.jpg",
-      "excerpt": "Inkling uses prediction markets to surface what is likely to happen next, before it becomes a headline. Traders assign probabilities to real world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding, validated across decades of forecasting research, that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
-      "date": "Ongoing",
-      "size": "Small"
-    },
-    {
-      "href": "/research/theyearahead",
-      "external": false,
-      "type": "Project",
-      "title": "TheYearAhead: Annual Forecasting Challenge",
-      "image": "/assets/library/illustration-library-15-700x440.jpg",
-      "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs, assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight, established by Philip Tetlock and colleagues, that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
-      "date": "Ongoing",
-      "size": "Small"
-    },
+  {
+    "href": "/research/inkling",
+    "external": false,
+    "type": "Project",
+    "title": "Inkling: News Powered by Prediction Markets",
+    "image": "/assets/library/illustration-library-6-700x527.jpg",
+    "excerpt": "Inkling uses prediction markets to surface what is likely to happen next, before it becomes a headline. Traders assign probabilities to real world events across politics, economics, and world affairs. Those probabilities become the news. Inkling builds on the finding, validated across decades of forecasting research, that prediction markets aggregate distributed knowledge more accurately than any individual expert or editorial team. Inkling puts this mechanism in the hands of a general news audience, turning collective intelligence into a live, probabilistic picture of what comes next.",
+    "date": "Ongoing",
+    "size": "Small"
+  },
+  {
+    "href": "/research/building-a-system-to-measure-prediction",
+    "external": false,
+    "type": "Project",
+    "title": "Infrastructure for measuring prediction",
+    "image": "/assets/img/research/research-08.webp",
+    "excerpt": "To systematically study human judgment, we introduce a research platform that collects, tracks, and evaluates probabilistic forecasts over time.",
+    "date": "Sep 12, 2026",
+    "size": "Small"
+  },
+  {
+    "href": "/research/can-human-forecasting-be-trained",
+    "external": false,
+    "type": "Working paper",
+    "title": "Evaluating training in human forecasting",
+    "image": "/assets/img/research/research-02.webp",
+    "excerpt": "To determine whether prediction is a trainable skill, we present experimental evidence that structured instruction improves probabilistic accuracy.",
+    "date": "Nov 17, 2026",
+    "size": "Small"
+  },
+  {
+    "href": "/research/theyearahead",
+    "external": false,
+    "type": "Project",
+    "title": "TheYearAhead: Annual Forecasting Challenge",
+    "image": "/assets/library/illustration-library-15-700x440.jpg",
+    "excerpt": "Each January, participants predict 100 events across politics, economics, and world affairs, assigning a probability to each rather than a simple yes or no. Each December, the platform scores their predictions against what actually happened using Brier scoring, the gold standard of forecast accuracy. TheYearAhead builds on the insight, established by Philip Tetlock and colleagues, that probabilistic thinking can be trained as a deliberate skill. The platform puts this into practice by giving participants a measurable record of their judgment over time, making visible something the human brain is not naturally designed to track. Now in its third year, TheYearAhead has grown to over 500 users and is in active development with academics at UCL to become a formal teaching platform for decision theory courses.",
+    "date": "Nov 12, 2026",
+    "size": "Small"
+  },
   {
     "href": "/research/improving-judgments-of-existential-risk",
     "external": false,
