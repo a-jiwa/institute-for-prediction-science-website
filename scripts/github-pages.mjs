@@ -96,8 +96,41 @@ function applyShare(html, share, { canonical = true } = {}) {
   return next
 }
 
+function shortBlurb(text, max = 160) {
+  const clean = text.replace(/\s+/g, ' ').trim()
+  if (clean.length <= max) return clean
+  const slice = clean.slice(0, max)
+  const cut = slice.lastIndexOf(' ')
+  return `${(cut > 60 ? slice.slice(0, cut) : slice).replace(/[.,;:]+$/, '')}…`
+}
+
+function isoWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+  const day = d.getUTCDay() || 7
+  d.setUTCDate(d.getUTCDate() + 4 - day)
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7)
+}
+
+function periodIncludesWeek(period, currentWeek) {
+  const endWeek = period.startWeek + period.duration - 1
+  if (endWeek > 52) {
+    if (currentWeek >= period.startWeek && currentWeek <= 52) return true
+    return currentWeek >= 1 && currentWeek <= endWeek - 52
+  }
+  return currentWeek >= period.startWeek && currentWeek <= endWeek
+}
+
+function isJobActive(job, currentWeek) {
+  if (!job.activePeriods || job.activePeriods.length === 0) return true
+  return job.activePeriods.some((period) => periodIncludesWeek(period, currentWeek))
+}
+
 const shell = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8')
 const research = JSON.parse(fs.readFileSync('src/data/research-all.json', 'utf8'))
+const jobs = JSON.parse(fs.readFileSync('src/data/jobs.json', 'utf8'))
+const openJobs = jobs.filter((job) => isJobActive(job, isoWeek(new Date())))
+
 const pages = [
   {
     path: '/',
@@ -121,6 +154,21 @@ const pages = [
     type: 'website',
     robots: 'index, follow',
   },
+  {
+    path: '/careers',
+    title: 'Careers',
+    description:
+      'Open roles at the Institute for Prediction Science. Listings change by week. Filter by location, department, and experience.',
+    type: 'website',
+    robots: 'index, follow',
+  },
+  ...openJobs.map((job) => ({
+    path: `/careers/${job.id}`,
+    title: job.title,
+    description: shortBlurb(`${job.title} at ${SITE_NAME}, ${job.location}. ${job.rolePurpose}`),
+    type: 'website',
+    robots: 'index, follow',
+  })),
   {
     path: '/privacy-policy',
     title: 'Privacy Policy',
@@ -192,6 +240,7 @@ const required = [
   'site.webmanifest',
   'about/index.html',
   'services/lab/index.html',
+  'careers/index.html',
   'privacy-policy/index.html',
   'cookie-policy/index.html',
   'assets/img/og/default.jpg',

@@ -3219,7 +3219,7 @@ footer .newsletter .btn {
   font-optical-sizing: auto;
   font-size: 1.0625rem;
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.7;
   overflow-wrap: break-word;
 }
@@ -3265,7 +3265,7 @@ footer .newsletter .btn {
   font-family: var(--essay-sans);
   font-size: 0.9375rem;
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.55;
 }
 
@@ -3344,7 +3344,7 @@ footer .newsletter .btn {
   font-family: var(--essay-sans);
   font-size: 0.875rem;
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.35;
 }
 
@@ -3486,7 +3486,7 @@ footer .newsletter .btn {
   font-family: var(--essay-sans);
   font-size: 1.0625rem;
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.7;
 }
 
@@ -3769,6 +3769,8 @@ html[data-tone] .about-statement p {
   --ps-weight-bold: 550;
   --ps-tracking-tight: -0.03em;
   --ps-tracking-normal: 0em;
+  /* Serif body: browser-default tracking. */
+  --ps-tracking-body: normal;
   --ps-leading-medium: 1.1;
   --ps-leading-large: 1.25;
   --ps-leading-xlarge: 1.33;
@@ -5758,7 +5760,7 @@ html[data-tone] .about-statement p {
   font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
@@ -7929,7 +7931,7 @@ html[data-tone] .about-statement p {
   font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-align: center;
   text-wrap: pretty;
@@ -8430,7 +8432,7 @@ html[data-tone] .about-statement p {
   font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
@@ -8475,7 +8477,7 @@ html[data-tone] .about-statement p {
   font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
@@ -8781,7 +8783,7 @@ html[data-tone] .about-statement p {
   font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
@@ -8867,7 +8869,7 @@ html[data-tone] .about-statement p {
   font-size: clamp(1.1875rem, 1.12rem + 0.35vw, 1.3125rem);
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.5;
   text-align: center;
   text-wrap: balance;
@@ -9287,7 +9289,7 @@ html[data-tone] .about-statement p {
   font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-align: center;
   text-wrap: pretty;
@@ -9301,7 +9303,7 @@ html[data-tone] .about-statement p {
   font-size: 0.9375rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-align: center;
 }
@@ -9342,7 +9344,7 @@ html[data-tone] .about-statement p {
   font-size: 1.0625rem;
   font-weight: 350;
   font-variation-settings: 'opsz' 18;
-  letter-spacing: -0.005em;
+  letter-spacing: var(--ps-tracking-body);
   line-height: 1.45;
   text-align: left;
   text-wrap: pretty;

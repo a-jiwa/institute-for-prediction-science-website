@@ -1,0 +1,314 @@
+[
+  {
+    "id": "research-assistant",
+    "title": "Part-Time Research Assistant",
+    "location": "London, UK",
+    "type": "Part-time",
+    "department": "Research",
+    "remoteOptions": "On-site",
+    "aboutCompany": "The Institute for Prediction Science is an independent research institute. We work to improve how people and organisations forecast uncertain events and make better decisions, through research, training, and forecasting programmes.",
+    "rolePurpose": "Research assistants support project leads across the Institute’s forecasting work. This is a part-time contractor role, with a preference for people who can give 10 or more hours a week, based in London.",
+    "keyResponsibilities": [
+      "Literature reviews",
+      "Distilling complex topics into forecastable questions",
+      "Responding to forecasters’ questions or clarification requests",
+      "Assisting project leads in designing and conducting experiments",
+      "Analysing data and aggregating forecasts from in-progress and previous forecasting tournaments and experiments",
+      "Helping to run forecasting tournaments",
+      "Collecting historical data underlying forecasting questions to embed in forecasting tournaments"
+    ],
+    "requirements": {
+      "experience": "Part-time, around 10 or more hours a week. Appointments start on a 3-month term to test for mutual fit, and we hope to extend this in most cases. We prefer people who can start soon.",
+      "skills": [
+        "Generalist research skills",
+        "Clear, explicit communication",
+        "Strong writing",
+        "Familiarity with, and interest in, quantitative forecasting",
+        "Able to work productively from our London base",
+        "Comfort taking on new challenges and learning new tools",
+        "Fluency in English (CEFR C1 or above)"
+      ],
+      "qualifications": "We encourage you to apply even if you do not feel completely qualified."
+    },
+    "desirable": [
+      "Familiarity with data analysis, though this is not required"
+    ],
+    "benefits": "You will work with the research team on live forecasting projects, with scope to extend the initial term when the fit is right.",
+    "equalOpportunities": "The Institute for Prediction Science welcomes applications from all qualified candidates regardless of race, ethnicity, gender, sexual orientation, age, disability, or background.",
+    "activePeriods": [
+      {
+        "startWeek": 52,
+        "duration": 4
+      },
+      {
+        "startWeek": 16,
+        "duration": 12
+      },
+      {
+        "startWeek": 40,
+        "duration": 12
+      }
+    ],
+    "applicationContact": {
+      "email": "careers@predictionscience.org"
+    }
+  },
+  {
+    "id": "student-research-assistant",
+    "title": "Part-Time Student Research Assistant",
+    "location": "London, UK",
+    "type": "Part-time",
+    "department": "Research",
+    "remoteOptions": "On-site",
+    "aboutCompany": "The Institute for Prediction Science is an independent research institute. We work to improve how people and organisations forecast uncertain events and make better decisions, through research, training, and forecasting programmes.",
+    "rolePurpose": "Student research assistants support the research team. This part-time contractor role is for students in higher education, based in London, with a preference for around 10 hours a week. If you are not a student, please see the Part-Time Research Assistant role.",
+    "keyResponsibilities": [
+      "Literature reviews",
+      "Distilling complex topics into forecastable questions",
+      "Conducting research and analysis to help design forecasting tournaments and experiments",
+      "Supporting the running of forecasting tournaments and experiments",
+      "Collecting, organising, and analysing data from in-progress and previous forecasting tournaments and experiments"
+    ],
+    "requirements": {
+      "experience": "Part-time, around 10 hours a week, for students in higher education. Appointments start on a 3-month term to test for mutual fit, and we hope to extend this in most cases. We prefer people who can start soon.",
+      "skills": [
+        "Studying for an undergraduate degree",
+        "Generalist research skills",
+        "Clear, explicit communication",
+        "Strong writing",
+        "Interest in quantitative forecasting",
+        "Able to work productively from our London base",
+        "Comfort taking on new challenges and learning new tools",
+        "Fluency in English (CEFR C1 or above)"
+      ],
+      "qualifications": "This role is for students. We encourage you to apply even if you do not feel completely qualified."
+    },
+    "desirable": [
+      "A strong interest in forecasting or how different fields approach uncertainty"
+    ],
+    "benefits": "You will support live forecasting research while you study, with scope to extend the initial term when the fit is right.",
+    "equalOpportunities": "The Institute for Prediction Science welcomes applications from all qualified candidates regardless of race, ethnicity, gender, sexual orientation, age, disability, or background.",
+    "activePeriods": [
+      {
+        "startWeek": 52,
+        "duration": 8
+      },
+      {
+        "startWeek": 20,
+        "duration": 12
+      },
+      {
+        "startWeek": 44,
+        "duration": 8
+      }
+    ],
+    "applicationContact": {
+      "email": "careers@predictionscience.org"
+    }
+  },
+  {
+    "id": "research-scientist",
+    "title": "Research Scientist",
+    "location": "London, UK",
+    "type": "Full-time",
+    "department": "Research",
+    "remoteOptions": "On-site",
+    "aboutCompany": "The Institute for Prediction Science is an independent research institute. We work to improve how people and organisations forecast uncertain events and make better decisions, through research, training, and forecasting programmes.",
+    "rolePurpose": "The core of this role is generating and applying evidence about how people forecast well. You will design studies, analyse forecasting data, and turn findings into training content, product features, and advice for the rest of the Institute, based in London.",
+    "keyResponsibilities": [
+      "Design experiments and studies on questions such as whether a given training improves accuracy, which aggregation methods beat a simple average, and how teams compare with individuals",
+      "Analyse participant data from competitions and our platform using scoring rules such as Brier scores, calibration curves, and discrimination measures",
+      "Review academic literature and translate findings into practical training content or product features",
+      "Write papers, white papers, and reports, and present results to partners or at conferences",
+      "Advise other teams: help question writers avoid ambiguity, help trainers ground content in evidence, and help engineers design useful accuracy metrics",
+      "Work with the Labs side on prototypes, such as testing whether an AI-assisted forecasting tool actually helps people"
+    ],
+    "requirements": {
+      "experience": "Several years of research experience in forecasting, judgement and decision making, statistics, behavioural science, or a closely related field. Experience designing and analysing empirical studies is essential.",
+      "skills": [
+        "Strong quantitative analysis skills, including familiarity with probabilistic scoring and calibration",
+        "Ability to design experiments and interpret messy real-world forecasting data",
+        "Clear written and spoken communication for both academic and applied audiences",
+        "Comfort collaborating with trainers, engineers, and programme teams",
+        "Able to work productively from our London base",
+        "Fluency in English (CEFR C1 or above)"
+      ],
+      "qualifications": "A postgraduate degree in a relevant field is preferred. We encourage strong candidates to apply even if their background is unconventional."
+    },
+    "desirable": [
+      "A publication record in forecasting, judgement under uncertainty, or related areas",
+      "Experience with forecasting tournaments, prediction platforms, or training interventions",
+      "Familiarity with machine learning methods used in forecast aggregation or decision support"
+    ],
+    "benefits": "You will work on live forecasting research with a clear path from evidence to practice, collaborating across research, Labs, and programme teams.",
+    "equalOpportunities": "The Institute for Prediction Science welcomes applications from all qualified candidates regardless of race, ethnicity, gender, sexual orientation, age, disability, or background.",
+    "activePeriods": [
+      {
+        "startWeek": 52,
+        "duration": 12
+      },
+      {
+        "startWeek": 24,
+        "duration": 12
+      },
+      {
+        "startWeek": 48,
+        "duration": 4
+      }
+    ],
+    "applicationContact": {
+      "email": "careers@predictionscience.org"
+    }
+  },
+  {
+    "id": "competition-manager",
+    "title": "Competition Manager",
+    "location": "London, UK",
+    "type": "Full-time",
+    "department": "Operations",
+    "remoteOptions": "On-site",
+    "aboutCompany": "The Institute for Prediction Science is an independent research institute. We work to improve how people and organisations forecast uncertain events and make better decisions, through research, training, and forecasting programmes.",
+    "rolePurpose": "This is an operations and delivery role: making a custom forecasting challenge actually happen. You will own the end-to-end running of competitions for universities, companies, and institutions, based in London.",
+    "keyResponsibilities": [
+      "Scope the competition with the client: audience, subject matter, duration, goals, and how success will be measured",
+      "Work with question writers to produce a well-balanced set of resolvable questions tied to the client’s theme or curriculum",
+      "Manage the timeline: recruitment, onboarding, launch, mid-competition communications, resolution of questions, and final results",
+      "Handle participant support, rules, tie-breaks, and disputes over how a question resolved",
+      "Run leaderboards and communications to keep people engaged, since participation drop-off is the main risk",
+      "Produce wrap-up reports for the client showing results, insights, and lessons learned",
+      "Coordinate across teams: engineering for platform issues, research for scoring, and client success for the relationship"
+    ],
+    "requirements": {
+      "experience": "Experience delivering complex programmes, events, or client projects end to end. Familiarity with education, research, or professional services environments is helpful.",
+      "skills": [
+        "Strong project management and attention to detail under fixed deadlines",
+        "Clear written communication for participants, clients, and internal teams",
+        "Comfort resolving ambiguous situations, including rules and scoring disputes",
+        "Ability to keep large groups engaged over multi-week programmes",
+        "Able to work productively from our London base",
+        "Fluency in English (CEFR C1 or above)"
+      ],
+      "qualifications": "A degree in any field is welcome. We care more about delivery judgement and reliability than a specific academic path."
+    },
+    "desirable": [
+      "Experience running competitions, tournaments, courses, or large participatory programmes",
+      "Familiarity with forecasting, prediction markets, or scoring systems",
+      "Experience working with university or enterprise clients"
+    ],
+    "benefits": "You will own high-visibility programmes from brief to final report, working closely with research, product, and client teams.",
+    "equalOpportunities": "The Institute for Prediction Science welcomes applications from all qualified candidates regardless of race, ethnicity, gender, sexual orientation, age, disability, or background.",
+    "activePeriods": [
+      {
+        "startWeek": 4,
+        "duration": 12
+      },
+      {
+        "startWeek": 28,
+        "duration": 12
+      }
+    ],
+    "applicationContact": {
+      "email": "careers@predictionscience.org"
+    }
+  },
+  {
+    "id": "product-manager",
+    "title": "Product Manager",
+    "location": "London, UK",
+    "type": "Full-time",
+    "department": "Technology",
+    "remoteOptions": "On-site",
+    "aboutCompany": "The Institute for Prediction Science is an independent research institute. We work to improve how people and organisations forecast uncertain events and make better decisions, through research, training, and forecasting programmes.",
+    "rolePurpose": "The product manager owns what gets built and why, mostly for the prediction-tracking platform and Labs tools. You will turn research and user needs into a clear roadmap, based in London.",
+    "keyResponsibilities": [
+      "Gather needs from users such as students, professionals, and competition participants, and from internal teams such as competitions and training",
+      "Decide priorities: which features come first, such as easier prediction entry, accuracy dashboards, bias feedback, or team features",
+      "Write specifications and user stories, and work day to day with engineers and designers",
+      "Define success metrics, for example whether users keep logging predictions and whether their calibration improves over time",
+      "Balance the research mission against usability: a tool that is statistically rigorous but tedious will not get adopted",
+      "Manage the roadmap and, in the Labs context, help decide which prototypes deserve to become real products or spin-outs"
+    ],
+    "requirements": {
+      "experience": "Experience as a product manager or in a closely related product role, ideally for tools used in education, research, analytics, or professional workflows.",
+      "skills": [
+        "Ability to turn ambiguous research and user needs into clear priorities",
+        "Strong written communication for specifications, roadmaps, and stakeholder updates",
+        "Comfort working closely with engineers and designers from discovery through release",
+        "Judgement about measurement: knowing which metrics matter for adoption and forecasting skill",
+        "Able to work productively from our London base",
+        "Fluency in English (CEFR C1 or above)"
+      ],
+      "qualifications": "A degree in any field is welcome. Evidence of shipping useful products matters more than a specific discipline."
+    },
+    "desirable": [
+      "Experience with forecasting, decision science, analytics products, or learning platforms",
+      "Familiarity with experimentation and product metrics",
+      "Experience taking early prototypes toward production products"
+    ],
+    "benefits": "You will shape tools that sit at the centre of the Institute’s research and programmes, with a direct line from product decisions to how people learn to forecast.",
+    "equalOpportunities": "The Institute for Prediction Science welcomes applications from all qualified candidates regardless of race, ethnicity, gender, sexual orientation, age, disability, or background.",
+    "activePeriods": [
+      {
+        "startWeek": 8,
+        "duration": 12
+      },
+      {
+        "startWeek": 32,
+        "duration": 12
+      }
+    ],
+    "applicationContact": {
+      "email": "careers@predictionscience.org"
+    }
+  },
+  {
+    "id": "client-success-manager",
+    "title": "Client Success Manager",
+    "location": "London, UK",
+    "type": "Full-time",
+    "department": "Client Relations",
+    "remoteOptions": "On-site",
+    "aboutCompany": "The Institute for Prediction Science is an independent research institute. We work to improve how people and organisations forecast uncertain events and make better decisions, through research, training, and forecasting programmes.",
+    "rolePurpose": "This role owns the relationship with universities, companies, and institutions after they sign on. You will make sure clients get value from competitions and training programmes, and grow those relationships over time, based in London.",
+    "keyResponsibilities": [
+      "Onboard new clients and make sure they understand what the competition or training programme will deliver",
+      "Act as the main point of contact, handling questions, concerns, and change requests",
+      "Check that the client is getting value, using participation numbers, feedback, and outcomes, and flag risks early",
+      "Gather feedback and relay it to product, research, and programme teams",
+      "Identify opportunities to renew or expand, for example turning a one-off university competition into a recurring programme or adding a training component",
+      "Help clients report results internally, such as showing leadership that their team’s forecasting improved"
+    ],
+    "requirements": {
+      "experience": "Experience in client success, account management, or a related relationship role, preferably with universities, research organisations, or professional services clients.",
+      "skills": [
+        "Strong relationship management and clear, calm communication",
+        "Ability to track delivery against outcomes and surface risks early",
+        "Comfort gathering feedback and translating it into useful requests for internal teams",
+        "Commercial judgement about renewals and expansion without overselling",
+        "Able to work productively from our London base",
+        "Fluency in English (CEFR C1 or above)"
+      ],
+      "qualifications": "A degree in any field is welcome. Evidence of careful client stewardship matters more than a specific academic background."
+    },
+    "desirable": [
+      "Experience with education, training, or research programmes",
+      "Familiarity with forecasting, decision making, or professional development offerings",
+      "Experience turning one-off engagements into recurring partnerships"
+    ],
+    "benefits": "You will be the face of the Institute for partner organisations, with a clear role in delivery quality, feedback loops, and long-term growth.",
+    "equalOpportunities": "The Institute for Prediction Science welcomes applications from all qualified candidates regardless of race, ethnicity, gender, sexual orientation, age, disability, or background.",
+    "activePeriods": [
+      {
+        "startWeek": 12,
+        "duration": 12
+      },
+      {
+        "startWeek": 36,
+        "duration": 12
+      }
+    ],
+    "applicationContact": {
+      "email": "careers@predictionscience.org"
+    }
+  }
+]

@@ -5,10 +5,7 @@ export const SERVICE_STEPS = {
     {
       kicker: 'Competitions',
       title: 'Custom forecasting challenges',
-      body: [
-        'We design and run fully managed forecasting competitions for universities, corporate teams, and institutions.',
-        'We turn subject matter into engaging, measurable prediction challenges so you can focus on the learning, not the setup.',
-      ],
+      body: 'We design and run fully managed forecasting competitions for universities, corporate teams, and institutions. We turn subject matter into engaging, measurable prediction challenges so you can focus on the learning, not the setup.',
       bullets: [
         'Score the same questions the same way, against real outcomes',
         'Shape the contest around decisions your organisation faces',

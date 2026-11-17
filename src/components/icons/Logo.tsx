@@ -19,6 +19,7 @@ const TEXT_X = 72
 export { SITE_NAME }
 export const WORDMARK_NAME = SITE_NAME
 export const CONTACT_EMAIL = 'info@predictionscience.org'
+export const CAREERS_EMAIL = 'careers@predictionscience.org'
 export const BLOG_URL = 'https://predictionscience.substack.com'
 export const BLOG_SUBSCRIBE_URL =
   'https://predictionscience.substack.com/subscribe?utm_source=menu&simple=true&next=https%3A%2F%2Fpredictionscience.substack.com%2F'

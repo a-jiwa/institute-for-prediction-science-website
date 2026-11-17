@@ -8,6 +8,8 @@ export function toneForPath(pathname: string): PageTone | null {
     path === '/about' ||
     path === '/services/lab' ||
     path.startsWith('/research/') ||
+    path === '/careers' ||
+    path.startsWith('/careers/') ||
     path === '/privacy-policy' ||
     path === '/cookie-policy'
   ) {

@@ -14,6 +14,7 @@ const PAGES = [
   { slug: 'research', path: '/research' },
   { slug: 'about', path: '/about' },
   { slug: 'careers', path: '/careers' },
+  { slug: 'careers-research-assistant', path: '/careers/research-assistant' },
   { slug: 'privacy', path: '/privacy-policy' },
 ]
 

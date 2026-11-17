@@ -7,6 +7,8 @@ import { AboutInstitutePage } from './pages/AboutInstitutePage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { CookiePage } from './pages/CookiePage'
 import { DetailPage } from './pages/DetailPage'
+import { CareersPage } from './pages/CareersPage'
+import { JobPage } from './pages/JobPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { routerBasename } from './utils/assetUrl'
 
@@ -31,6 +33,22 @@ function App() {
               element={
                 <div className="home-cover">
                   <AboutInstitutePage />
+                </div>
+              }
+            />
+            <Route
+              path="/careers"
+              element={
+                <div className="home-cover">
+                  <CareersPage />
+                </div>
+              }
+            />
+            <Route
+              path="/careers/:jobId"
+              element={
+                <div className="home-cover">
+                  <JobPage />
                 </div>
               }
             />

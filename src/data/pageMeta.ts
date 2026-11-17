@@ -1,3 +1,4 @@
+import { findJob, isoWeek, isJobActive } from './jobs'
 import { articleAuthors, authorByline, findResearch } from './research'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from './site'
 import { DEFAULT_OG_IMAGE, SOCIAL_SHARE_SPEC, TWITTER_IMAGE, type SocialShareMeta } from './socialShare'
@@ -35,6 +36,12 @@ const PAGES: Record<string, Omit<PageMeta, 'robots'>> = {
     description: 'Academic papers, experiments, and ongoing projects on measuring and improving prediction.',
     type: 'website',
   },
+  '/careers': {
+    title: 'Careers',
+    description:
+      'Open roles at the Institute for Prediction Science. Listings change by week. Filter by location, department, and experience.',
+    type: 'website',
+  },
   '/privacy-policy': {
     title: 'Privacy Policy',
     description: 'How we collect, use, and protect personal information on this website.',
@@ -69,6 +76,22 @@ export function metaForPath(pathname: string): PageMeta {
   const path = normalize(pathname)
   const known = PAGES[path]
   if (known) return { ...known, robots: INDEXABLE }
+
+  if (path.startsWith('/careers/')) {
+    const id = path.slice('/careers/'.length)
+    const job = id && !id.includes('/') ? findJob(id) : null
+    if (!job || !isJobActive(job, isoWeek(new Date()))) {
+      return hidden(job?.title || 'Role closed', 'This role is not open for applications.')
+    }
+    return {
+      title: job.title,
+      description: shortBlurb(
+        `${job.title} at ${SITE_NAME}, ${job.location}. ${job.rolePurpose}`,
+      ),
+      robots: INDEXABLE,
+      type: 'website',
+    }
+  }
 
   if (path.startsWith('/research/')) {
     const slug = path.slice('/research/'.length)

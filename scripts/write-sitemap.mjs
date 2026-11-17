@@ -45,6 +45,7 @@ function xmlEscape(value) {
 }
 
 const research = readJson('src/data/research-all.json')
+const jobs = readJson('src/data/jobs.json')
 const urls = []
 const seen = new Set()
 
@@ -63,6 +64,7 @@ const staticRoutes = [
   ['/', 'src/pages/AboutPage.tsx'],
   ['/about', 'src/pages/AboutInstitutePage.tsx'],
   ['/services/lab', 'src/pages/LabPage.tsx'],
+  ['/careers', 'src/pages/CareersPage.tsx'],
   ['/privacy-policy', 'src/pages/PrivacyPage.tsx'],
   ['/cookie-policy', 'src/pages/CookiePage.tsx'],
 ]
@@ -82,6 +84,46 @@ for (const item of research) {
   const slug = item.href.split('/').filter(Boolean).pop()
   if (!listed.has(slug)) continue
   add(item.href, lastmodFromDate(item.date) ?? catalogueDate)
+}
+
+function isoWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+  const day = d.getUTCDay() || 7
+  d.setUTCDate(d.getUTCDate() + 4 - day)
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7)
+}
+
+function periodIncludesWeek(period, currentWeek) {
+  const endWeek = period.startWeek + period.duration - 1
+  if (endWeek > 52) {
+    if (currentWeek >= period.startWeek && currentWeek <= 52) return true
+    return currentWeek >= 1 && currentWeek <= endWeek - 52
+  }
+  return currentWeek >= period.startWeek && currentWeek <= endWeek
+}
+
+function isoWeekMonday(year, week) {
+  const jan4 = new Date(Date.UTC(year, 0, 4))
+  const jan4Day = (jan4.getUTCDay() + 6) % 7
+  const monday = new Date(jan4)
+  monday.setUTCDate(jan4.getUTCDate() - jan4Day + (week - 1) * 7)
+  monday.setUTCHours(0, 0, 0, 0)
+  return monday
+}
+
+/** Canonical URL for each role that is open this ISO week. lastmod is the Monday it opened. */
+const now = new Date()
+const week = isoWeek(now)
+for (const job of jobs) {
+  const period = (job.activePeriods || []).find((item) => periodIncludesWeek(item, week))
+  if (!period) continue
+  const endWeek = period.startWeek + period.duration - 1
+  const spills = endWeek > 52
+  const year = now.getFullYear() - (spills && week < period.startWeek ? 1 : 0)
+  const posted = isoWeekMonday(year, period.startWeek)
+  const lastmod = posted.toISOString().slice(0, 10)
+  add(`/careers/${job.id}`, lastmod)
 }
 
 const body = [
