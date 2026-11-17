@@ -51,7 +51,7 @@ const FEED: Array<{
   authors?: string[]
 }> = [
   {
-    slug: 'advancing-the-science-of-prediction',
+    slug: 'introducing-the-institute-for-prediction-science',
     title: 'Introducing the Institute for Prediction Science',
     excerpt:
       'Why we founded a research institute dedicated to empirical forecasting and better decision making.',
@@ -59,14 +59,14 @@ const FEED: Array<{
     authors: ['Philip Tetlock', 'Josh Rosenberg', 'Ezra Karger'],
   },
   {
-    slug: 'building-a-system-to-measure-prediction',
+    slug: 'infrastructure-for-measuring-prediction',
     title: 'Infrastructure for Measuring Prediction',
     excerpt:
       'A research platform built to collect, track, and score probabilistic forecasts over time.',
     image: '/assets/img/research/research-08.webp',
   },
   {
-    slug: 'can-human-forecasting-be-trained',
+    slug: 'evaluating-training-in-human-forecasting',
     title: 'Evaluating Training in Human Forecasting',
     excerpt:
       'Experimental evidence showing that structured training measurably improves probabilistic accuracy.',
@@ -84,10 +84,12 @@ export function researchFeed(): ResearchItem[] {
     if (!base) return []
     const placeholder =
       /placeholder/i.test(entry.title) || /goes here/i.test(entry.excerpt)
+    const title = placeholder ? base.title : entry.title
     return [
       {
         ...base,
-        title: placeholder ? base.title : entry.title,
+        href: `/research/${entry.slug}`,
+        title,
         excerpt: placeholder ? base.excerpt : entry.excerpt,
         image: entry.image || base.image,
       },
@@ -144,6 +146,7 @@ export function findResearch(slug: string) {
   if (!base) return null
   return {
     ...base,
+    href: `/research/${entry.slug}`,
     title: entry.title,
     excerpt: entry.excerpt,
     image: entry.image || base.image,
@@ -212,7 +215,7 @@ const AUTHORED_ARTICLES: Record<
     sections: ArticleSection[]
   }
 > = {
-  'advancing-the-science-of-prediction': {
+  'introducing-the-institute-for-prediction-science': {
     lead:
       'Why we founded a research institute dedicated to empirical forecasting and better decision making.',
     intro: [
@@ -255,7 +258,7 @@ const AUTHORED_ARTICLES: Record<
       },
     ],
   },
-  'building-a-system-to-measure-prediction': {
+  'infrastructure-for-measuring-prediction': {
     lead:
       'A research platform built to collect, track, and score probabilistic forecasts over time.',
     intro: [],
@@ -362,7 +365,7 @@ const AUTHORED_ARTICLES: Record<
       },
     ],
   },
-  'can-human-forecasting-be-trained': {
+  'evaluating-training-in-human-forecasting': {
     lead:
       'Experimental evidence showing that structured training measurably improves probabilistic accuracy.',
     intro: [],

@@ -74,9 +74,9 @@ for (const [pathname, file] of staticRoutes) {
 }
 
 const listed = new Set([
-  'advancing-the-science-of-prediction',
-  'building-a-system-to-measure-prediction',
-  'can-human-forecasting-be-trained',
+  'introducing-the-institute-for-prediction-science',
+  'infrastructure-for-measuring-prediction',
+  'evaluating-training-in-human-forecasting',
 ])
 const catalogueDate = fileDate('src/data/research-all.json')
 for (const item of research) {

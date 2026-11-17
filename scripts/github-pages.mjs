@@ -213,26 +213,30 @@ for (const page of pages) {
   fs.writeFileSync(file, html)
 }
 
-const legacyLab = path.join(DIST, 'services/lab/index.html')
-fs.mkdirSync(path.dirname(legacyLab), { recursive: true })
-fs.writeFileSync(
-  legacyLab,
-  `<!doctype html>
+const legacyRedirects = JSON.parse(fs.readFileSync('src/data/legacy-redirects.json', 'utf8'))
+for (const [from, to] of Object.entries(legacyRedirects)) {
+  const file = path.join(DIST, from.replace(/^\//, ''), 'index.html')
+  const canonical = `${SITE}${to}`
+  fs.mkdirSync(path.dirname(file), { recursive: true })
+  fs.writeFileSync(
+    file,
+    `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Research - ${SITE_NAME}</title>
-    <link rel="canonical" href="${SITE}/research" />
+    <link rel="canonical" href="${canonical}" />
     <meta name="robots" content="noindex, follow" />
-    <meta http-equiv="refresh" content="0; url=/research" />
-    <script>location.replace('/research')</script>
+    <meta http-equiv="refresh" content="0; url=${to}" />
+    <script>location.replace(${JSON.stringify(to)})</script>
   </head>
   <body>
-    <p><a href="/research">Research</a></p>
+    <p><a href="${to}">Continue</a></p>
   </body>
 </html>
 `,
-)
+  )
+}
 
 fs.writeFileSync(
   path.join(DIST, '404.html'),
@@ -262,6 +266,9 @@ const required = [
   'about/index.html',
   'research/index.html',
   'services/lab/index.html',
+  'research/introducing-the-institute-for-prediction-science/index.html',
+  'research/infrastructure-for-measuring-prediction/index.html',
+  'research/evaluating-training-in-human-forecasting/index.html',
   'careers/index.html',
   'privacy-policy/index.html',
   'cookie-policy/index.html',

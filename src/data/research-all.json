@@ -1,6 +1,6 @@
 [
   {
-    "href": "/research/advancing-the-science-of-prediction",
+    "href": "/research/introducing-the-institute-for-prediction-science",
     "external": false,
     "type": "Editorial",
     "title": "Introducing the Institute for Prediction Science",
@@ -10,7 +10,7 @@
     "size": "Small"
   },
   {
-    "href": "/research/building-a-system-to-measure-prediction",
+    "href": "/research/infrastructure-for-measuring-prediction",
     "external": false,
     "type": "Project",
     "title": "Infrastructure for Measuring Prediction",
@@ -20,7 +20,7 @@
     "size": "Small"
   },
   {
-    "href": "/research/can-human-forecasting-be-trained",
+    "href": "/research/evaluating-training-in-human-forecasting",
     "external": false,
     "type": "Working paper",
     "title": "Evaluating Training in Human Forecasting",

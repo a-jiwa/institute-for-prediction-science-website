@@ -11,6 +11,7 @@ import { CareersPage } from './pages/CareersPage'
 import { JobPage } from './pages/JobPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { routerBasename } from './utils/assetUrl'
+import legacyRedirects from './data/legacy-redirects.json'
 
 function App() {
   return (
@@ -28,7 +29,9 @@ function App() {
               }
             />
             <Route path="/research/:slug" element={<DetailPage />} />
-            <Route path="/services/lab" element={<Navigate to="/research" replace />} />
+            {Object.entries(legacyRedirects).map(([from, to]) => (
+              <Route key={from} path={from} element={<Navigate to={to} replace />} />
+            ))}
             <Route
               path="/about"
               element={
