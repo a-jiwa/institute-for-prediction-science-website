@@ -4,3 +4,8 @@ export const SITE_URL = 'https://www.predictionscience.org'
 export const SITE_HOST = 'www.predictionscience.org'
 export const SITE_DESCRIPTION =
   'The Institute for Prediction Science is an independent research institute with a mission to improve how people and organisations forecast uncertain events and make better decisions.'
+
+/** Browser `<title>` suffix: "About - Institute for Prediction Science" */
+export function browserDocumentTitle(pageTitle: string) {
+  return pageTitle === SITE_NAME ? SITE_NAME : `${pageTitle} - ${SITE_NAME}`
+}

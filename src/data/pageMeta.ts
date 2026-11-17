@@ -1,6 +1,6 @@
 import { findJob, isoWeek, isJobActive } from './jobs'
 import { articleAuthors, authorByline, findResearch } from './research'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from './site'
+import { browserDocumentTitle, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from './site'
 import { DEFAULT_OG_IMAGE, SOCIAL_SHARE_SPEC, TWITTER_IMAGE, type SocialShareMeta } from './socialShare'
 
 type PageMeta = {
@@ -183,9 +183,7 @@ function upsertCanonical(href: string) {
 
 export function applyPageMeta(pathname: string) {
   const share = socialShareForPath(pathname)
-  const displayTitle = share.title === SITE_NAME ? SITE_NAME : `${share.title} — ${SITE_NAME}`
-
-  document.title = displayTitle
+  document.title = browserDocumentTitle(share.title)
   upsertNamedMeta('description', share.description)
   upsertNamedMeta('robots', share.robots)
   if (share.author) upsertNamedMeta('author', share.author)

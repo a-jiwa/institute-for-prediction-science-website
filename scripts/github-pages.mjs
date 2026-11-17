@@ -69,7 +69,7 @@ function shareBlock(share) {
 }
 
 function applyShare(html, share, { canonical = true } = {}) {
-  const title = share.title === SITE_NAME ? SITE_NAME : `${share.title} — ${SITE_NAME}`
+  const title = share.title === SITE_NAME ? SITE_NAME : `${share.title} - ${SITE_NAME}`
   let next = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeAttr(title)}</title>`)
   next = next.replace(
     /<meta name="description" content="[\s\S]*?"\s*\/>/,
