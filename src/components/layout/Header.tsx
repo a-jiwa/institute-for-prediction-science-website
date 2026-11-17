@@ -6,14 +6,15 @@ import { useHeaderScroll } from '../../hooks/useHeaderScroll'
 import { useLenis } from './CookieBanner'
 
 export function Header() {
+  const location = useLocation()
   const headerRef = useRef<HTMLElement>(null)
   const menuWasOpen = useRef(false)
+  const openedOnPath = useRef(location.pathname)
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuPresent, setMenuPresent] = useState(false)
   const [menuShown, setMenuShown] = useState(false)
   const lenis = useLenis()
   useHeaderScroll(headerRef, lenis)
-  const location = useLocation()
 
   useEffect(() => {
     setMenuOpen(false)
@@ -68,22 +69,39 @@ export function Header() {
 
   useEffect(() => {
     if (!lenis) return
-    if (menuPresent) lenis.stop()
-    else lenis.start()
-  }, [menuPresent, lenis])
+    if (menuPresent) {
+      lenis.stop()
+      return
+    }
+    lenis.start()
+    if (!menuWasOpen.current || location.pathname === openedOnPath.current) return
+    lenis.scrollTo(0, { immediate: true, force: true })
+    window.scrollTo(0, 0)
+  }, [menuPresent, lenis, location.pathname])
 
   useEffect(() => {
     if (menuOpen) {
       menuWasOpen.current = true
+      openedOnPath.current = location.pathname
       return
     }
     if (!menuWasOpen.current) return
+    const pathAtOpen = openedOnPath.current
     const y = window.scrollY
-    requestAnimationFrame(() => {
+    const frame = requestAnimationFrame(() => {
+      // Closing the menu on the same page keeps that page's offset.
+      // Choosing another page should land at the top instead.
+      if (window.location.pathname !== pathAtOpen) {
+        window.scrollTo(0, 0)
+        document.documentElement.scrollTop = 0
+        document.body.scrollTop = 0
+        return
+      }
       window.scrollTo(0, y + 1)
       window.scrollTo(0, y)
     })
-  }, [menuOpen])
+    return () => cancelAnimationFrame(frame)
+  }, [menuOpen, location.pathname])
 
   return (
     <header ref={headerRef} className={menuOpen ? 'menu-open' : undefined}>

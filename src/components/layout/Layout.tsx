@@ -6,10 +6,18 @@ import { applyPageMeta } from '../../data/pageMeta'
 import { toneForPath, type PageTone } from '../../data/pageTones'
 import { toRouterPath } from '../../utils/assetUrl'
 import { useLenis } from './CookieBanner'
+import type Lenis from 'lenis'
 
 function applyTone(tone: PageTone | null) {
   if (tone) document.documentElement.dataset.tone = tone
   else delete document.documentElement.dataset.tone
+}
+
+function scrollToTop(lenis: Lenis | null) {
+  lenis?.scrollTo(0, { immediate: true, force: true })
+  window.scrollTo(0, 0)
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
 }
 
 export function Layout() {
@@ -66,8 +74,19 @@ export function Layout() {
       }
     }
 
-    if (lenis) lenis.scrollTo(0, { immediate: true, force: true })
-    window.scrollTo(0, 0)
+    scrollToTop(lenis)
+    // The mobile menu restores the previous offset on the next frame, and
+    // iOS can do the same when that fixed panel closes. Pin the top again
+    // after those so a new page never opens mid-scroll.
+    let second = 0
+    const first = requestAnimationFrame(() => {
+      scrollToTop(lenis)
+      second = requestAnimationFrame(() => scrollToTop(lenis))
+    })
+    return () => {
+      cancelAnimationFrame(first)
+      cancelAnimationFrame(second)
+    }
   }, [pathname, hash, lenis])
 
   return (

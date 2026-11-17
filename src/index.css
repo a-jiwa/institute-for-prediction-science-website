@@ -83,6 +83,8 @@ body {
   max-width: 100%;
   min-height: 100vh;
   min-height: 100lvh;
+  /* Route changes replace the page. Don't keep the previous scroll offset. */
+  overflow-anchor: none;
   /* White canvas so the strip behind Safari's toolbar is the page, not black. */
   background: #fff;
   /* Labs floaters / negative shape insets must not create sideways scroll. */
