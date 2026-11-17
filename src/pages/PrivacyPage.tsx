@@ -1,4 +1,5 @@
 import { CONTACT_EMAIL, SITE_NAME } from '../components/icons/Logo'
+import { SITE_HOST } from '../data/site'
 import { LegalPage } from './LegalPage'
 
 export function PrivacyPage() {
@@ -10,7 +11,7 @@ export function PrivacyPage() {
       <section>
         <h2>Who we are</h2>
         <p>
-          {SITE_NAME} (“we”) is a research institute. This policy covers predictionscience.org: visits to the site,
+          {SITE_NAME} (“we”) is a research institute. This policy covers {SITE_HOST}: visits to the site,
           messages you send us, and the newsletter we point you to. It does not cover a research study, forecasting
           competition, or training programme. Those activities use their own notice.
         </p>

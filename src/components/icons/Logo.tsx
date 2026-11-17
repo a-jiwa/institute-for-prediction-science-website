@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import { animate, stagger } from 'animejs'
+import { SITE_NAME } from '../../data/site'
 import { LOGO_MARK } from './logo-mark'
 
 export const LOGO_HEIGHT = 48
@@ -15,8 +16,8 @@ const TEXT_GREEN = '#102B23'
 const TEXT_INK = '#000000'
 const TEXT_X = 72
 
-export const SITE_NAME = 'Institute for Prediction Science'
-export const WORDMARK_NAME = 'Institute for Prediction Science'
+export { SITE_NAME }
+export const WORDMARK_NAME = SITE_NAME
 export const CONTACT_EMAIL = 'info@predictionscience.org'
 export const BLOG_URL = 'https://predictionscience.substack.com'
 export const BLOG_SUBSCRIBE_URL =

@@ -42,7 +42,7 @@ export type ArticleContent = {
 
 export const researchItems = researchAll as ResearchItem[]
 
-/** Short feed shown on Research publications. Full catalogue stays in researchItems. */
+/** Papers listed on the research page. Anything else is not a page. */
 const FEED: Array<{
   slug: string
   title: string
@@ -52,24 +52,24 @@ const FEED: Array<{
 }> = [
   {
     slug: 'advancing-the-science-of-prediction',
-    title: 'Introducing the Institute of Prediction Science',
+    title: 'Introducing the Institute for Prediction Science',
     excerpt:
-      'To improve how society anticipates uncertain outcomes, we establish a research institute focused on empirical forecasting and decision science.',
+      'Why we founded a research institute dedicated to empirical forecasting and better decision making.',
     image: '/assets/img/research/research-01.webp',
     authors: ['Philip Tetlock', 'Josh Rosenberg', 'Ezra Karger'],
   },
   {
     slug: 'building-a-system-to-measure-prediction',
-    title: 'Infrastructure for measuring prediction',
+    title: 'Infrastructure for Measuring Prediction',
     excerpt:
-      'To systematically study human judgment, we introduce a research platform that collects, tracks, and evaluates probabilistic forecasts over time.',
+      'A research platform built to collect, track, and score probabilistic forecasts over time.',
     image: '/assets/img/research/research-08.webp',
   },
   {
     slug: 'can-human-forecasting-be-trained',
-    title: 'Evaluating training in human forecasting',
+    title: 'Evaluating Training in Human Forecasting',
     excerpt:
-      'To determine whether prediction is a trainable skill, we present experimental evidence that structured instruction improves probabilistic accuracy.',
+      'Experimental evidence showing that structured training measurably improves probabilistic accuracy.',
     image: '/assets/img/research/research-02.webp',
   },
 ]
@@ -138,15 +138,15 @@ export function researchSlug(href: string) {
 }
 
 export function findResearch(slug: string) {
+  const entry = FEED.find((row) => row.slug === slug)
+  if (!entry) return null
   const base = researchItems.find((item) => !item.external && researchSlug(item.href) === slug)
   if (!base) return null
-  const entry = FEED.find((row) => row.slug === slug)
-  if (!entry) return base
   return {
     ...base,
     title: entry.title,
     excerpt: entry.excerpt,
-    image: entry.image,
+    image: entry.image || base.image,
   }
 }
 
@@ -159,13 +159,6 @@ function timestamp(date: string) {
 
 export function sortResearch(items: ResearchItem[]) {
   return [...items].sort((a, b) => timestamp(b.date) - timestamp(a.date))
-}
-
-function sentences(text: string) {
-  return text
-    .split(/(?<=[.!?])\s+/)
-    .map((sentence) => sentence.trim())
-    .filter(Boolean)
 }
 
 function hashSlug(value: string) {
@@ -197,13 +190,6 @@ export function authorInitials(name: string) {
     .join('')
 }
 
-function slugify(heading: string) {
-  return heading
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-}
-
 /** Subheadings use sentence case: only the first letter capitalised. */
 function sentenceCaseHeading(heading: string) {
   const trimmed = heading.trim()
@@ -218,19 +204,6 @@ function withSentenceCaseHeadings(sections: ArticleSection[]): ArticleSection[] 
   }))
 }
 
-const LOREM = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-  'Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.',
-  'Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing. Mauris tincidunt sem sed arcu. Nunc posuere. Nullam lectus justo, vulputate eget, mollis sed.',
-  'Phasellus rhoncus. Aenean viverra rhoncus pede. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam.',
-  'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor. Sed non quam. In vel mi sit amet augue congue elementum. Morbi in ipsum sit amet pede facilisis laoreet.',
-]
-
-function lorem(start: number, count: number) {
-  return Array.from({ length: count }, (_, index) => LOREM[(start + index) % LOREM.length])
-}
-
 const AUTHORED_ARTICLES: Record<
   string,
   {
@@ -241,7 +214,7 @@ const AUTHORED_ARTICLES: Record<
 > = {
   'advancing-the-science-of-prediction': {
     lead:
-      'To improve how society anticipates uncertain outcomes, we establish a research institute focused on empirical forecasting and decision science.',
+      'Why we founded a research institute dedicated to empirical forecasting and better decision making.',
     intro: [
       'The ability to anticipate future events is fundamental to how we make decisions, yet the science of forecasting remains an underdeveloped discipline. We believe that improving how people reason about the future is one of the most important challenges facing individuals, organisations and society.',
     ],
@@ -284,7 +257,7 @@ const AUTHORED_ARTICLES: Record<
   },
   'building-a-system-to-measure-prediction': {
     lead:
-      'To systematically study human judgment, we introduce a research platform that collects, tracks, and evaluates probabilistic forecasts over time.',
+      'A research platform built to collect, track, and score probabilistic forecasts over time.',
     intro: [],
     sections: [
       {
@@ -391,7 +364,7 @@ const AUTHORED_ARTICLES: Record<
   },
   'can-human-forecasting-be-trained': {
     lead:
-      'To determine whether prediction is a trainable skill, we present experimental evidence that structured instruction improves probabilistic accuracy.',
+      'Experimental evidence showing that structured training measurably improves probabilistic accuracy.',
     intro: [],
     sections: [
       {
@@ -774,108 +747,13 @@ const AUTHORED_ARTICLES: Record<
   },
 }
 
-export function articleLead(item: ResearchItem) {
+export function articleContent(item: ResearchItem): ArticleContent | null {
   const authored = AUTHORED_ARTICLES[researchSlug(item.href)]
-  if (authored?.lead) return authored.lead
-  const fromExcerpt = sentences(item.excerpt)[0]
-  if (fromExcerpt && fromExcerpt.length > 40) return fromExcerpt
-  return `${item.title} explores how forecasting can be measured, improved, and applied to decisions under uncertainty.`
-}
-
-export function articleContent(item: ResearchItem): ArticleContent {
-  const authors = feedAuthors(item)
-  const slug = researchSlug(item.href)
-  const authored = AUTHORED_ARTICLES[slug]
-  if (authored) {
-    return {
-      lead: authored.lead,
-      intro: authored.intro ?? [],
-      sections: withSentenceCaseHeadings(authored.sections),
-      authors,
-    }
+  if (!authored) return null
+  return {
+    lead: authored.lead,
+    intro: authored.intro ?? [],
+    sections: withSentenceCaseHeadings(authored.sections),
+    authors: feedAuthors(item),
   }
-
-  const seed = hashSlug(slug)
-  const lead = articleLead(item)
-
-  const intro = [
-    ...lorem(seed, 2),
-    item.excerpt && item.excerpt.length > 60
-      ? item.excerpt
-      : `${item.title} is ${item.type === 'Project' ? 'an ongoing project' : `a ${item.type.toLowerCase()}`} from ${SITE_NAME}. It forms part of a broader programme of competitions, training, and lab work on prediction.`,
-  ]
-
-  const sections: ArticleSection[] = [
-    {
-      id: 'overview',
-      heading: 'Overview',
-      blocks: [
-        { type: 'p', text: lead },
-        ...lorem(seed + 1, 3).map((text) => ({ type: 'p' as const, text })),
-        {
-          type: 'ul',
-          items: [
-            'Clear questions and scoring rules make predictions comparable over time.',
-            'Tournaments and panels surface where experts and methods disagree.',
-            'Applied tools carry those lessons into everyday decisions.',
-            'Open reporting helps others reuse methods and check results.',
-          ],
-        },
-      ],
-    },
-    {
-      id: 'approach',
-      heading: 'Approach',
-      blocks: [
-        ...lorem(seed + 2, 3).map((text) => ({ type: 'p' as const, text })),
-        {
-          type: 'p',
-          text: 'The work combines structured elicitation, careful scoring, and iterative feedback. Participants make probabilistic forecasts, receive updates as evidence arrives, and review how their judgement performed against outcomes.',
-        },
-        ...lorem(seed + 3, 2).map((text) => ({ type: 'p' as const, text })),
-      ],
-    },
-    {
-      id: 'findings',
-      heading: 'Findings',
-      blocks: [
-        ...lorem(seed + 4, 3).map((text) => ({ type: 'p' as const, text })),
-        {
-          type: 'ol',
-          items: [
-            'Measured forecasts reveal where people are overconfident or underconfident.',
-            'Training and feedback can improve calibration when practice is repeated.',
-            'Aggregating diverse judgements often outperforms any single expert view.',
-            'Practical tools help organisations use forecasts without hiding uncertainty.',
-          ],
-        },
-        ...lorem(seed + 5, 2).map((text) => ({ type: 'p' as const, text })),
-      ],
-    },
-    {
-      id: 'looking-ahead',
-      heading: 'Looking ahead',
-      blocks: [
-        ...lorem(seed + 6, 3).map((text) => ({ type: 'p' as const, text })),
-        {
-          type: 'p',
-          text:
-            item.date === 'Ongoing'
-              ? `This ${item.type.toLowerCase()} is ongoing work from ${SITE_NAME}. We continue to refine the methods, gather feedback, and share what we learn.`
-              : `This ${item.type.toLowerCase()} was published on ${item.date}. Further work will test the ideas in new settings and with new participants.`,
-        },
-        ...lorem(seed + 1, 2).map((text) => ({ type: 'p' as const, text })),
-      ],
-    },
-  ]
-
-  return { lead, intro, sections: withSentenceCaseHeadings(sections), authors }
-}
-
-export function articleSections(item: ResearchItem) {
-  return articleContent(item).sections.map(({ id, heading }) => ({ id, heading }))
-}
-
-export function sectionIdFromHeading(heading: string) {
-  return slugify(heading)
 }

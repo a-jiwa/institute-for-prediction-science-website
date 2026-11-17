@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Lottie, LottieSubscription, type LottieHandle } from 'lottie-react'
+import { SITE_NAME } from '../data/site'
 import { assetUrl } from '../utils/assetUrl'
 
 const ABOUT_HERO_SRC = assetUrl('/assets/lottie/about-hero.json')
@@ -183,7 +184,7 @@ export function AboutInstitutePage() {
         <div className="ps-contain">
           <p className="ps-kicker">About</p>
           <p>
-            The Institute of Prediction Science is dedicated to advancing the science and practice of forecasting. We
+            The {SITE_NAME} is dedicated to advancing the science and practice of forecasting. We
             bring together research, education and practical application to develop better ways of understanding
             uncertainty, anticipating future events and making informed decisions.
           </p>
@@ -229,7 +230,7 @@ export function AboutInstitutePage() {
               <p className="ps-kicker">Partnerships</p>
               <h2 id="lab-partnerships-title">Building a stronger foundation for better predictions</h2>
               <p>
-                Alongside pursuing our own research agenda, much of the Institute of Prediction Science’s work is shaped
+                Alongside pursuing our own research agenda, much of the {SITE_NAME}’s work is shaped
                 through collaboration with other organisations. We believe partnerships are essential to advancing the
                 field, bringing together complementary expertise, broadening perspectives and translating research into
                 practical applications. We work with universities, research institutions, businesses, policymakers and

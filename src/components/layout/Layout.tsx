@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
+import { applyPageMeta } from '../../data/pageMeta'
 import { toneForPath, type PageTone } from '../../data/pageTones'
 import { toRouterPath } from '../../utils/assetUrl'
 import { useLenis } from './CookieBanner'
@@ -19,6 +20,7 @@ export function Layout() {
 
   useLayoutEffect(() => {
     applyTone(toneForPath(pathname))
+    applyPageMeta(pathname)
   }, [pathname])
 
   useEffect(() => {

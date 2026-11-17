@@ -1,4 +1,5 @@
 import { BLOG_URL, CONTACT_EMAIL, LINKEDIN_URL, X_URL } from '../components/icons/Logo'
+import { SITE_HOST } from '../data/site'
 import { LegalPage } from './LegalPage'
 
 export function CookiePage() {
@@ -10,7 +11,7 @@ export function CookiePage() {
       <section>
         <h2>Cookies on this website</h2>
         <p>
-          predictionscience.org does not set cookies. There are no advertising cookies, no analytics cookies, and
+          {SITE_HOST} does not set cookies. There are no advertising cookies, no analytics cookies, and
           nothing to accept or refuse when you arrive.
         </p>
         <p>
@@ -41,7 +42,7 @@ export function CookiePage() {
         <h2>Your browser</h2>
         <p>
           You can block or delete cookies in your browser settings. Because this site does not set any, that will not
-          change how predictionscience.org works.
+          change how {SITE_HOST} works.
         </p>
       </section>
 

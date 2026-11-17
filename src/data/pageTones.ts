@@ -6,16 +6,12 @@ export function toneForPath(pathname: string): PageTone | null {
   if (
     path === '/' ||
     path === '/about' ||
-    path === '/services' ||
-    path === '/services/competitions' ||
     path === '/services/lab' ||
-    path === '/research' ||
     path.startsWith('/research/') ||
     path === '/privacy-policy' ||
     path === '/cookie-policy'
   ) {
     return 'lilac'
   }
-  if (path === '/services/training') return 'green'
   return null
 }

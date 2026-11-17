@@ -1,5 +1,4 @@
 export { ServiceSteps } from './ServiceSteps'
 export { StoryScrollFrame } from './StoryScrollFrame'
-export { DotsDayTimeline } from './DotsDayTimeline'
 export { HeroConstellation } from './HeroConstellation'
 export { AssetLottie } from './AssetLottie'
