@@ -60,14 +60,14 @@ const FEED: Array<{
   },
   {
     slug: 'infrastructure-for-measuring-prediction',
-    title: 'Infrastructure for Measuring Prediction',
+    title: 'Infrastructure for measuring prediction',
     excerpt:
       'A research platform built to collect, track, and score probabilistic forecasts over time.',
     image: '/assets/img/research/research-08.webp',
   },
   {
     slug: 'evaluating-training-in-human-forecasting',
-    title: 'Evaluating Training in Human Forecasting',
+    title: 'Evaluating training in human forecasting',
     excerpt:
       'Experimental evidence showing that structured training measurably improves probabilistic accuracy.',
     image: '/assets/img/research/research-02.webp',
