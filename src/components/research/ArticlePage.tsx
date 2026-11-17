@@ -5,7 +5,7 @@ import { articleContent, findResearch, type ArticleBlock } from '../../data/rese
 function EssayCrumb({ title }: { title: string }) {
   return (
     <nav className="essay-crumb" aria-label="Breadcrumb">
-      <Link className="essay-crumb__parent" to="/services/lab">
+      <Link className="essay-crumb__parent" to="/research">
         Research
       </Link>
       <span className="essay-crumb__sep" aria-hidden="true">

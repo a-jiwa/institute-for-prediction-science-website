@@ -6,7 +6,7 @@ export function toneForPath(pathname: string): PageTone | null {
   if (
     path === '/' ||
     path === '/about' ||
-    path === '/services/lab' ||
+    path === '/research' ||
     path.startsWith('/research/') ||
     path === '/careers' ||
     path.startsWith('/careers/') ||

@@ -63,7 +63,7 @@ function add(pathname, lastmod) {
 const staticRoutes = [
   ['/', 'src/pages/AboutPage.tsx'],
   ['/about', 'src/pages/AboutInstitutePage.tsx'],
-  ['/services/lab', 'src/pages/LabPage.tsx'],
+  ['/research', 'src/pages/LabPage.tsx'],
   ['/careers', 'src/pages/CareersPage.tsx'],
   ['/privacy-policy', 'src/pages/PrivacyPage.tsx'],
   ['/cookie-policy', 'src/pages/CookiePage.tsx'],

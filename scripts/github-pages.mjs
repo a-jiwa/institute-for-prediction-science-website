@@ -148,7 +148,7 @@ const pages = [
     robots: 'index, follow',
   },
   {
-    path: '/services/lab',
+    path: '/research',
     title: 'Research',
     description: 'Academic papers, experiments, and ongoing projects on measuring and improving prediction.',
     type: 'website',
@@ -213,6 +213,27 @@ for (const page of pages) {
   fs.writeFileSync(file, html)
 }
 
+const legacyLab = path.join(DIST, 'services/lab/index.html')
+fs.mkdirSync(path.dirname(legacyLab), { recursive: true })
+fs.writeFileSync(
+  legacyLab,
+  `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Research - ${SITE_NAME}</title>
+    <link rel="canonical" href="${SITE}/research" />
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content="0; url=/research" />
+    <script>location.replace('/research')</script>
+  </head>
+  <body>
+    <p><a href="/research">Research</a></p>
+  </body>
+</html>
+`,
+)
+
 fs.writeFileSync(
   path.join(DIST, '404.html'),
   applyShare(
@@ -239,6 +260,7 @@ const required = [
   'favicon.ico',
   'site.webmanifest',
   'about/index.html',
+  'research/index.html',
   'services/lab/index.html',
   'careers/index.html',
   'privacy-policy/index.html',

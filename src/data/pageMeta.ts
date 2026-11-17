@@ -31,7 +31,7 @@ const PAGES: Record<string, Omit<PageMeta, 'robots'>> = {
     description: 'Our mission, team, and approach to advancing empirical forecasting and decision science.',
     type: 'website',
   },
-  '/services/lab': {
+  '/research': {
     title: 'Research',
     description: 'Academic papers, experiments, and ongoing projects on measuring and improving prediction.',
     type: 'website',

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import { Layout } from './components/layout/Layout'
 import { SmoothScroll } from './components/layout/CookieBanner'
 import { HomePage } from './pages/HomePage'
@@ -19,15 +19,16 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/research/:slug" element={<DetailPage />} />
             <Route
-              path="/services/lab"
+              path="/research"
               element={
                 <div className="home-cover">
                   <LabPage />
                 </div>
               }
             />
+            <Route path="/research/:slug" element={<DetailPage />} />
+            <Route path="/services/lab" element={<Navigate to="/research" replace />} />
             <Route
               path="/about"
               element={
