@@ -8563,7 +8563,7 @@ html[data-tone] .about-statement p {
 
 /* Centred Research label + standfirst under the hero. */
 .ps-lab-intro {
-  padding: clamp(1.25rem, 0.9rem + 1vw, 2rem) 0 clamp(6rem, 4.5rem + 4vw, 9rem);
+  padding: clamp(1.25rem, 0.9rem + 1vw, 2rem) 0 0;
 }
 
 .ps-lab-intro .ps-contain {
@@ -8595,9 +8595,11 @@ html[data-tone] .about-statement p {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Three field cards. Icon left of title, then body. */
+/* Three field cards: image above title, everything centered.
+   Same gap above the cards (from intro) and below (to follow copy). */
 .ps-lab-works {
-  padding-top: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  --ps-lab-works-gap: clamp(3.25rem, 2.5rem + 2vw, 5rem);
+  padding-top: var(--ps-lab-works-gap);
   padding-bottom: var(--ps-section);
   overflow-x: clip;
 }
@@ -8610,7 +8612,7 @@ html[data-tone] .about-statement p {
 
 .ps-lab-page .ps-lab-works__follow {
   max-width: 40rem;
-  margin-top: clamp(2.75rem, 2rem + 2.5vw, 4.5rem);
+  margin-top: var(--ps-lab-works-gap);
   margin-inline: auto;
   text-align: center;
 }
@@ -8628,23 +8630,25 @@ html[data-tone] .about-statement p {
 }
 
 .ps-lab-works li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 0.85rem;
   min-width: 0;
-  padding: 0.9rem;
+  padding: 1.15rem 1rem 1.25rem;
   border-radius: 20px;
   background: var(--ps-band-surface);
+  text-align: center;
 }
 
 .ps-lab-works__thumb {
   position: relative;
   overflow: hidden;
-  width: 4.25rem;
+  width: min(5.5rem, 42%);
   aspect-ratio: 1;
   flex: 0 0 auto;
-  border-radius: 12px;
+  margin-inline: auto;
+  border-radius: 14px;
 }
 
 .ps-lab-works__thumb .ps-ph,
@@ -8676,8 +8680,11 @@ html[data-tone] .about-statement p {
 .ps-lab-works__text {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
   min-width: 0;
+  text-align: center;
 }
 
 .ps-lab-page .ps-lab-works li h3 {
@@ -8685,12 +8692,15 @@ html[data-tone] .about-statement p {
   font-size: 1.125rem;
   letter-spacing: -0.006em;
   line-height: 1.12;
+  text-align: center;
   text-wrap: balance;
 }
 
 .ps-lab-page .ps-lab-works li p {
   font-size: 0.9375rem;
   line-height: 1.4;
+  text-align: center;
+  text-wrap: pretty;
 }
 
 @media (min-width: 768px) {
@@ -8710,13 +8720,9 @@ html[data-tone] .about-statement p {
   }
 
   .ps-lab-works li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 0.9rem;
     padding: 1.25rem 1.15rem 1.35rem;
     border-radius: 24px;
-    text-align: center;
   }
 
   .ps-lab-works__thumb {
@@ -8725,7 +8731,6 @@ html[data-tone] .about-statement p {
   }
 
   .ps-lab-works__text {
-    align-items: center;
     gap: 0.5rem;
   }
 }
@@ -8843,18 +8848,23 @@ html[data-tone] .about-statement p {
 }
 
 .ps-lab-split {
-  display: grid;
-  gap: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: clamp(1.25rem, 1rem + 1.2vw, 2rem);
 }
 
 .ps-lab-work__copy {
   min-width: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .ps-lab-split__frame {
   position: relative;
-  min-width: 0;
+  order: -1;
+  flex: 0 0 auto;
+  width: min(100%, 14rem);
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 20px;
@@ -8877,11 +8887,20 @@ html[data-tone] .about-statement p {
 
 @media (min-width: 768px) {
   .ps-lab-split {
+    display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr);
+    align-items: center;
     gap: clamp(2rem, 1.5rem + 2vw, 4rem);
   }
 
+  .ps-lab-work__copy {
+    text-align: left;
+  }
+
   .ps-lab-split__frame {
+    order: 0;
+    width: auto;
+    min-width: 0;
     border-radius: 24px;
   }
 }

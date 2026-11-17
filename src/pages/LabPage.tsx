@@ -181,13 +181,9 @@ export function LabPage() {
         <div className="ps-about-hero__layout">
           <div className="ps-about-hero__copy">
             <h1>
-              Advancing the
-              <br className="ps-lab-hero__break ps-lab-hero__break--sm" />
-              {' '}
-              frontiers of
-              <br className="ps-lab-hero__break ps-lab-hero__break--lg" />
-              {' '}
-              prediction
+              Pioneering research into
+              <br />
+              prediction science
             </h1>
             <p className="ps-about-hero__lead">
               Exploring new applications of
@@ -222,7 +218,7 @@ export function LabPage() {
             {FIELDS.map((field) => (
               <li key={field.title}>
                 <div className="ps-lab-works__thumb" aria-hidden="true">
-                  <AssetLottie className="ps-lab-works__lottie" src={field.lottieSrc} loop />
+                  <AssetLottie className="ps-lab-works__lottie" src={field.lottieSrc} paused />
                 </div>
                 <div className="ps-lab-works__text">
                   <h3>{field.title}</h3>
