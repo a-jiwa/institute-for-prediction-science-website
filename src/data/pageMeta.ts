@@ -123,7 +123,8 @@ export function metaForPath(pathname: string): PageMeta {
 
 export function canonicalUrl(pathname: string) {
   const path = normalize(pathname)
-  return path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`
+  // GitHub Pages serves each folder at a trailing slash. Canonicals match that 200 URL.
+  return path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}/`
 }
 
 export function socialShareForPath(pathname: string): SocialShareMeta {

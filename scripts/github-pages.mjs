@@ -199,7 +199,7 @@ for (const page of pages) {
     title: page.title,
     description: page.description,
     ogDescription: page.ogDescription || page.description,
-    url: page.path === '/' ? `${SITE}/` : `${SITE}${page.path}`,
+    url: page.path === '/' ? `${SITE}/` : `${SITE}${page.path}/`,
     type: page.type,
     robots: page.robots,
   }
@@ -216,7 +216,8 @@ for (const page of pages) {
 const legacyRedirects = JSON.parse(fs.readFileSync('src/data/legacy-redirects.json', 'utf8'))
 for (const [from, to] of Object.entries(legacyRedirects)) {
   const file = path.join(DIST, from.replace(/^\//, ''), 'index.html')
-  const canonical = `${SITE}${to}`
+  const destination = to.endsWith('/') ? to : `${to}/`
+  const canonical = `${SITE}${destination}`
   fs.mkdirSync(path.dirname(file), { recursive: true })
   fs.writeFileSync(
     file,
@@ -227,11 +228,11 @@ for (const [from, to] of Object.entries(legacyRedirects)) {
     <title>Research - ${SITE_NAME}</title>
     <link rel="canonical" href="${canonical}" />
     <meta name="robots" content="noindex, follow" />
-    <meta http-equiv="refresh" content="0; url=${to}" />
-    <script>location.replace(${JSON.stringify(to)})</script>
+    <meta http-equiv="refresh" content="0; url=${destination}" />
+    <script>location.replace(${JSON.stringify(destination)})</script>
   </head>
   <body>
-    <p><a href="${to}">Continue</a></p>
+    <p><a href="${destination}">Continue</a></p>
   </body>
 </html>
 `,

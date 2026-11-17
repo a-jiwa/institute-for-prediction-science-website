@@ -134,7 +134,7 @@ export function jobPostingLd(job: Job, now = new Date()) {
         ...LONDON,
       },
     },
-    url: `${SITE_URL}${jobPath(job)}`,
+    url: `${SITE_URL}${jobPath(job)}/`,
     directApply: true,
     industry: 'Scientific Research and Development',
     occupationalCategory: OCCUPATION[job.id] || '19-3099.00 Social Scientists and Related Workers, All Other',

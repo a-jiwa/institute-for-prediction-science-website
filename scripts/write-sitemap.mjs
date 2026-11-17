@@ -55,7 +55,7 @@ function add(pathname, lastmod) {
   if (seen.has(pathName)) return
   seen.add(pathName)
   urls.push({
-    loc: pathName === '/' ? `${SITE}/` : `${SITE}${pathName}`,
+    loc: pathName === '/' ? `${SITE}/` : `${SITE}${pathName}/`,
     lastmod,
   })
 }
