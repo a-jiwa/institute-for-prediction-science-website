@@ -5707,6 +5707,13 @@ html[data-tone] .about-statement p {
   line-height: var(--ps-leading-large);
 }
 
+/* Home What we do: let copy use the full blue column width. */
+.home-cover .ps-services-band .ps-step h3,
+.home-cover .ps-services-band .ps-step p:not(.ps-step__lead) {
+  max-width: none;
+  width: 100%;
+}
+
 /*
   How it works steps: larger type; tight kicker→title (one unit),
   a little more title→body. em gaps track the fluid sizes.
