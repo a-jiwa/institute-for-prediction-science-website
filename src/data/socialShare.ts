@@ -2,7 +2,7 @@ import { SITE_NAME, SITE_URL } from './site.ts'
 
 /** Homepage lead. Share text stays in step with the landing headline. */
 export const HOME_OG_DESCRIPTION =
-  'We study how people forecast uncertain events and build practical tools to improve real-world decisions.'
+  'The Institute for Prediction Science is an independent research institute with a mission to improve how people and organisations forecast uncertain events and make better decisions.'
 
 export const OG_IMAGE_ALT = `${SITE_NAME}. Advancing the science of prediction.`
 export const OG_IMAGE_TYPE = 'image/jpeg'

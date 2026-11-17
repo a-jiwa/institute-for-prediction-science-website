@@ -37,7 +37,7 @@ const SITE_NAME = 'Institute for Prediction Science'
 const OG_IMAGE = `${SITE}/assets/img/og/default.jpg`
 const OG_ALT = `${SITE_NAME}. Advancing the science of prediction.`
 const HOME_DESCRIPTION =
-  'We study how people forecast uncertain events and build practical tools to improve real-world decisions.'
+  'The Institute for Prediction Science is an independent research institute with a mission to improve how people and organisations forecast uncertain events and make better decisions.'
 const HOME_SHARE = HOME_DESCRIPTION
 
 function escapeAttr(value) {
