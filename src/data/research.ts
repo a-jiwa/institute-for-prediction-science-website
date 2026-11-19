@@ -1,5 +1,5 @@
 import researchAll from './research-all.json'
-import { SITE_NAME } from '../components/icons/Logo'
+import { SITE_NAME } from './site'
 
 export type ResearchItem = {
   href: string

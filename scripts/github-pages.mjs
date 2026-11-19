@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { injectSnapshot, loadSiteContent, snapshotFor } from './crawl-snapshot.mjs'
 
 const DIST = 'dist'
 // Custom domain is served at the root, so CSS asset URLs stay /assets/...
@@ -194,6 +195,8 @@ const pages = [
     })),
 ]
 
+const siteContent = await loadSiteContent()
+
 for (const page of pages) {
   const share = {
     title: page.title,
@@ -203,7 +206,7 @@ for (const page of pages) {
     type: page.type,
     robots: page.robots,
   }
-  const html = applyShare(shell, share)
+  const html = injectSnapshot(applyShare(shell, share), snapshotFor(page.path, siteContent, openJobs))
   if (page.path === '/') {
     fs.writeFileSync(path.join(DIST, 'index.html'), html)
     continue
